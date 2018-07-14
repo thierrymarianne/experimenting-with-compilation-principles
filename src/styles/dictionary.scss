@@ -1,0 +1,17 @@
+@import "./variables.scss";
+
+.dictionary {
+    &-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    display: flex;
+    background-color: $color-grey;
+    width: 50vw;
+    height: 50vh;
+    align-self: center;
+}

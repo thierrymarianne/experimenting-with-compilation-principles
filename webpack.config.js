@@ -1,11 +1,27 @@
-var path = require('path');
+const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
+  resolve: {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    }
+  },  
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      }, {
+        test: /\.(sc|c)ss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
+      }, {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
@@ -40,5 +56,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js'
-  }
+  },
+  plugins: [
+    new VueLoaderPlugin()
+  ]  
 };

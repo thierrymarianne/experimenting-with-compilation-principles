@@ -1,4 +1,10 @@
-import Dictionary from './data-structures/dictionary';
+import Vue from 'vue';
+import Dico from './components/dictionary.vue';
 
 // eslint-disable-next-line
-console.log(Dictionary.name);
+new Vue({
+    el: '#data-structures',
+    components: {
+        dictionary: Dico,
+    },
+});
