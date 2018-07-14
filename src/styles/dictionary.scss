@@ -1,6 +1,11 @@
 @import './variables.scss';
 
 .dictionary {
+  color: $color-text;
+  font-family: $font-family;
+  border: 1px solid $color-border;
+  background-color: $background-color;
+
   &-container {
     display: flex;
     align-items: center;
@@ -9,55 +14,69 @@
     height: 100vh;
   }
 
-  background-color: $color-grey;
-
   &__key-value {
-    display: inline-flex;
-    line-height: 1em;
+    padding-left: 1em;
+    min-width: 0;
 
     &:not(:last-child) {
+      display: inline-block;
+
       &:after {
         content: ',';
-        padding-top: 10px;
+        margin-right: 1em;
       }
     }
 
     &:first-child {
-      padding-left: 10px;
-  
+      display: inline-block;
+      padding-left: 1em;
+      margin-top: 1em;
+
       &:before {
-        padding-top: 10px;
-        content: '{';
+        padding-top: 1em;
+        content: '{' '\a';
+        white-space: pre;
       }
     }
 
     &:last-child {
-      padding-right: 10px;
+      display: inline-block;
+      margin-bottom: 1em;
 
       &:after {
-        padding-left: 10px;
-        padding-top: 10px;
-        content: '}';
+        content: '\a' '}';
+        white-space: pre;
+        margin-right: 1em;
       }
     }
   }
 
+  $padding-between-properties: 0.5em / 2; 
+
   &__key {
     line-height: 1em;
+    color: $color-property;
     display: inline-flex;
     font-weight: bold;
-    padding: 10px;
-    padding-right: 5px;
+    padding: $padding-between-properties;
+    padding-right: 0;
+
+    &:before {
+      content: ' ';
+      white-space: pre;
+    }
 
     &:after {
-      content: ':';
+      content: ': ';
+      white-space: pre;
     }
   }
 
   &__value {
+    color: $color-value;
     line-height: 1em;
     display: inline-flex;
-    padding: 10px 0;
+    padding: $padding-between-properties 0;
 
     &--string {
       &:before,

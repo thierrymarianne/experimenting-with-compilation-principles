@@ -1,10 +1,13 @@
 <template>
     <div class="dictionary-container">
         <div class="dictionary">
-            <div v-for="property in properties" class=dictionary__key-value>
-                <span class="dictionary__key">{{ property.key }}</span>
-                <span :class="getPropertyClass(property)">{{ property.value }}</span>
-            </div>
+            <template v-for="(property, index) in properties">
+                <div class="dictionary__key-value">
+                    <span class="dictionary__key">{{ property.key }}</span>
+                    <span :class="getPropertyClass(property)">{{ property.value }}</span>
+                </div>
+                <br v-if="(index < properties.length - 1)" />
+            </template>
         </div>
     </div>
 </template>
@@ -60,5 +63,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/dictionary.scss";
+@import '../styles/dictionary.scss';
 </style>
