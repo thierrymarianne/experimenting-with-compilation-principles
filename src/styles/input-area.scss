@@ -6,8 +6,8 @@
   display: flex;
   font-family: $font-family;
   font-size: 1em;
-  height: 250px;
   width: 500px;
+  padding: 0;
 
   &__textarea {
     display: inline-block;

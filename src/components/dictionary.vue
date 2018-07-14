@@ -33,13 +33,14 @@
                 try {
                     event.json = event.json
                         // Replace names non-enclosed in quotes with names enclosed in quotes
-                        .replace(/([^\{,"'\s\{]+):/g, '"$1":')
+                        .replace(/([^\{,"'\s\{]+)\s*:/g, '"$1":')
                         // Replace values having a non-number with the value enclosed in quotes
-                        .replace(/:\s*((?:[^,\s'"\}]*[^0-9,\s'"\}]{1,}[^\s,'"\}]*){1,})/g, ': "$1"')
+                        .replace(/:\s*((?:[^,\s"'\}]*[^0-9,\s"'\}]{1,}[^\s,"'\}]*){1,})/g, ': "$1"')
                         // Replace values starting with Number followed by non-number with 
                         // same values enclosed in quotes
-                        .replace(/:\s*(?=[1-9]{1,}}[^\d\}]{1,})([^'",\s\}]{1,})/g, ': "$1"')
-                        .replace(/:\s*(?![1-9]{1,})([^'",\s\}]{1,})/g, ': "$1"')
+                        .replace(/:\s*(?=[1-9]{1,}}[^\d\}]{1,})([^"',\s\}]{1,})/g, ': "$1"')
+                        .replace(/:\s*(?![1-9]{1,})([^"',\s\}]{1,})/g, ': "$1"')
+                        .replace(/'/g, '"')
 
                     this.dataStructure = JSON.parse(event.json);
                     EventHub.$emit('parsing.succeeded', {'parsedJson': this.dataStructure});
