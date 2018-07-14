@@ -1,0 +1,20 @@
+{
+  "extends": "airbnb-base",
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "overrides": [
+    {
+      "files": [ "src/**/*.js" ],
+      "rules": {
+        "indent": [
+          2,
+          4
+        ],
+        "semi": 2
+      }
+    }
+  ]
+}

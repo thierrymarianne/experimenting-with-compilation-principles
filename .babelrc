@@ -1,0 +1,13 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "modules": false,
+      "targets": {
+        "esmodules": true
+      }
+    }],
+    ["@babel/preset-stage-2", {
+      "decoratorsLegacy": true
+    }]
+  ]
+}
