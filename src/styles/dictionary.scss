@@ -4,13 +4,13 @@
   color: $color-text;
   font-family: $font-family;
   border: 1px solid $color-border;
-  background-color: $background-color;
+  background-color: $color-background;
 
   &-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100vw;
+    margin-left: 1em;
     height: 100vh;
   }
 

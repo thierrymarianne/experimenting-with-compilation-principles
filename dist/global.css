@@ -1,3 +1,10 @@
 body {
+  display: flex;
   background-color: #252526;
+  justify-content: center;
+}
+
+#data-structures {
+  display: flex;
+  width: 50vw;  
 }

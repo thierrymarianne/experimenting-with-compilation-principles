@@ -1,0 +1,40 @@
+@import './variables.scss';
+
+.input-area {
+  align-self: center;
+  border: 0;
+  display: flex;
+  font-family: $font-family;
+  font-size: 1em;
+  height: 250px;
+  width: 500px;
+
+  &__textarea {
+    display: inline-block;
+    background-color: $color-background;
+    border: 1px solid $color-border;
+    color: $color-textarea;
+    padding: 1em;
+    outline: none;
+    height: 200px;
+    width: 500px;
+  }
+
+  &__format-button {
+    border-color: $color-border;
+    border-radius: 0;
+    color: $color-text;
+    font-size: 1em;
+    font-weight: 100;
+    background-color: transparent;
+    display: inline-block;
+    padding: 0.5em;
+    outline: none;
+  }
+
+  &__format-button-label {
+    display: inline-block;
+    margin-top: 1em;
+    text-align: right;
+  }
+}
