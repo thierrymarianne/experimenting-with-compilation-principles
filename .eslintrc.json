@@ -1,8 +1,13 @@
 {
-  "extends": ["airbnb-base", "plugin:import/errors", "plugin:import/warnings"],
+  "extends": [
+    "airbnb-base", 
+    "plugin:import/errors", 
+    "plugin:import/warnings",
+    "plugin:vue/recommended"
+  ],
   "plugins": ["import"],
-  "parser": "babel-eslint",
   "parserOptions": {
+    "parser": "babel-eslint",
     "ecmaVersion": 6,
     "sourceType": "module"
   },

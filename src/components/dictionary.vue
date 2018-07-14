@@ -1,20 +1,64 @@
 <template>
     <div class="dictionary-container">
-        <div class="dictionary"></div>
+        <div class="dictionary">
+            <div v-for="property in properties" class=dictionary__key-value>
+                <span class="dictionary__key">{{ property.key }}</span>
+                <span :class="getPropertyClass(property)">{{ property.value }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import {isString} from 'lodash'
+
 export default {
     name: 'dictionary',
     props: {
-        dictionary: {
+        "literal-object": {
             type: Object
+        }
+    },
+    methods: {
+        getPropertyClass(property) {
+            const classes = {
+                'dictionary__value': true
+            };
+
+            classes['dictionary__value--string'] = isString(property.value);
+
+            return classes;
+        },
+        isString: function (subject) {
+            return isString(subject); 
+        }
+    },
+    computed: {
+        properties: function () {
+            const properties = [];
+
+            if (typeof this.dataStructure === 'undefined') {
+                return properties;
+            }
+
+            for (const property in this.dataStructure) {
+                properties.push({
+                    key: property,
+                    value: this.dataStructure[property]
+                });
+            }
+
+            return properties;
+        }
+    },
+    data: function () {
+        return {
+            dataStructure: this.literalObject
         }
     }
 };
 </script>
 
 <style lang="scss" scoped>
-    @import "../styles/dictionary.scss";
+@import "../styles/dictionary.scss";
 </style>

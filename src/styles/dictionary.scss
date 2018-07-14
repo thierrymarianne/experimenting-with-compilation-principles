@@ -1,17 +1,69 @@
-@import "./variables.scss";
+@import './variables.scss';
 
 .dictionary {
-    &-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
+  &-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  background-color: $color-grey;
+
+  &__key-value {
+    display: inline-flex;
+    line-height: 1em;
+
+    &:not(:last-child) {
+      &:after {
+        content: ',';
+        padding-top: 10px;
+      }
     }
 
-    display: flex;
-    background-color: $color-grey;
-    width: 50vw;
-    height: 50vh;
-    align-self: center;
+    &:first-child {
+      padding-left: 10px;
+  
+      &:before {
+        padding-top: 10px;
+        content: '{';
+      }
+    }
+
+    &:last-child {
+      padding-right: 10px;
+
+      &:after {
+        padding-left: 10px;
+        padding-top: 10px;
+        content: '}';
+      }
+    }
+  }
+
+  &__key {
+    line-height: 1em;
+    display: inline-flex;
+    font-weight: bold;
+    padding: 10px;
+    padding-right: 5px;
+
+    &:after {
+      content: ':';
+    }
+  }
+
+  &__value {
+    line-height: 1em;
+    display: inline-flex;
+    padding: 10px 0;
+
+    &--string {
+      &:before,
+      &:after {
+        content: '"';
+      }
+    }
+  }
 }
