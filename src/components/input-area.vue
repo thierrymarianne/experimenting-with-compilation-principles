@@ -1,27 +1,52 @@
 <template>
   <fieldset class="input-area">
     <textarea
-      class="input-area__textarea"
+      :class='getInputStatusClasses'
       ref="json"
       @change='getJson'
     ></textarea>
-    <label for="input-area__format-button" 
-           class="input-area__format-button-label">
-      <input 
-        class="input-area__format-button"
-        id="input-area__format-button" 
-        type="button" 
-        value="Format JavaScript Serialized Object Notation" />
-    </label>
   </fieldset>
 </template>
 
 <script>
+import EventHub from '../modules/event-hub' 
+
 export default {
   name: 'input-area',
+  mounted: function () {
+    EventHub.$on('parsing.failed', this.highlightInputError);
+    EventHub.$on('parsing.succeeded', this.fixedInput);
+  },
+  computed: {
+    getInputStatusClasses: function () {
+      const classes = {
+        'input-area__textarea': true
+      };
+
+      classes['input-area__textarea--error'] = this.error
+
+      return classes;
+    },  
+  },
   methods: {
     getJson: function () {
-      console.log(this.$refs.json.value);
+      this.json = this.$refs.json.value
+      EventHub.$emit('source.changed', {
+        json: this.json
+      });
+    },
+    highlightInputError: function () {
+      this.error = true;
+    },
+    fixedInput: function (event) {
+      this.error = false;
+      this.$refs.json.value = JSON.stringify(event.parsedJson);
+    }
+  },
+  data: function () {
+    return {
+      json: {},
+      error: false
     }
   }
 }

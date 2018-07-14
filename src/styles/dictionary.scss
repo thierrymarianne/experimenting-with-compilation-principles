@@ -16,7 +16,6 @@
 
   &__key-value {
     padding-left: 1em;
-    min-width: 0;
 
     &:not(:last-child) {
       display: inline-block;
@@ -67,7 +66,7 @@
     }
 
     &:after {
-      content: ': ';
+      content: ':';
       white-space: pre;
     }
   }

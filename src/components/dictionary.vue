@@ -13,55 +13,80 @@
 </template>
 
 <script>
-import {isString} from 'lodash'
+    import { isString } from 'lodash'
+    import EventHub from '../modules/event-hub'
 
-export default {
-    name: 'dictionary',
-    props: {
-        "literal-object": {
-            type: Object
-        }
-    },
-    methods: {
-        getPropertyClass(property) {
-            const classes = {
-                'dictionary__value': true
-            };
-
-            classes['dictionary__value--string'] = isString(property.value);
-
-            return classes;
+    export default {
+        name: 'dictionary',
+        props: {
+            "literal-object": {
+                type: Object
+            }
         },
-        isString: function (subject) {
-            return isString(subject); 
-        }
-    },
-    computed: {
-        properties: function () {
-            const properties = [];
+        mounted: function () {
+            EventHub.$on('source.changed', this.updateDataStructure);
+        },
+        methods: {
+            updateDataStructure: function (event) {
+                const previousDataStructure = this.dataStructure;
 
-            if (typeof this.dataStructure === 'undefined') {
+                try {
+                    event.json = event.json
+                        // Replace names non-enclosed in quotes with names enclosed in quotes
+                        .replace(/([^\{,"'\s\{]+):/g, '"$1":')
+                        // Replace values having a non-number with the value enclosed in quotes
+                        .replace(/:\s*((?:[^,\s'"\}]*[^0-9,\s'"\}]{1,}[^\s,'"\}]*){1,})/g, ': "$1"')
+                        // Replace values starting with Number followed by non-number with 
+                        // same values enclosed in quotes
+                        .replace(/:\s*(?=[1-9]{1,}}[^\d\}]{1,})([^'",\s\}]{1,})/g, ': "$1"')
+                        .replace(/:\s*(?![1-9]{1,})([^'",\s\}]{1,})/g, ': "$1"')
+
+                    this.dataStructure = JSON.parse(event.json);
+                    EventHub.$emit('parsing.succeeded', {'parsedJson': this.dataStructure});
+                } catch (error) {
+                    this.dataStructure = previousDataStructure;
+                    EventHub.$emit('parsing.failed', {error: error});
+                }
+            },
+            getPropertyClass: function (property) {
+                const classes = {
+                    'dictionary__value': true
+                };
+
+                classes['dictionary__value--string'] = isString(property.value);
+
+                return classes;
+            },
+            isString: function (subject) {
+                return isString(subject);
+            }
+        },
+        computed: {
+            properties: function () {
+                const properties = [];
+
+                if (typeof this.dataStructure === 'undefined') {
+                    return properties;
+                }
+
+                for (const property in this.dataStructure) {
+                    properties.push({
+                        key: property,
+                        value: this.dataStructure[property]
+                    });
+                }
+
                 return properties;
             }
-
-            for (const property in this.dataStructure) {
-                properties.push({
-                    key: property,
-                    value: this.dataStructure[property]
-                });
+        },
+        data: function () {
+            return {
+                dataStructure: this.literalObject
             }
-
-            return properties;
         }
-    },
-    data: function () {
-        return {
-            dataStructure: this.literalObject
-        }
-    }
-};
+    };
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/dictionary.scss';
+    @import '../styles/dictionary.scss';
 </style>
