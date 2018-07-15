@@ -16,8 +16,7 @@
       "files": [ "src/**/*.js" ],
       "rules": {
         "indent": [
-          2,
-          4
+          ["error", 2]
         ],
         "semi": 2
       }

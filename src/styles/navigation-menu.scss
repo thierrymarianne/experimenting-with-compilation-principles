@@ -1,0 +1,52 @@
+@import './variables.scss';
+
+.navigation-menu {
+  &__container {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+  } 
+
+  &__header {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  &__menu {
+    border: 1px solid $color-border;
+    display: inline-flex;
+    margin: 1rem 0 0 1rem;
+    padding: 0;
+    color: $color-text;
+    font-family: $font-family-menu;
+    font-size: 1.5em;
+    list-style-type: none;
+  }
+
+  &__menu-item {
+    color: $color-text-clickable;
+    text-decoration: underline;
+    cursor: pointer;
+    border-right: 1px solid $color-border;
+    padding: 1rem;
+
+    &:last-child {
+      border: none;
+    }
+
+    &--active {
+      color: $color-text-active;
+      text-decoration: none;
+      cursor: default;
+    }
+  }
+
+  &__title {
+    display: flex;
+    color: $color-text;
+    font-family: $font-family-title;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    width: 1024px;
+  }
+}

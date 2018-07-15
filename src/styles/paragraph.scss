@@ -1,0 +1,20 @@
+@import './variables.scss';
+
+.paragraph {
+  color: $color-text;
+  display: inline-block;
+  align-self: center;
+  font-family: $font-family-paragraph;
+  font-size: 1rem;
+  font-weight: 100;
+  line-height: 1.5rem;
+  padding: 1rem;
+  margin-top: 0;
+  white-space: pre;
+  text-align: left;
+
+  &:first-letter {
+    font-size: 1.2rem;
+    font-family: $font-family-cursive;
+  }
+}

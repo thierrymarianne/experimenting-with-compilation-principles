@@ -43,10 +43,10 @@
                         .replace(/'/g, '"')
 
                     this.dataStructure = JSON.parse(event.json);
-                    EventHub.$emit('parsing.succeeded', {'parsedJson': this.dataStructure});
+                    EventHub.$emit('parsing.succeeded', { 'parsedJson': this.dataStructure });
                 } catch (error) {
                     this.dataStructure = previousDataStructure;
-                    EventHub.$emit('parsing.failed', {error: error});
+                    EventHub.$emit('parsing.failed', { error: error });
                 }
             },
             getPropertyClass: function (property) {

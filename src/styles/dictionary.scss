@@ -1,7 +1,7 @@
 @import './variables.scss';
 
 .dictionary {
-  color: $color-text;
+  color: $color-text-default;
   font-family: $font-family;
   border: 1px solid $color-border;
   background-color: $color-background;
@@ -11,18 +11,16 @@
     align-items: center;
     justify-content: center;
     margin-left: 1em;
-    height: 100vh;
   }
 
   &__key-value {
-    padding-left: 1em;
+    padding: 0 1em;
 
     &:not(:last-child) {
       display: inline-block;
 
       &:after {
         content: ',';
-        margin-right: 1em;
       }
     }
 

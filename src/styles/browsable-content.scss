@@ -1,0 +1,7 @@
+@import './variables.scss';
+
+.browsable-content {
+  display: flex;
+  max-width: 1024px;
+  flex-wrap: wrap;
+}

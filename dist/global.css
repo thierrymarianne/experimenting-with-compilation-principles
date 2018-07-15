@@ -2,9 +2,11 @@ body {
   display: flex;
   background-color: #252526;
   justify-content: center;
+  margin: 0;
 }
 
-#data-structures {
+#app {
   display: flex;
-  width: 50vw;  
+  width: 100%;
+  justify-content: center;
 }

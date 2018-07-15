@@ -1,0 +1,20 @@
+.about {
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    justify-content: center;
+  }
+
+  &__example {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
