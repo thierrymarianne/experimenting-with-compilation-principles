@@ -13,6 +13,10 @@
   white-space: pre;
   text-align: left;
 
+  &--align-right {
+    text-align: right;
+  }
+
   &:first-letter {
     font-size: 1.2rem;
     font-family: $font-family-cursive;

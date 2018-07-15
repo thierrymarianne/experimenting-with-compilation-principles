@@ -5,16 +5,22 @@
 @import url(https://fonts.googleapis.com/css?family=Niconne);
 @import url(https://fonts.googleapis.com/css?family=Libre+Baskerville);
 
-$color-background: #1e1e1e;
-
+$color-black: #1e1e1e;
 $color-beige: #d4d4d4;
 $color-orange: #ce9178;
 $color-green: #b4cea8;
+
+$color-background: $color-black;
+$color-background-code: $color-black;
+
+$color-border-code: $color-beige;
+$color-border-clickable: $color-green;
 
 $color-text-default: $color-beige;
 $color-text-link: $color-green;
 $color-text: $color-orange;
 $color-text-active: $color-orange;
+$color-text-code: $color-beige;
 $color-text-clickable: $color-green;
 $color-textarea: #d4d4d3;
 $color-error: #94151b;
@@ -23,8 +29,13 @@ $color-border-menu: $color-orange;
 $color-value: #ce9178;
 $color-property: #569CD3;
 
-$font-family: 'Ubuntu Mono', monospace;
+$font-family-monospace: 'Ubuntu Mono', monospace;
+
+$font-family: $font-family-monospace ;
+$font-family-code: $font-family-monospace;
 $font-family-menu: Dosis, sans-serif;
 $font-family-title: 'Libre Baskerville', serif;
 $font-family-paragraph: Roboto, sans-serif;
 $font-family-cursive: 'Libre Baskerville', serif;
+
+$width-max: calc(100% - 1rem);

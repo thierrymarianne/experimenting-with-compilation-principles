@@ -1,10 +1,27 @@
 <template>
-  <p class="paragraph"><slot></slot></p>
+  <p :class="getClasses()"><slot></slot></p>
 </template>
 
 <script>
 export default {
-  name: 'paragraph'
+  name: 'paragraph',
+  methods: {
+    getClasses: function () {
+      const classes = { 'paragraph': true };
+      
+      if (this.align !== 'left') {
+        classes['paragraph--align-' + this.align] = true
+      }
+
+      return classes;
+    }
+  },
+  props: {
+    align: {
+      type: String,
+      default: 'left'
+    }
+  }
 }
 </script>
 

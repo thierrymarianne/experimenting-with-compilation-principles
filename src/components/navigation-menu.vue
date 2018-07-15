@@ -14,13 +14,24 @@
           </router-link>
         </ul>
       </header>
-      <h1 class="navigation-menu__title">{{ getActiveMenuItem.text }}</h1>
+      <h1 :class="getClasses()">{{ getActiveMenuItem.text }}</h1>
     </div>
 </template>
 
 <script>
 export default {
   name: 'navigation-menu',
+  methods: {
+    getClasses: function () {
+      const classes = { 'navigation-menu__title': true };
+
+      if (this.getActiveMenuItem.key == 'about') {
+        classes['navigation-menu__title--align-right'] = true
+      }
+
+      return classes;
+    }
+  },
   computed: {
     getMenuItems: function () {
       return this.menuItems;

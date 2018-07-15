@@ -40,7 +40,10 @@ export default {
     },
     fixedInput: function (event) {
       this.error = false;
-      this.$refs.json.value = JSON.stringify(event.parsedJson);
+
+      if (typeof this.$refs.json !== 'undefined') {
+        this.$refs.json.value = JSON.stringify(event.parsedJson);
+      }
     }
   },
   data: function () {

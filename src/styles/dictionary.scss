@@ -3,18 +3,20 @@
 .dictionary {
   color: $color-text-default;
   font-family: $font-family;
-  border: 1px solid $color-border;
-  background-color: $color-background;
+  border-left: 1px solid $color-border;
+  margin-top: 1rem;
+  padding: 1rem;
+  width: 100%;
 
   &-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 1em;
+    width: 100%;
   }
 
   &__key-value {
-    padding: 0 1em;
+    padding: 0;
 
     &:not(:last-child) {
       display: inline-block;
@@ -26,8 +28,6 @@
 
     &:first-child {
       display: inline-block;
-      padding-left: 1em;
-      margin-top: 1em;
 
       &:before {
         padding-top: 1em;
@@ -38,7 +38,6 @@
 
     &:last-child {
       display: inline-block;
-      margin-bottom: 1em;
 
       &:after {
         content: '\a' '}';

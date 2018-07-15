@@ -25,8 +25,13 @@
         },
         mounted: function () {
             EventHub.$on('source.changed', this.updateDataStructure);
+            EventHub.$on('source.copied', this.pasteSource)
         },
         methods: {
+            pasteSource: function (event) {
+                event.json = event.code;
+                EventHub.$emit('source.changed', event);
+            },
             updateDataStructure: function (event) {
                 const previousDataStructure = this.dataStructure;
 
