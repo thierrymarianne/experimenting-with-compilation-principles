@@ -1,8 +1,17 @@
 <template>
   <div class='about__container'>
     <paragraph>When playing around with <browsable-link href='https://vuejs.org'>vue.js</browsable-link>,
-  I've stumbled upon several limitations of my own understanding 
-  with regards to how a source code can be parsed before interpretation.</paragraph>
+I've stumbled upon several limitations of my own understanding 
+with regards to how a source code can be parsed before interpretation.
+
+My original intention consisted in having a better sense of classic data structures
+(as plain and simple as a JavaScript object).
+ 
+I had the following requirements in mind:  
+ - A visualization of a data structure would be available
+ - The representation of a data structure would be reactive i.e.
+ altering the data structure would update its visual representation
+</paragraph>
 
     <div class="about__content">
       <div class="about__example">

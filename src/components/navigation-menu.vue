@@ -2,9 +2,16 @@
     <div class="navigation-menu__container">
       <header class='navigation-menu__header'>
         <ul class="navigation-menu__menu">
-          <li v-for="item in getMenuItems"
-              @click='navigateTo(item.key)'
-              :class="getMenuItemClasses(item.key)">{{ item.text }}</li>
+          <router-link 
+            v-for="item in getMenuItems"
+            :key='item.key'
+            :to='item.url'
+            active-class='navigation-menu__menu-item--active'
+            class='navigation-menu__menu-item'
+            tag='li' 
+            >
+            {{ item.text }}  
+          </router-link>
         </ul>
       </header>
       <h1 class="navigation-menu__title">{{ getActiveMenuItem.text }}</h1>
@@ -12,8 +19,6 @@
 </template>
 
 <script>
-import EventHub from '../modules/event-hub'
-
 export default {
   name: 'navigation-menu',
   computed: {
@@ -21,31 +26,14 @@ export default {
       return this.menuItems;
     },
     getActiveMenuItem: function () {
-      const activeMenuItem = this.selectedMenuItem;
+      const activeMenuItem = this.$route.name;
 
       return this.menuItems.filter(function (item) {
           return item.key === activeMenuItem;
       })[0];
     }
   },
-  methods: {
-    navigateTo: function (key) {
-      this.selectedMenuItem = key;
-      EventHub.$emit('menu_item.clicked', {target: this.getActiveMenuItem.key})
-    },
-    getMenuItemClasses: function (key) {
-      const classes = { 'navigation-menu__menu-item': true };
-
-      classes['navigation-menu__menu-item--active'] = key == this.selectedMenuItem;
-
-      return classes;
-    }    
-  },
   props: {
-    activeMenuItem: {
-      type: String,
-      default: 'about'
-    },
     menuItems: {
       type: Array,
       default: function () {
@@ -53,19 +41,16 @@ export default {
           {
             key: 'introduction',
             text: 'Introduction',
+            url: '/introduction',
           }, 
           {
             key: 'about',
             text: 'About',
+            url: '/about',
           }
         ];
       }
     }
-  },
-  data: function () {
-    return {
-      selectedMenuItem: this.activeMenuItem
-    };
   }
 }
 </script>
