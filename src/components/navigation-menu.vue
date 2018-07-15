@@ -23,13 +23,10 @@ export default {
   name: 'navigation-menu',
   methods: {
     getClasses: function () {
-      const classes = { 'navigation-menu__title': true };
-
-      if (this.getActiveMenuItem.key == 'about') {
-        classes['navigation-menu__title--align-right'] = true
-      }
-
-      return classes;
+      return {
+        'navigation-menu__title': true,
+        'navigation-menu__title--align-right': true
+      };
     }
   },
   computed: {

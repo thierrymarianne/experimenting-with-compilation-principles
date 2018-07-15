@@ -1,0 +1,17 @@
+@import './variables.scss';
+
+.question {
+  cursor: pointer;
+
+  &__question {
+    margin-bottom: 0;
+  }
+
+  &__answer {
+    color: $color-text-answer; 
+
+    &:first-letter {
+      font-size: 1rem;
+    }
+  }
+}

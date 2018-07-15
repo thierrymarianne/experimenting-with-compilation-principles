@@ -7,15 +7,12 @@
 
 <script>
 import NavigationMenu from './navigation-menu.vue'
-import Content from './content/index'
 import RouterView from 'vue-router'
 
 export default {
   name: 'browsable-content',
   components: {
-    NavigationMenu,
-    About: Content.About,
-    Introduction: Content.Introduction
+    NavigationMenu
   }
 }
 </script>

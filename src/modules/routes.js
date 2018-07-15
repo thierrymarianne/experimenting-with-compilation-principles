@@ -10,6 +10,9 @@ export default [
         path: 'introduction',
         name: 'introduction',
         component: Content.Introduction,
+        props: {
+          subtitle: 'Language processors',
+        },
       },
       {
         path: 'about',

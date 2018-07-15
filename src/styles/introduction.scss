@@ -1,0 +1,17 @@
+@import './variables.scss';
+
+.introduction {
+  &__container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    width: 50%
+  }
+
+  &__subtitle {
+    color: $color-text-title;
+    font-family: $font-family-title;
+    font-size: 1.2em;
+    width: 100%;
+  }
+}

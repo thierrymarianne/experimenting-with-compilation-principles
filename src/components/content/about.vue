@@ -1,6 +1,6 @@
 <template>
   <div class='about__container'>
-    <div class='about__left-column'>
+    <section class='about__left-column'>
       <paragraph align='right'>When playing with <browsable-link href='https://vuejs.org'>vue.js</browsable-link>,
 I've stumbled upon several limitations of
 my own understanding  with regards to
@@ -34,20 +34,22 @@ using regular expressions
 to fix half-compliant JSON
 would not help much to deal with 
 the task at hand, I've decided to dive into 
-<em>Compilers - Principles, Techniques, & Tools</em></paragraph>
-    </div>
+<em>Compilers - Principles, Techniques, & Tools</em>
+in order to exercice myself
+in learning the basics of compilation</paragraph>
+    </section>
 
-    <div class='about__right-column'>
+    <section class='about__right-column'>
       <div class="about__content">
         <div class="about__example">
           <input-area></input-area>
           <dictionary 
-            :literal-object="defaultExample"
+            :literal-object="emptyExample"
             ref="dictionary">
           </dictionary>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -83,6 +85,12 @@ export default {
     }
   }, 
   props: {
+    emptyExample: {
+      type: Object,
+      default: function () {
+        return {};
+      }
+    },
     defaultExample: {
       type: Object,
       default: function () {
@@ -103,5 +111,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../../styles/about.scss' 
+  @import '../../styles/about.scss';
 </style>
