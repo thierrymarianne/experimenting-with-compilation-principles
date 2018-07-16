@@ -34,12 +34,38 @@ because it executes the source program statement by statement.</paragraph>
     <question>
         <template slot-scope='slotProps'>
           <paragraph :class='slotProps.question.classes.question'>What advantages are there to a language-processing system
-in which the compiler produces assembly language rather than machine language?</paragraph>
+in which the compiler produces assembly language
+rather than machine language?</paragraph>
           <paragraph
             :class='slotProps.question.classes.answer'
             v-if='slotProps.question.answerIsVisible'
           >The compiler may produce an assembly-language as its output,
-because assembly language is easier to produce as output and is easier to debug.x</paragraph>
+because assembly language is easier to produce as output and is easier to debug.</paragraph>
+        </template>
+    </question>
+    <question>
+        <template slot-scope='slotProps'>
+          <paragraph :class='slotProps.question.classes.question'>A compiler that translates a high-level language
+into another high-level language
+is called a <em>source-to-source</em> translator. 
+What advantages are there to using C
+as a target language for a compiler?</paragraph>
+          <paragraph
+            :class='slotProps.question.classes.answer'
+            v-if='slotProps.question.answerIsVisible'
+          >There is a C compiler for almost every system ever made.
+<browsable-link href='http://bit.ly/advantages-of-c-compiler-as-target-language'>See original Quora answer</browsable-link></paragraph>
+        </template>
+    </question>
+    <question>
+        <template slot-scope='slotProps'>
+          <paragraph :class='slotProps.question.classes.question'>Describe some of the tasks
+that an assembler needs to perform.</paragraph>
+          <paragraph
+            :class='slotProps.question.classes.answer'
+            v-if='slotProps.question.answerIsVisible'
+          >An assembler produces relocatable machine code as its output
+by processing an assembly language</paragraph>
         </template>
     </question>
   </div>
@@ -48,6 +74,7 @@ because assembly language is easier to produce as output and is easier to debug.
 <script>
 import Paragraph from '../paragraph.vue'
 import Question from '../question.vue'
+import BrowsableLink from '../browsable-link.vue'
 
 export default {
   name: 'introduction',
@@ -59,6 +86,7 @@ export default {
   components: {
     paragraph: Paragraph,
     question: Question,
+    'browsable-link': BrowsableLink,
   },
   methods: {
     getSubtitleClasses: function () {

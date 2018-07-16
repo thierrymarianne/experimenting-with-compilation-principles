@@ -11,23 +11,25 @@
     display: flex;
     justify-content: center;
     height: 80px;
+    border-bottom: 1px solid $color-border-menu;
   }
 
   &__menu {
     border: 0;
     display: inline-flex;
-    margin: 1rem 0 0 1rem;
+    margin: 1rem 0 0 0;
     padding: 0;
     color: $color-text;
     font-family: $font-family-menu;
     font-size: 1.5em;
     list-style-type: none;
+    width: 50%;
   }
 
   &__menu-item {
     color: $color-text-clickable;
-    text-decoration: underline;
     cursor: pointer;
+    text-decoration: underline;
     border-right: 1px solid $color-border-menu;
     padding: 1rem;
 
@@ -40,6 +42,11 @@
       text-decoration: none;
       cursor: default;
       font-weight: bold;
+      border-bottom: 4px solid $color-border-menu;
+
+      &:last-child {
+        border-bottom: 4px solid $color-border-menu;
+      }
     }
   }
 

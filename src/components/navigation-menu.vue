@@ -50,8 +50,11 @@ export default {
             key: 'introduction',
             text: 'Introduction',
             url: '/introduction',
-          }, 
-          {
+          }, {
+            key: 'structure-of-a-compiler',
+            text: 'The Structure of a Compiler',
+            url: '/structure-of-a-compiler',
+          }, {
             key: 'about',
             text: 'About',
             url: '/about',

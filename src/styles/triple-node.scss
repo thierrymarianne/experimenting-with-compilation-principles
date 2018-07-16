@@ -1,0 +1,78 @@
+@import './variables.scss';
+
+.triple-node {
+  &__parent {
+    color: $color-text-tree;
+    justify-content: center;
+  }
+
+  &__children {
+    display: flex;
+    color: $color-text-tree;
+    justify-content: center;
+  }
+
+  &__left-child,
+  &__right-child {
+    display: flex;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  &__right-child {
+    padding-left: 1rem;
+
+    > :first-child {
+      margin-left: calc(100% - 25%);      
+    }
+  }
+
+  &__arrows {
+    display: flex;
+
+    &--only-child {
+      justify-content: center;
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    margin: 0.5rem 0;
+  }
+
+  &__left-arrow {
+    transform: rotate(45deg)
+  }
+
+  &__right-arrow {
+    transform: rotate(-45deg)
+  }
+
+  &__left-arrow,
+  &__right-arrow {
+    flex: 66%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__arrow-edge,
+  &__left-arrow-edge,
+  &__right-arrow-edge {
+    display: flex;
+    align-self: center;
+    width: 1px;
+    height: 15px;
+    background-color: $color-background-arrow-edge;
+  }  
+
+  &__right-arrow-tip,
+  &__left-arrow-tip {
+    display: flex;
+    align-self: center;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent; 
+    border-top: 5px solid transparent;
+  }
+}

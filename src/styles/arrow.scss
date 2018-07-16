@@ -1,0 +1,44 @@
+@import './variables.scss';
+
+.arrow {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+
+  &__edge {
+    width: 2px;
+    background-color: $color-background-arrow-tip;
+    height: 10px;
+    align-self: center;
+    display: flex;
+    margin: 1rem;
+
+    &--bottom {
+      margin-top: 0.4rem;
+      margin-bottom: 0;
+    }
+
+    &--top {
+      margin-bottom: 0.1rem;
+      margin-top: 0;
+    }
+  }
+
+  &__text {
+    color: $color-text-default;
+    font-family: $font-family-code;
+    font-size: 1rem;
+    line-height: 1rem;
+    text-align: center;
+  }
+
+  &__tip {
+    border: 10px solid transparent; 
+    border-top: 10px solid $color-border-arrow-tip; 
+    width: 0;
+    height: 0;
+    display: flex;
+    align-self: center;
+    margin-top: 0;
+  }
+}

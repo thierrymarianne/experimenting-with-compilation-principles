@@ -12,6 +12,9 @@
     color: $color-text-title;
     font-family: $font-family-title;
     font-size: 1.2em;
-    width: 100%;
+    padding-left: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    width: calc(50% - 2rem);
   }
 }

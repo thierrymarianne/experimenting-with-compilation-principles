@@ -1,0 +1,46 @@
+@import './variables.scss';
+
+$box-width: calc(100% - 12px);
+
+.box {
+  &__container {
+    display: flex;
+    width: $box-width;
+  }
+
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
+  color: $color-text-default;
+  border: 1px solid $color-border-box;
+  font-family: $font-family-code;
+  font-size: 1.2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  width: $box-width;
+
+  &__highlight {
+    border-color: $color-border-box-highlight;
+    color: $color-border-box-highlight;
+  }
+
+  &__highlightable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: $color-border-box-highlight;
+      color: $color-border-box-highlight;
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-self: center;
+    margin-top: -1rem;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left: 10px solid $color-border-box-highlight;
+  }
+}

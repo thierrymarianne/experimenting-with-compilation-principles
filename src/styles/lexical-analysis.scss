@@ -1,0 +1,32 @@
+@import './variables.scss';
+
+.lexical-analysis {
+  display: flex;
+  flex-direction: column;
+
+  &__em {
+    color: $color-text-emphasis; 
+  }
+
+  &__paragraph {
+    height: auto;
+  }
+
+  &__example {
+    border: 1px dotted $color-border-button;
+    color: $color-text-button;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.1rem;
+    display: flex;
+    align-self: center;
+    background-color: $color-background-button;
+    border-radius: 0;
+    padding: 1rem;
+
+    &:hover {
+      border: 1px dotted $color-border-button-highlight;
+      color: $color-text-button-highlight;
+    }
+  }
+}

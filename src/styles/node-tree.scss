@@ -1,0 +1,47 @@
+@import './variables.scss';
+
+.node-tree {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+
+  &__root {
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+  }
+
+  &__edge-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &__edge {
+    width: 2px;
+    background-color: $color-background-arrow-tip;
+    height: 10px;
+    align-self: center;
+    display: flex;
+    margin: 1rem;
+
+    &--bottom {
+      margin-top: 0.4rem;
+      margin-bottom: 0;
+    }
+
+    &--top {
+      margin-bottom: 0.1rem;
+      margin-top: 0;
+    }
+  }
+
+  &__tip {
+    border: 10px solid transparent; 
+    border-top: 10px solid $color-border-arrow-tip; 
+    width: 0;
+    height: 0;
+    display: flex;
+    align-self: center;
+    margin-top: 0;
+  }
+}

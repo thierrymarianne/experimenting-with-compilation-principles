@@ -18,6 +18,4 @@ const app = new Vue({
   },
 });
 
-router.replace('/introduction');
-
 window.app = app;

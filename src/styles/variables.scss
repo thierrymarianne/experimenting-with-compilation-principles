@@ -9,16 +9,29 @@ $color-black: #1e1e1e;
 $color-beige: #d4d4d4;
 $color-orange: #ce9178;
 $color-green: #b4cea8;
+$color-yellow: #dab988;
 
 $color-background: $color-black;
 $color-background-code: $color-black;
+$color-background-arrow-tip: $color-beige;
+$color-background-arrow-edge: $color-beige;
+$color-background-button: $color-black;
 
+$color-border-box: $color-beige;
+$color-border-box-highlight: $color-orange;
+$color-border-button: $color-orange;
+$color-border-button-highlight: $color-yellow;
 $color-border-code: $color-beige;
 $color-border-clickable: $color-green;
+$color-border-arrow-tip: $color-beige;
 
+$color-text-tree: $color-beige;
+$color-text-button: $color-orange;
+$color-text-button-highlight: $color-yellow;
 $color-text-default: $color-beige;
 $color-text-link: $color-green;
 $color-text: $color-orange;
+$color-text-emphasis: $color-beige;
 $color-text-title: $color-orange;
 $color-text-active: $color-orange;
 $color-text-answer: $color-beige;
@@ -39,5 +52,6 @@ $font-family-menu: Dosis, sans-serif;
 $font-family-title: 'Libre Baskerville', serif;
 $font-family-paragraph: Roboto, sans-serif;
 $font-family-cursive: 'Libre Baskerville', serif;
+$font-family-serif: serif;
 
 $width-max: calc(100% - 1rem);

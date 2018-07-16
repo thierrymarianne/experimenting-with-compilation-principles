@@ -1,0 +1,28 @@
+@import './variables.scss';
+
+.structure-of-a-compiler {
+  text-align: center;
+  display: flex;
+
+  &__left-column {
+    flex: 0.5;
+  }
+ 
+  &__right-column {
+    flex: 0.5;
+    padding-left: 2rem;
+    visibility: hidden;
+    flex-direction: column4;
+
+    &--visible {
+      display: flex;
+      visibility: visible;
+    }
+  }
+
+  &__phase {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
+}

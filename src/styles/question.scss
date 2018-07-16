@@ -2,9 +2,12 @@
 
 .question {
   cursor: pointer;
+  width: 100%;
 
   &__question {
     margin-bottom: 0;
+    width: calc(50% - 2rem);
+    text-align: right;
   }
 
   &__answer {
