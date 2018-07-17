@@ -1,9 +1,14 @@
 <template>
-  <div class='box__container' v-on:click='toggleBoxHighlight'>
+  <div
+    class='box__container' 
+    v-on:click='toggleBoxHighlight'
+  >
     <div :class='getBoxClasses'>
       <slot></slot>
     </div>
-    <div v-if='isHighlighted' class='box__arrow'></div>
+    <transition name='box__translatable'>
+      <div v-if='isHighlighted' class='box__arrow'></div>
+    </transition>
   </div>
 </template>
 
@@ -30,11 +35,16 @@ export default {
       this.showDescription(this.name);
     },
     toggleBoxHighlight: function () {
+      if (this.highlighted === undefined) {
+        return;
+      }
+
       if (this.isHighlightable) {
+        window.scrollTo(0, this.$el.offsetTop - 10);
         this.highlight();
 
         return;
-      } 
+      }
 
       this.unhighlight();
     }

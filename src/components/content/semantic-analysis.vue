@@ -1,5 +1,5 @@
 <template>
-  <div class='semantic-analyzer'>
+  <div class='semantic-analysis'>
     <description>The <em>semantic analyzer</em> uses the syntax tree and
 the information in the symbol table to check
 the source program for semantic consistency
@@ -35,10 +35,9 @@ a floating-point number</description>
 
 <script>
 import Description from '../description.vue';
-import EventHub from '../../modules/event-hub';
 
 export default {
-  name: 'semantic-analyzer',
+  name: 'semantic-analysis',
   components: {
     description: Description
   },
@@ -46,5 +45,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../../styles/semantic-analyzer.scss';
+  @import '../../styles/semantic-analysis.scss';
 </style>

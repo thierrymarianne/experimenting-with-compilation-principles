@@ -1,9 +1,14 @@
 @import './variables.scss';
 
-.syntax-analyzer {
+.semantic-analysis {
   display: flex;
-
+  
   em {
     color: $color-text-emphasis; 
+  }
+
+  strong {
+    font-weight: bold;
+    color: $color-text-bold;
   }
 }

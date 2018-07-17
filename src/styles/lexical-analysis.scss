@@ -1,0 +1,10 @@
+@import './variables.scss';
+
+.lexical-analysis {
+  display: flex;
+  flex-direction: column;
+
+  em {
+    color: $color-text-emphasis; 
+  }
+}

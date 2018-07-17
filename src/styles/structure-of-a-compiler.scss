@@ -4,6 +4,24 @@
   text-align: center;
   display: flex;
 
+  &__fadeable-enter-active,
+  &__fadeable-leave-active {
+    transition: opacity 1s;
+  }
+
+  &__fadeable-enter,
+  &__fadeable-leave-to {
+    opacity: 0;
+  }    
+
+  &__scrollable {
+    position: sticky;
+    top: 1em;
+    display: block;
+    overflow: visible;
+    max-height: 0;
+  }
+
   &__left-column {
     flex: 0.5;
   }
@@ -13,6 +31,7 @@
     padding-left: 2rem;
     flex-direction: column;
     visibility: hidden;
+    position: relative;
 
     &--visible {
       display: flex;

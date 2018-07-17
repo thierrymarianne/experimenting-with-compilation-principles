@@ -1,7 +1,7 @@
 <template>
   <div class='structure-of-a-compiler'>
     <section class='structure-of-a-compiler__left-column'>
-      <button 
+      <button
         v-if='exampleIsVisible'
         v-on:click='toggleExampleVisibility' 
         class='structure-of-a-compiler__example'>Hide example</button>
@@ -34,17 +34,17 @@
         </template>
       </div>
     </section>
-    <section
-      :class='columnClasses("lexical-analyzer")'>
-      <lexical-analyzer></lexical-analyzer>
-    </section>
-    <section
-      :class='columnClasses("syntax-analyzer")'>
-      <syntax-analyzer></syntax-analyzer>
-    </section>
-    <section
-      :class='columnClasses("semantic-analyzer")'>
-      <semantic-analyzer></semantic-analyzer>
+    <section 
+      :class='columnClasses(phaseName)'
+      v-for='(phaseName, index) in getPhases'
+      :key='index'>
+      <div class='structure-of-a-compiler__scrollable'>
+        <transition name='structure-of-a-compiler__fadeable'>
+          <component 
+            v-bind:is='phaseName' 
+            v-if='isVisible(phaseName) || phaseName == "lexical-analysis"'></component>
+        </transition>
+      </div>
     </section>
   </div>
 </template>
@@ -55,9 +55,10 @@ import Box from '../structure-of-a-compiler/box.vue';
 import EventHub from '../../modules/event-hub'; 
 import NodeTree from '../structure-of-a-compiler/node-tree.vue'; 
 import CodeSample from '../structure-of-a-compiler/code-sample.vue'; 
-import LexicalAnalyzer from './lexical-analyzer.vue';
-import SyntaxAnalyzer from './syntax-analyzer.vue';
-import SemanticAnalyzer from './semantic-analyzer.vue';
+import LexicalAnalysis from './lexical-analysis.vue';
+import SyntaxAnalysis from './syntax-analysis.vue';
+import SemanticAnalysis from './semantic-analysis.vue';
+import IntermediateCodeGeneration from './intermediate-code-generation.vue';
 
 import MutationTypes from '../../store/modules/mutation-types';
 
@@ -73,9 +74,10 @@ export default {
     box: Box,
     'node-tree': NodeTree,
     'code-sample': CodeSample,
-    'lexical-analyzer': LexicalAnalyzer,
-    'syntax-analyzer': SyntaxAnalyzer,
-    'semantic-analyzer': SemanticAnalyzer,
+    'lexical-analysis': LexicalAnalysis,
+    'syntax-analysis': SyntaxAnalysis,
+    'semantic-analysis': SemanticAnalysis,
+    'intermediate-code-generation': IntermediateCodeGeneration,
   },
   computed: {
     ...mapGetters([
@@ -84,15 +86,21 @@ export default {
       'exampleIsVisible',
       'sequence'
     ]),
+    getPhases() {
+      return Object.keys(this.visibilityOfDescriptions);
+    }
   },
   methods: {
+    isVisible: function (phaseName) {
+      return phaseName === this.visibleDescription;
+    },
     columnClasses: function (phaseName) {
       const classes = { 
         'structure-of-a-compiler__right-column': true,
         'structure-of-a-compiler__right-column--visible': this.visibilityOfDescriptions[phaseName] 
       }
 
-      if (this.visibleDescription === null && phaseName !== 'lexical-analyzer') {
+      if (this.visibleDescription === null && phaseName !== 'lexical-analysis') {
         classes['structure-of-a-compiler__right-column--hidden'] = true;
 
         return classes;
@@ -121,19 +129,20 @@ export default {
           phases_of_a_compiler: [
             {
               input: 'character stream',
-              text: 'Lexical Analyzer',
-              name: 'lexical-analyzer',
+              text: 'Lexical analyzer',
+              name: 'lexical-analysis',
             }, {
               input: 'token stream',
-              text: 'Syntax Analyzer',
-              name: 'syntax-analyzer',
+              text: 'Syntax analyzer',
+              name: 'syntax-analysis',
             }, {
               input: 'syntax tree',
-              text: 'Semantic Analyzer',
-              name: 'semantic-analyzer',
+              text: 'Semantic analyzer',
+              name: 'semantic-analysis',
             }, {
               input: 'syntax tee',
               text: 'Intermediate Code Generator',
+              name: 'intermediate-code-generation'
             }, {
               input: 'intermediate representation',
               text: 'Machine-Independent Code Optimizer'
@@ -150,12 +159,12 @@ export default {
           translation_of_a_an_assignment_statement: [
             {
               input: 'position = initial + rate * 60',
-              text: 'Lexical Analyzer',
-              name: 'lexical-analyzer',
+              text: 'Lexical analyzer',
+              name: 'lexical-analysis',
             }, {
               input: '⟨id, 1⟩ ⟨=⟩ ⟨id, 2⟩ ⟨+⟩ ⟨id, 3⟩ ⟨*⟩ ⟨60⟩',
-              text: 'Syntax Analyzer',
-              name: 'syntax-analyzer',
+              text: 'Syntax analyzer',
+              name: 'syntax-analysis',
             }, {
               isTree: true,
               input: {
@@ -174,8 +183,8 @@ export default {
                   }
                 }
               },
-              text: 'Semantic Analyzer',
-              name: 'semantic-analyzer',
+              text: 'Semantic analyzer',
+              name: 'semantic-analysis',
             }, {
               isTree: true,
               input: {
@@ -196,8 +205,9 @@ export default {
                       }
                     }
                   }
-                }
+                },
               },
+              name: 'intermediate-code-generation',
               text: 'Intermediate Code Generator',
             }, {
               input: [

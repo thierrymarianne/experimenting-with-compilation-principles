@@ -5,11 +5,12 @@ const StructureOfACompiler = {
   namespaced: true,
   state: {
     visibilityOfDescriptions: {
-      'lexical-analyzer': false,
-      'syntax-analyzer': false,
-      'semantic-analyzer': false,
+      'lexical-analysis': true,
+      'syntax-analysis': false,
+      'semantic-analysis': false,
+      'intermediate-code-generation': false,
     },
-    visibleDescription: 'lexical-analyzer',
+    visibleDescription: 'lexical-analysis',
     exampleIsVisible: false,
     sequence: 'phases_of_a_compiler',
   },

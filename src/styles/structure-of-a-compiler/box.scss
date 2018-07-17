@@ -3,11 +3,6 @@
 $box-width: calc(100% - 12px);
 
 .box {
-  &__container {
-    display: flex;
-    width: $box-width;
-  }
-
   display: flex;
   justify-content: center;
   flex-shrink: 0;
@@ -19,6 +14,21 @@ $box-width: calc(100% - 12px);
   padding: 1rem;
   margin-bottom: 1rem;
   width: $box-width;
+
+  &__container {
+    display: flex;
+    width: $box-width;
+  }
+
+  &__translatable-enter-active,  
+  &__translatable-leave-active {
+    transition: opacity 1s;
+  }
+  
+  &__translatable-enter, 
+  &__translatable-leave-to {
+    opacity: 0;
+  }    
 
   &__highlighted {
     cursor: pointer;

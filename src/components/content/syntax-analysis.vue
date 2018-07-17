@@ -1,5 +1,5 @@
 <template>
-  <div class='syntax-analyzer'>
+  <div class='syntax-analysis'>
     <description>The second phase of the compiler is <em>syntax analysis</em>
 or <em>parsing</em>.
 
@@ -21,7 +21,7 @@ import Description from '../description.vue';
 import EventHub from '../../modules/event-hub';
 
 export default {
-  name: 'syntax-analyzer',
+  name: 'syntax-analysis',
   components: {
     description: Description
   },
@@ -29,5 +29,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../../styles/syntax-analyzer.scss';
+  @import '../../styles/syntax-analysis.scss';
 </style>

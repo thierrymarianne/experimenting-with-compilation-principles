@@ -1,6 +1,6 @@
 <template>
-  <div class='lexical-analyzer__container'>
-    <div class='lexical-analyzer'>
+  <div class='lexical-analysis__container'>
+    <div class='lexical-analysis'>
       <description>The first phase of a compiler is called <em>lexical analysis</em>
 or <em>scanning</em>.
 
@@ -30,7 +30,7 @@ for semantic analysis and code generation.</description>
 import Description from '../description.vue';
 
 export default {
-  name: 'lexical-analyzer',
+  name: 'lexical-analysis',
   components: {
     description: Description
   },
@@ -38,5 +38,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../../styles/lexical-analyzer.scss';
+  @import '../../styles/lexical-analysis.scss';
 </style>
