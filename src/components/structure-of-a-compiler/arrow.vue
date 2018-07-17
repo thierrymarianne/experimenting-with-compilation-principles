@@ -16,5 +16,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../styles/arrow.scss';
+  @import '../../styles/structure-of-a-compiler/arrow.scss';
 </style>

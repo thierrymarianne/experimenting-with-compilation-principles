@@ -111,5 +111,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../styles/triple-node.scss';
+  @import '../../styles/structure-of-a-compiler/triple-node.scss';
 </style>

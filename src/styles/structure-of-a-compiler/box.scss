@@ -1,4 +1,4 @@
-@import './variables.scss';
+@import '../variables.scss';
 
 $box-width: calc(100% - 12px);
 
@@ -20,12 +20,15 @@ $box-width: calc(100% - 12px);
   margin-bottom: 1rem;
   width: $box-width;
 
-  &__highlight {
+  &__highlighted {
+    cursor: pointer;
     border-color: $color-border-box-highlight;
     color: $color-border-box-highlight;
   }
 
   &__highlightable {
+    border: 1px solid $color-border-box;
+    color: $color-text-default;
     cursor: pointer;
 
     &:hover {

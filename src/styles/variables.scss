@@ -1,9 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono);
-@import url(https://fonts.googleapis.com/css?family=Dosis);
-@import url(https://fonts.googleapis.com/css?family=Montserrat);
-@import url(https://fonts.googleapis.com/css?family=Roboto);
-@import url(https://fonts.googleapis.com/css?family=Niconne);
-@import url(https://fonts.googleapis.com/css?family=Libre+Baskerville);
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+@import url('https://fonts.googleapis.com/css?family=Dosis');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+@import url('https://fonts.googleapis.com/css?family=Niconne');
+@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville');
 
 $color-black: #1e1e1e;
 $color-beige: #d4d4d4;
@@ -25,6 +25,7 @@ $color-border-code: $color-beige;
 $color-border-clickable: $color-green;
 $color-border-arrow-tip: $color-beige;
 
+$color-text-bold: $color-beige;
 $color-text-tree: $color-beige;
 $color-text-button: $color-orange;
 $color-text-button-highlight: $color-yellow;

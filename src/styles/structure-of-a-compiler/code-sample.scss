@@ -1,0 +1,16 @@
+@import '../variables.scss';
+
+.code-sample {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+
+  &__line {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    margin: 0 auto;
+    justify-content: flex-start;
+    width: 100%;
+  }
+}

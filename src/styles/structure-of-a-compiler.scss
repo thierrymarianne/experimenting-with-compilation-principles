@@ -11,18 +11,41 @@
   &__right-column {
     flex: 0.5;
     padding-left: 2rem;
+    flex-direction: column;
     visibility: hidden;
-    flex-direction: column4;
 
     &--visible {
       display: flex;
       visibility: visible;
     }
+
+    &--hidden {
+      display: none;
+    }
   }
 
   &__phase {
-    justify-content: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    width: 400px;
+  }
+
+  &__example {
+    border: 1px dotted $color-border-button;
+    color: $color-text-button;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.1rem;
+    align-self: center;
+    background-color: $color-background-button;
+    border-radius: 0;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    &:hover {
+      border: 1px dotted $color-border-button-highlight;
+      color: $color-text-button-highlight;
+    }
   }
 }

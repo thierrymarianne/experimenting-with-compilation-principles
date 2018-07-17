@@ -1,0 +1,12 @@
+@import './variables.scss';
+
+.description {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  min-width: 500px;
+
+  &__paragraph {
+    align-self: flex-start;
+  }
+}

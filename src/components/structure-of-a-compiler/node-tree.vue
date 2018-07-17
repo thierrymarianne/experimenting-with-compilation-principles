@@ -42,5 +42,5 @@ export default {
 </script>
 
 <style scoped type='text/scss'>
-  @import '../styles/node-tree.scss';
+  @import '../../styles/structure-of-a-compiler/node-tree.scss';
 </style>

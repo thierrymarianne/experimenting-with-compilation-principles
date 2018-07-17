@@ -1,0 +1,9 @@
+@import './variables.scss';
+
+.syntax-analyzer {
+  display: flex;
+
+  em {
+    color: $color-text-emphasis; 
+  }
+}
