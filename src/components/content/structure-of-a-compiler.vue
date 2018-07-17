@@ -28,10 +28,18 @@
           <box
             :name='step.name ? step.name : null'
             v-if='step.text'
-            :highlighted='typeof visibilityOfDescriptions[step.name] !== "undefined" ? visibilityOfDescriptions[step.name] : undefined'
-            :highlightable='typeof visibilityOfDescriptions[step.name] !== "undefined" ? ! visibilityOfDescriptions[step.name] : undefined'
-            :ref='step.name ? step.name : null'>{{ step.text }}</box>
+            :highlighted='isHighlighted(step.name)'
+            :highlightable='isHighlightable(step.name)'
+          >{{ step.text }}</box>
         </template>
+        <hr class='structure-of-a-compiler__separator' />
+        <symbol-table :symbols='symbols'>
+          <box
+            name='symbol-table-management'
+            :highlighted='isHighlighted("symbol-table-management")'
+            :highlightable='isHighlighted("symbol-table-management")'
+          >Symbol Table</box>
+        </symbol-table>
       </div>
     </section>
     <section 
@@ -52,13 +60,17 @@
 <script>
 import Arrow from '../structure-of-a-compiler/arrow.vue';
 import Box from '../structure-of-a-compiler/box.vue';
-import EventHub from '../../modules/event-hub'; 
+import SymbolTable from '../structure-of-a-compiler/symbol-table.vue';
+import EventHub from '../../modules/event-hub';
 import NodeTree from '../structure-of-a-compiler/node-tree.vue'; 
 import CodeSample from '../structure-of-a-compiler/code-sample.vue'; 
 import LexicalAnalysis from './lexical-analysis.vue';
 import SyntaxAnalysis from './syntax-analysis.vue';
 import SemanticAnalysis from './semantic-analysis.vue';
 import IntermediateCodeGeneration from './intermediate-code-generation.vue';
+import CodeOptimization from './code-optimization.vue';
+import CodeGeneration from './code-generation.vue';
+import SymbolTableManagement from './symbol-table-management.vue';
 
 import MutationTypes from '../../store/modules/mutation-types';
 
@@ -72,12 +84,19 @@ export default {
   components: {
     arrow: Arrow,
     box: Box,
+    'symbol-table': SymbolTable,
     'node-tree': NodeTree,
     'code-sample': CodeSample,
     'lexical-analysis': LexicalAnalysis,
     'syntax-analysis': SyntaxAnalysis,
     'semantic-analysis': SemanticAnalysis,
     'intermediate-code-generation': IntermediateCodeGeneration,
+    'code-optimization': CodeOptimization,
+    'code-generation': CodeGeneration,
+    'symbol-table-management': SymbolTableManagement,
+  },
+  mounted: function () {
+    EventHub.$on('phase.unhighlighted', this.scrollToTop);
   },
   computed: {
     ...mapGetters([
@@ -91,6 +110,23 @@ export default {
     }
   },
   methods: {
+    scrollToTop: function () {
+      window.scrollTo(0, 0);
+    },
+    isHighlighted: function (target) {
+      if (typeof this.visibilityOfDescriptions[target] !== "undefined") {
+        return this.visibilityOfDescriptions[target];
+      }
+
+      return undefined;
+    },
+    isHighlightable: function (target) {
+      if (typeof this.visibilityOfDescriptions[target] !== "undefined") {
+        return !this.visibilityOfDescriptions[target];
+      }
+
+      return undefined;
+    },
     isVisible: function (phaseName) {
       return phaseName === this.visibleDescription;
     },
@@ -122,6 +158,17 @@ export default {
     },
   },
   props: {
+    symbols: {
+      type: Array,
+      default: function () {
+        return [
+          'position',
+          'initial',
+          'rate',
+          ' '
+        ];
+      }
+    },
     sequences: {
       type: Object,
       default: function () {
@@ -142,13 +189,15 @@ export default {
             }, {
               input: 'syntax tee',
               text: 'Intermediate Code Generator',
-              name: 'intermediate-code-generation'
+              name: 'intermediate-code-generation',
             }, {
               input: 'intermediate representation',
-              text: 'Machine-Independent Code Optimizer'
+              text: 'Machine-Independent Code Optimizer',
+              name: 'code-optimization',
             }, {
               input: 'intermediate representation',
               text: 'Code Generator',
+              name: 'code-generation',
             }, {
               input: 'target-machine code',
               text: 'Machine dependent Code Optimizer',
@@ -216,13 +265,15 @@ export default {
                 't3 = id2 + t2',
                 'id1 = t3',
               ],
-              text: 'Code Optimizer'
+              text: 'Code Optimizer',
+              name: 'code-optimization',
             }, {
               input: [
                 't1 = id3 * 60.0',
                 'id1 = t1 + t2',
               ],
               text: 'Code Generator',
+              name: 'code-generation',
             }, {
               input: [
                 'LDF R2, id3',

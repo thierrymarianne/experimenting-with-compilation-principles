@@ -1,0 +1,19 @@
+@import './variables.scss';
+
+.code-optimization {
+  display: flex;
+
+  em {
+    color: $color-text-emphasis; 
+  }
+
+  strong {
+    font-weight: bold;
+    color: $color-text-bold;
+  }
+
+  code {
+    font-family: $font-family-code;
+    color: $color-text-bold;
+  }
+}

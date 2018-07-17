@@ -9,12 +9,14 @@
             v-if='slotProps.question.answerIsVisible' 
           >A <em>compiler</em> is a program that can read a program
 in one language - the <em>source</em> language - and translate it
-into an equivalent program in another language - the <em>target</em> language.
+into an equivalent program in another language
+- the <em>target</em> language.
 
 A <em>interpreter</em> is another common kind of language processor.
 Instead of producing a target program as a translation, 
-an interpreter appears to directly execute the operations specified 
-in the source program on inputs supplied by the user.</paragraph>
+an interpreter appears to directly execute the operations
+specified in the source program
+on inputs supplied by the user.</paragraph>
         </template>
     </question>
     <question>
@@ -24,11 +26,14 @@ in the source program on inputs supplied by the user.</paragraph>
           <paragraph
             :class='slotProps.question.classes.answer'
             v-if='slotProps.question.answerIsVisible'
-          >(a) The machine-language target program produced by a compiler
-is usually much faster at mapping inputs to outputs.
+          >(a) The machine-language target program
+produced by a compiler is usually much faster at mapping
+inputs to outputs.
 
-(b) An interpreter, however can usually give better error diagnostics than a compiler,
-because it executes the source program statement by statement.</paragraph>
+(b) An interpreter, however can usually give
+better error diagnostics than a compiler,
+because it executes the source program
+statement by statement.</paragraph>
         </template>
     </question>
     <question>
@@ -39,8 +44,10 @@ rather than machine language?</paragraph>
           <paragraph
             :class='slotProps.question.classes.answer'
             v-if='slotProps.question.answerIsVisible'
-          >The compiler may produce an assembly-language as its output,
-because assembly language is easier to produce as output and is easier to debug.</paragraph>
+          >The compiler may produce an assembly-language
+as its output, because assembly language 
+is easier to produce as output and
+is easier to debug.</paragraph>
         </template>
     </question>
     <question>
@@ -53,8 +60,8 @@ as a target language for a compiler?</paragraph>
           <paragraph
             :class='slotProps.question.classes.answer'
             v-if='slotProps.question.answerIsVisible'
-          >There is a C compiler for almost every system ever made.
-<browsable-link href='http://bit.ly/advantages-of-c-compiler-as-target-language'>See original Quora answer</browsable-link></paragraph>
+          >There is a C compiler for almost every system
+ever made. <browsable-link href='http://bit.ly/advantages-of-c-compiler-as-target-language'>See original Quora answer</browsable-link></paragraph>
         </template>
     </question>
     <question>
@@ -64,8 +71,8 @@ that an assembler needs to perform.</paragraph>
           <paragraph
             :class='slotProps.question.classes.answer'
             v-if='slotProps.question.answerIsVisible'
-          >An assembler produces relocatable machine code as its output
-by processing an assembly language</paragraph>
+          >An assembler produces relocatable machine code
+as its output by processing an assembly language</paragraph>
         </template>
     </question>
   </div>

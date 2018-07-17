@@ -15,6 +15,7 @@
 <script>
 import ActionTypes from '../../store/modules/action-types';
 import MutationTypes from '../../store/modules/mutation-types';
+import EventHub from '../../modules/event-hub';
 
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions, mapMutations } = createNamespacedHelpers('structure-of-a-compiler')
@@ -30,6 +31,7 @@ export default {
     ]),
     unhighlight: function (event) {
       this.hideAllDescriptions();
+      this.showDescription('lexical-analysis');
     },
     highlight: function () {
       this.showDescription(this.name);
@@ -40,12 +42,14 @@ export default {
       }
 
       if (this.isHighlightable) {
-        window.scrollTo(0, this.$el.offsetTop - 10);
+        const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        window.scrollTo(0, this.$el.offsetTop - rem);
         this.highlight();
 
         return;
       }
 
+      EventHub.$emit('phase.unhighlighted');
       this.unhighlight();
     }
   },

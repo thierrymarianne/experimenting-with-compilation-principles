@@ -3,6 +3,7 @@ body {
   background-color: #252526;
   justify-content: center;
   margin: 0;
+  scroll-behavior: smooth;
 }
 
 #app {

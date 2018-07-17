@@ -1,0 +1,31 @@
+@import '../variables.scss';
+
+.symbol-table {
+  color: $color-text-symbol;
+  font-family: $font-family-code;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+  }
+
+  &__index {
+    border: 0;
+    width: 30px;
+  }
+
+  &__ellipsis,
+  &__name {
+    border: 1px solid $color-border-symbol;
+    width: 100px;
+    height: 1.2rem;
+  }
+
+  &__ellipsis {
+    border-left: none;
+  }
+}

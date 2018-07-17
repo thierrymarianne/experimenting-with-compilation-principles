@@ -34,11 +34,16 @@ $box-width: calc(100% - 12px);
     cursor: pointer;
     border-color: $color-border-box-highlight;
     color: $color-border-box-highlight;
+
+    &:hover {
+      border-color: $color-border-box-highlight;
+      color: $color-border-box-highlight;
+    }
   }
 
   &__highlightable {
-    border: 1px solid $color-border-box;
-    color: $color-text-default;
+    border: 1px solid $color-border-box !important;
+    color: $color-text-default !important;
     cursor: pointer;
 
     &:hover {

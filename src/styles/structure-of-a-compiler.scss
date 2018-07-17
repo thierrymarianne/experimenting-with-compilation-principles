@@ -1,8 +1,16 @@
 @import './variables.scss';
 
+$break-small-width: 768px;
+$break-small-height: 1024px;
+
 .structure-of-a-compiler {
   text-align: center;
   display: flex;
+
+  .structure-of-a-compiler__separator {
+    width: 50%;
+    margin-bottom: 1rem;
+  }
 
   &__fadeable-enter-active,
   &__fadeable-leave-active {
@@ -18,8 +26,20 @@
     position: sticky;
     top: 1em;
     display: block;
-    overflow: visible;
+    overflow: scroll;
     max-height: 0;
+
+    @media screen and (min-width: $break-small-width) {
+      height: 768px;
+      overflow: scroll;
+      max-height: none;
+    }
+
+    @media screen and (min-height: $break-small-height) {
+      height: 1024px;
+      overflow: scroll;
+      max-height: none;
+    }
   }
 
   &__left-column {
@@ -28,7 +48,7 @@
  
   &__right-column {
     flex: 0.5;
-    padding-left: 2rem;
+    padding-left: 3rem;
     flex-direction: column;
     visibility: hidden;
     position: relative;
