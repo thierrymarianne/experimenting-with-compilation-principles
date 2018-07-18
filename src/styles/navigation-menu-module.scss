@@ -1,42 +1,61 @@
 .navigation-menu {
   &__container {
     width: 100%;
+    display: flex;
     position: relative;
-    display: inline-block;
   } 
 
   &__header {
+    background-color: $color-background-menu;
+    bottom: 0;
     display: flex;
-    justify-content: center;
-    height: 80px;
-    border-bottom: 1px solid $color-border-menu;
+    justify-content: flex-start;
     position: relative;
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+    border-top: 10px dotted beige;
+    border-right: 10px dotted beige;
   }
 
   &__menu {
-    border: 0;
-    display: inline-flex;
-    margin: 1rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
     padding: 0;
     color: $color-text;
     font-family: $font-family-menu;
-    font-size: 1.5em;
+    font-size: 1.2em;
     list-style-type: none;
+    position: relative;
+    width: auto;
   }
 
+  &__sub-menu {
+    display: flex;
+    list-style-type: none;
+    flex-direction: column;
+    padding-left: 0;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 100%;
+  }
+ 
   &__sub-menu-item,
   &__menu-item {
+    display: flex;
     color: $color-text-clickable;
     cursor: pointer;
     text-decoration: underline;
-    border-right: 1px solid $color-border-menu;
     padding: 1rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    height: 1.2rem
 
     &-sub-menu {
       display: flex;
       justify-content: center;
-      position: absolute;
-      width: 50%;
     }
 
     &:last-child {
@@ -48,31 +67,17 @@
       text-decoration: none;
       cursor: default;
       font-weight: bold;
-      border-bottom: 4px solid $color-border-menu;
-
-      &:last-child {
-        border-bottom: 4px solid $color-border-menu;
-      }
     }
   }
  
-  &__sub-menu {
-    list-style-type: none;
-    flex-direction: row;
-    display: flex;
-    position: absolute;
-    top: 5rem;
-    padding-left: 0;
-  }
- 
   &__sub-menu-item {
-    font-size: 1.1rem;
+    font-size: 1.0rem;
   }
 
   &__titles-introduction {
-    margin-top: 5rem;
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
 
   &__introduction {

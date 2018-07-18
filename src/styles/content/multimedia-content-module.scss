@@ -4,6 +4,10 @@
   height: auto;
   width: $width-base-content;
 
+  em {
+    color: $color-text-emphasis; 
+  }
+
   &__paragraph {
     &.paragraph {
       align-self: flex-start;

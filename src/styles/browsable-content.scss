@@ -3,10 +3,12 @@
   flex-wrap: wrap;
   width: $width-max;
   justify-content: center;
+  position: relative;
 
   &__content {
     display: flex;
     width: $width-max;
     justify-content: center;
+    margin-bottom: $height-menu;
   }
 }

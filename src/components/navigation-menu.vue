@@ -36,7 +36,10 @@
         </ul>
       </header>
       <div class='navigation-menu__titles-introduction'>
-        <h1 :class="getTitleClasses()">{{ getActiveMenuItem.text }}</h1>
+        <h1 
+          :class="getTitleClasses()"
+          id='top'
+        >{{ getActiveMenuItem.text }}</h1>
         <div 
           class='navigation-menu__introduction'
           v-if='aMenuItemHasBeenSelected && getActiveMenuItem.introduction'
@@ -247,7 +250,7 @@ export default {
               key: 'the-move-to-higher-level-languages',
               text: 'The Move to Higher-level Languages',
               hasIntroduction: true,
-              url: '/the-evolution-of-programming-languages/the-move-to-higher-level-languages'
+              url: '/the-evolution-of-programming-languages/the-move-to-higher-level-languages#top'
             }, {
               key: 'impacts-on-compilers',              
               text: 'Impacts on Compilers',
