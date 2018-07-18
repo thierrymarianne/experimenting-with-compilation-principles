@@ -3,11 +3,15 @@
       <button
       class='navigation-menu__button'
       @click='showMenu = ! showMenu'
-      >{{ getToggleMenuButtonLabel }}</button>  
+      >
+        <span :class='{"navigation-menu__direction": true, "navigation-menu__direction--open": !showMenu}'>></span>
+        {{ getToggleMenuButtonLabel }}
+        <span :class='{"navigation-menu__direction--right": true, "navigation-menu__direction": true, "navigation-menu__direction--open": !showMenu}'>></span>
+      </button>  
       <transition
         name="custom-classes-transition"
-        enter-active-class="animated fadeInLeftBig"
-        leave-active-class="animated fadeOutLeftBig"
+        enter-active-class="animated slideInUp"
+        leave-active-class="animated slideOutDown"
       >
         <header 
           class='navigation-menu__header'
@@ -116,10 +120,10 @@ export default {
   computed: {
     getToggleMenuButtonLabel: function () {
       if (this.showMenu) {
-        return '<<< Hide menu <<<';
+        return 'Hide Menu';
       }
 
-      return '>>> Show menu >>>';
+      return 'Show Menu';
     },
     shouldShowSubtitle: function () {
       return this.getActiveMenuItem.subtitle &&

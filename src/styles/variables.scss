@@ -60,7 +60,11 @@ $font-family-paragraph: Roboto, sans-serif;
 $font-family-cursive: 'Libre Baskerville', serif;
 $font-family-serif: serif;
 
-$height-menu: calc(3.2rem * 6);
+$font-size-menu-item: 1.5rem;
+$font-size-submenu-item: 1.3rem;
+$menu-height: calc(#{$font-size-menu-item} + 2rem); 
+
+$height-menu: calc(#{$menu-height} * 6);
 $margin-bottom-content: calc(#{$height-menu} + 3rem);
 
 $width-max: calc(100% - 1rem);

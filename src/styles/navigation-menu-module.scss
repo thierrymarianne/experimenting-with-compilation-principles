@@ -63,22 +63,39 @@
     width: auto;
   }
 
+  &__direction {
+    color: $color-button-menu;
+    margin-right: 1rem;
+    transform: rotate(90deg);
+    display: inline-block;
+    line-height: 1rem;
+
+    &--open {
+      transform: rotate(-90deg);
+    }
+
+    &--right {
+      margin-right: auto;
+      margin-left: 1rem;
+    }
+  }
+
   &__button {
-    align-self: center;
     background-color: $color-background-menu;
     border: 1px solid $color-border-menu;
-    border-radius: 0%;
-    font-size: 1rem;
+    border-radius: 15px;
+    font-size: 2rem;
     color: $color-button-menu;
     cursor: pointer;
-    display: flex;
     opacity: 0.8;
     outline: none;
+    padding: 1rem;
     position: fixed;
     right: 3rem;
     bottom: 1rem;
     z-index: 3;
-    width: auto;
+    text-align: center;
+    width: 300px;
   }
 
   &__sub-menu {
@@ -99,9 +116,9 @@
     cursor: pointer;
     text-decoration: underline;
     padding: 1rem;
-    font-size: 1.2rem;
-    line-height: 1.2rem;
-    height: 1.2rem;
+    font-size: $font-size-menu-item;
+    line-height: $font-size-menu-item;
+    height: $font-size-menu-item;
 
     &-sub-menu {
       display: flex;
@@ -121,7 +138,7 @@
   }
  
   &__sub-menu-item {
-    font-size: 1.0rem;
+    font-size: $font-size-submenu-item;
   }
 
   &__titles-introduction {
