@@ -10,12 +10,44 @@
     bottom: 0;
     display: flex;
     justify-content: flex-start;
-    position: relative;
-    width: 100%;
     position: fixed;
     z-index: 2;
-    border-top: 10px dotted beige;
-    border-right: 10px dotted beige;
+    max-height: $height-menu;
+    height: $height-menu;
+    flex-wrap: wrap;
+    width: $width-menu;
+    border-top: 10px dotted $color-border-menu;
+    border-right: 10px dotted $color-border-menu;
+  }
+
+  &__fadeable-enter-active,
+  &__fadeable-leave-active {
+    transition: opacity 1s;
+  }
+
+  &__fadeable-enter,
+  &__fadeable-leave-to {
+    opacity: 0;
+  }
+
+  &__overlay {
+    display: block;
+    height: 5rem;
+    margin-top: -5rem;
+    opacity: 0.5;
+    background: linear-gradient(0deg, $color-background-menu, $color-background-menu, 50%, transparent);
+    width: 100%;
+
+    &--right {
+      background: linear-gradient(90deg, $color-background-menu, $color-background-menu, 50%, transparent);
+      height: 100%;
+      margin-right: -5rem;
+      opacity: 0.5;
+      position: absolute;
+      right: 0;
+      width: 5rem;
+      z-index: 3;
+    }
   }
 
   &__menu {
@@ -28,6 +60,24 @@
     font-size: 1.2em;
     list-style-type: none;
     position: relative;
+    width: auto;
+  }
+
+  &__button {
+    align-self: center;
+    background-color: $color-background-menu;
+    border: 1px solid $color-border-menu;
+    border-radius: 0%;
+    font-size: 1rem;
+    color: $color-button-menu;
+    cursor: pointer;
+    display: flex;
+    opacity: 0.8;
+    outline: none;
+    position: fixed;
+    right: 3rem;
+    bottom: 1rem;
+    z-index: 3;
     width: auto;
   }
 
@@ -51,7 +101,7 @@
     padding: 1rem;
     font-size: 1.2rem;
     line-height: 1.2rem;
-    height: 1.2rem
+    height: 1.2rem;
 
     &-sub-menu {
       display: flex;
@@ -106,5 +156,10 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
+    margin-bottom: 0;
+
+    &:last-child {
+      margin-top: 0;
+    }
   }
 }

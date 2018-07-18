@@ -4,6 +4,14 @@
   height: auto;
   width: $width-base-content;
 
+  h3 {
+    display: block;
+    font-family: $font-family-title;
+    font-size: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+  }
+    
   em {
     color: $color-text-emphasis; 
   }
@@ -14,6 +22,10 @@
       white-space: normal;
       text-align: left;
       padding: 1rem;
+      
+      &:first-letter {
+        margin-left: 1rem;
+      }
     }
   }
 

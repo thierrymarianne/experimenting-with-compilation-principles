@@ -1,8 +1,11 @@
 import VueRouter from 'vue-router';
 import Vue from 'vue';
+
 import App from './components/app.vue';
 import routes from './modules/routes';
 import store from './store';
+
+import './styles/global.css';
 
 Vue.use(VueRouter);
 

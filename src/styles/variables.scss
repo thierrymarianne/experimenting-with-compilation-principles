@@ -19,6 +19,7 @@ $color-background-arrow-tip: $color-beige;
 $color-background-arrow-edge: $color-beige;
 $color-background-button: $color-black;
 
+$color-border-menu: $color-beige;
 $color-border-box: $color-beige;
 $color-border-box-highlight: $color-orange;
 $color-border-button: $color-orange;
@@ -45,9 +46,9 @@ $color-text-clickable: $color-green;
 $color-textarea: #d4d4d3;
 $color-error: #94151b;
 $color-border: #ced4d4;
-$color-border-menu: $color-orange;
 $color-value: #ce9178;
 $color-property: #569CD3;
+$color-button-menu: $color-text-clickable;
 
 $font-family-monospace: 'Ubuntu Mono', monospace;
 
@@ -59,6 +60,9 @@ $font-family-paragraph: Roboto, sans-serif;
 $font-family-cursive: 'Libre Baskerville', serif;
 $font-family-serif: serif;
 
-$height-menu: calc(250px + 1rem);
+$height-menu: calc(3.2rem * 6);
+$margin-bottom-content: calc(#{$height-menu} + 3rem);
+
 $width-max: calc(100% - 1rem);
 $width-base-content: 500px;
+$width-menu: calc(100% - 5rem);

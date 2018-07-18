@@ -74,6 +74,39 @@ export default [
             },
           },
         ],
+      }, {
+        path: 'applications-of-compiler-technology',
+        component: BrowsableContent,
+        props: {
+          showNavigationMenu: false,
+        },
+        children: [
+          {
+            path: 'implementation-of-high-level-programming-languages',
+            name: 'implementation-of-high-level-programming-languages',
+            components: {
+              content: Content.ImplementationOfHighLevelProgrammingLanguages,
+            },
+          }, {
+            path: 'optimizations-for-computer-architectures',
+            name: 'optimizations-for-computer-architectures',
+            components: {
+              content: Content.OptimizationsForComputerArchitectures,
+            },
+          }, {
+            path: 'program-translations',
+            name: 'program-translations',
+            components: {
+              content: Content.ProgramTranslations,
+            },
+          }, {
+            path: 'software-productivity-tools',
+            name: 'software-productivity-tools',
+            components: {
+              content: Content.SoftwareProductivityTools,
+            },
+          },
+        ],
       },
     ],
   }, {

@@ -3,7 +3,8 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
-    width: 50%
+    width: 50%;
+    margin-bottom: $margin-bottom-content;
   }
 
   &__question-set {
