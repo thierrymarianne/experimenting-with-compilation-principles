@@ -5,7 +5,9 @@ export default [
   {
     path: '/',
     redirect: '/introduction',
-    component: BrowsableContent,
+    components: {
+      default: BrowsableContent,
+    },
     children: [
       {
         path: 'introduction',
@@ -17,12 +19,31 @@ export default [
       }, {
         path: 'about',
         name: 'about',
-        component: Content.About,
+        components: {
+          default: Content.About,
+        },
       }, {
-        path: 'structure-of-a-compiler',
-        name: 'structure-of-a-compiler',
-        component: Content.StructureOfACompiler,
+        path: 'structure-of-a-compiler/phases-of-a-compiler',
+        name: 'phases-of-a-compiler',
+        components: {
+          main: Content.StructureOfACompiler,
+        },
+      }, {
+        path: 'structure-of-a-compiler/grouping-of-phases-into-passes',
+        name: 'grouping-of-phases-into-passes',
+        components: {
+          main: Content.GroupingOfPhasesIntoPasses,
+        },
+      }, {
+        path: 'structure-of-a-compiler/compiler-construction-tools',
+        name: 'compiler-construction-tools',
+        components: {
+          main: Content.CompilerConstructionTools,
+        },
       },
     ],
+  }, {
+    path: '*',
+    redirect: '/',
   },
 ];

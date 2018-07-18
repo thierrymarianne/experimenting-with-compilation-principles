@@ -3,9 +3,9 @@
     class='box__container' 
     v-on:click='toggleBoxHighlight'
   >
-    <div :class='getBoxClasses'>
+    <button :class='getBoxClasses'>
       <slot></slot>
-    </div>
+    </button>
     <transition name='box__translatable'>
       <div v-if='isHighlighted' class='box__arrow'></div>
     </transition>
@@ -91,6 +91,6 @@ export default {
 }
 </script>
 
-<style scoped type='text/scss'>
+<style scoped lang='scss'>
   @import '../../styles/structure-of-a-compiler/box.scss'
 </style>

@@ -37,6 +37,6 @@ export default {
 }
 </script>
 
-<style scoped type='text/scss'>
-  @import '../../styles/lexical-analysis.scss';
+<style scoped lang='scss'>
+  @import '../../styles/content/lexical-analysis.scss';
 </style>

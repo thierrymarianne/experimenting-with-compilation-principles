@@ -16,10 +16,38 @@ module.exports = {
         loader: 'vue-loader'
       }, {
         test: /\.(sc|c)ss$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'sass-loader'
+        oneOf: [
+          {
+            resourceQuery: /-module/,
+            use: [
+              'vue-style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                  sourceMap: true,
+                  localIdentName: '[local]_[hash:base64:5]'
+                }
+              }
+            ]
+          }, {
+            use: [
+              'vue-style-loader',
+              'css-loader',
+              {
+                loader: 'sass-loader',
+                options: {
+                  data: '@import "variables.scss";',
+                  sourceMap: true,
+                  includePaths: [
+                    path.join(__dirname, 'src/styles'), 
+                    path.join(__dirname, 'src/styles/content'),
+                    path.join(__dirname, 'src/styles/structure-of-a-compiler'),
+                  ]
+                }
+              },
+            ]
+          }
         ]
       }, {
         test: /\.js$/,

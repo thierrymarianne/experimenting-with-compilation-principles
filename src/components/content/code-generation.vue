@@ -56,6 +56,6 @@ or during code generation.
   }
   </script>
   
-  <style scoped type='text/scss'>
-    @import '../../styles/code-generation.scss';
+  <style scoped lang='scss'>
+    @import '../../styles/content/code-generation.scss';
   </style>

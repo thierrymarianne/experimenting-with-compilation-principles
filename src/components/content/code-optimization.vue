@@ -46,6 +46,6 @@ compilation too much.
   }
   </script>
   
-  <style scoped type='text/scss'>
-    @import '../../styles/code-optimization.scss';
+  <style scoped lang='scss'>
+    @import '../../styles/content/code-optimization.scss';
   </style>

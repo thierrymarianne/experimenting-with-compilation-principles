@@ -1,5 +1,3 @@
-@import '../variables.scss';
-
 $box-width: calc(100% - 12px);
 
 .box {
@@ -14,6 +12,9 @@ $box-width: calc(100% - 12px);
   padding: 1rem;
   margin-bottom: 1rem;
   width: $box-width;
+  background-color: transparent;
+  outline: none;
+  border-radius: 0;
 
   &__container {
     display: flex;
@@ -47,8 +48,8 @@ $box-width: calc(100% - 12px);
     cursor: pointer;
 
     &:hover {
-      border-color: $color-border-box-highlight;
-      color: $color-border-box-highlight;
+      border-color: $color-border-box-highlight !important;
+      color: $color-border-box-highlight !important;
     }
   }
 

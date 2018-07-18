@@ -291,6 +291,6 @@ export default {
 }
 </script>
 
-<style scoped type='text/scss'>
-  @import '../../styles/structure-of-a-compiler.scss';
+<style scoped lang='scss'>
+  @import '../../styles/content/structure-of-a-compiler.scss';
 </style>

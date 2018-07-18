@@ -35,6 +35,6 @@ or retrieve data from that record quickly.
   }
   </script>
   
-  <style scoped type='text/scss'>
-    @import '../../styles/symbol-table-management.scss';
+  <style scoped lang='scss'>
+    @import '../../styles/content/symbol-table-management.scss';
   </style>

@@ -1,9 +1,11 @@
-@import './variables.scss';
-
-.intermediate-code-generation {
+.content {
   display: flex;
 
   em {
     color: $color-text-emphasis; 
+  }
+
+  .description__container {
+    display: flex;
   }
 }

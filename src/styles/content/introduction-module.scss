@@ -1,11 +1,18 @@
-@import './variables.scss';
-
 .introduction {
   &__container {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
+    flex-direction: column;
     width: 50%
+  }
+
+  &__question-set {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 500px;
+    margin: auto;    
   }
 
   &__subtitle {
@@ -14,7 +21,6 @@
     font-size: 1.2em;
     padding-left: 1rem;
     display: flex;
-    justify-content: flex-end;
-    width: calc(50% - 2rem);
+    align-self: center;
   }
 }

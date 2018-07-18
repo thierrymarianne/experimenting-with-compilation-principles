@@ -50,6 +50,6 @@ have fewer than three operands.
   }
   </script>
   
-  <style scoped type='text/scss'>
-    @import '../../styles/intermediate-code-generation.scss';
+  <style scoped lang='scss'>
+    @import '../../styles/content/intermediate-code-generation.scss';
   </style>

@@ -44,6 +44,6 @@ export default {
 }
 </script>
 
-<style scoped type='text/scss'>
-  @import '../../styles/semantic-analysis.scss';
+<style scoped lang='scss'>
+  @import '../../styles/content/semantic-analysis.scss';
 </style>

@@ -14,6 +14,6 @@ export default {
 }
 </script>
 
-<style scoped type="text/scss">
+<style scoped lang='scss'>
   @import '../styles/link.scss'; 
 </style>

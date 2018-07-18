@@ -2,6 +2,7 @@
   <div class="browsable-content">
     <navigation-menu></navigation-menu>
     <router-view></router-view>
+    <router-view name='main'></router-view>
   </div>
 </template>
 
@@ -17,6 +18,6 @@ export default {
 }
 </script>
 
-<style type="text/scss">
+<style scoped lang='scss'>
   @import '../styles/browsable-content.scss'; 
 </style>

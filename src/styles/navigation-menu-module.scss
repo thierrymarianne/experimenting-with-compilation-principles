@@ -1,5 +1,3 @@
-@import './variables.scss';
-
 .navigation-menu {
   &__container {
     width: 100%;
@@ -12,6 +10,7 @@
     justify-content: center;
     height: 80px;
     border-bottom: 1px solid $color-border-menu;
+    position: relative;
   }
 
   &__menu {
@@ -25,6 +24,7 @@
     list-style-type: none;
   }
 
+  &__sub-menu-item,
   &__menu-item {
     color: $color-text-clickable;
     cursor: pointer;
@@ -48,18 +48,45 @@
       }
     }
   }
+ 
+  &__sub-menu {
+    list-style-type: none;
+    flex-direction: row;
+    display: flex;
+    position: absolute;
+    top: 5rem;
+    left: 0;
+  }
+ 
+  &__sub-menu-item {
+    font-size: 1.1rem;
+  }
 
+  &__titles {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__subtitle,
   &__title {
     display: flex;
-    color: $color-text;
+    color: $color-text-title;
     font-family: $font-family-title;
     height: 40px; 
     margin-left: 0;
     margin-bottom: 1rem;
-    width: calc(50% - 1rem);
+    align-self: center;
+    justify-content: flex-end;
+  }
 
-    &--align-right {
-      justify-content: flex-end;
-    }
+  &__subtitle {
+    color: $color-text-title;
+    font-family: $font-family-title;
+    font-size: 1.2em;
+    padding-left: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
   }
 }

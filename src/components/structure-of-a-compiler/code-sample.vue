@@ -28,6 +28,6 @@ export default {
 };
 </script>
 
-<style scoped type='text/scss'>
+<style scoped lang='scss'>
   @import '../../styles/structure-of-a-compiler/code-sample.scss';
 </style>
