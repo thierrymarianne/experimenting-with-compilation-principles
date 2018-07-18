@@ -3,4 +3,10 @@
   flex-wrap: wrap;
   width: $width-max;
   justify-content: center;
+
+  &__content {
+    display: flex;
+    width: $width-max;
+    justify-content: center;
+  }
 }

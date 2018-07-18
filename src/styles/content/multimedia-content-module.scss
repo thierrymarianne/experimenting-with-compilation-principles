@@ -1,0 +1,21 @@
+.multimedia-content {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: $width-base-content;
+
+  &__paragraph {
+    &.paragraph {
+      align-self: flex-start;
+      white-space: normal;
+      text-align: left;
+      padding: 1rem;
+    }
+  }
+
+  br {
+    margin-bottom: 1rem;
+    display: block;
+    content: ' ';  
+  }
+}

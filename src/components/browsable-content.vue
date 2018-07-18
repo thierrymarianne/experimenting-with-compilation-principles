@@ -1,8 +1,14 @@
 <template>
   <div class="browsable-content">
-    <navigation-menu></navigation-menu>
-    <router-view></router-view>
-    <router-view name='main'></router-view>
+    <template v-if='showNavigationMenu'>
+      <navigation-menu></navigation-menu>
+      <router-view></router-view>
+    </template>
+    <div 
+      v-else
+      class="browsable-content__content">
+        <router-view name='content'></router-view>
+    </div>
   </div>
 </template>
 
@@ -14,6 +20,12 @@ export default {
   name: 'browsable-content',
   components: {
     NavigationMenu
+  },
+  props: {
+    showNavigationMenu: {
+      type: Boolean,
+      default: true
+    }
   }
 }
 </script>

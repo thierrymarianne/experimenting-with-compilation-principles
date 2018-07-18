@@ -32,6 +32,13 @@
     border-right: 1px solid $color-border-menu;
     padding: 1rem;
 
+    &-sub-menu {
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      width: 50%;
+    }
+
     &:last-child {
       border: none;
     }
@@ -55,17 +62,23 @@
     display: flex;
     position: absolute;
     top: 5rem;
-    left: 0;
+    padding-left: 0;
   }
  
   &__sub-menu-item {
     font-size: 1.1rem;
   }
 
-  &__titles {
+  &__titles-introduction {
     margin-top: 5rem;
     display: flex;
     flex-direction: column;
+  }
+
+  &__introduction {
+    display: flex;
+    align-self: center;
+    width: $width-base-content;
   }
 
   &__subtitle,

@@ -5,9 +5,7 @@ export default [
   {
     path: '/',
     redirect: '/introduction',
-    components: {
-      default: BrowsableContent,
-    },
+    component: BrowsableContent,
     children: [
       {
         path: 'introduction',
@@ -23,27 +21,63 @@ export default [
           default: Content.About,
         },
       }, {
-        path: 'structure-of-a-compiler/phases-of-a-compiler',
-        name: 'phases-of-a-compiler',
+        path: 'structure-of-a-compiler',
+        component: BrowsableContent,
+        props: {
+          showNavigationMenu: false,
+        },
+        children: [
+          {
+            path: 'phases-of-a-compiler',
+            name: 'phases-of-a-compiler',
+            components: {
+              content: Content.StructureOfACompiler,
+            },
+          }, {
+            path: 'grouping-of-phases-into-passes',
+            name: 'grouping-of-phases-into-passes',
+            components: {
+              content: Content.GroupingOfPhasesIntoPasses,
+            },
+          }, {
+            path: 'compiler-construction-tools',
+            name: 'compiler-construction-tools',
+            components: {
+              content: Content.CompilerConstructionTools,
+            },
+          },
+        ],
+      }, {
+        path: 'the-science-of-building-a-compiler',
+        name: 'the-science-of-building-a-compiler',
         components: {
-          main: Content.StructureOfACompiler,
+          default: Content.TheScienceOfCodeOptimization,
         },
       }, {
-        path: 'structure-of-a-compiler/grouping-of-phases-into-passes',
-        name: 'grouping-of-phases-into-passes',
-        components: {
-          main: Content.GroupingOfPhasesIntoPasses,
+        path: 'the-evolution-of-programming-languages',
+        component: BrowsableContent,
+        props: {
+          showNavigationMenu: false,
         },
-      }, {
-        path: 'structure-of-a-compiler/compiler-construction-tools',
-        name: 'compiler-construction-tools',
-        components: {
-          main: Content.CompilerConstructionTools,
-        },
+        children: [
+          {
+            path: 'the-move-to-higher-level-languages',
+            name: 'the-move-to-higher-level-languages',
+            components: {
+              content: Content.TheMoveToHigherLevelLanguages,
+            },
+          }, {
+            path: 'impacts-on-compilers',
+            name: 'impacts-on-compilers',
+            components: {
+              content: Content.ImpactsOnCompilers,
+            },
+          },
+        ],
       },
     ],
   }, {
     path: '*',
-    redirect: '/',
+    redirect: '/introduction',
   },
 ];
