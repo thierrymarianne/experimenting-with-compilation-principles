@@ -1,5 +1,8 @@
 <template>
-  <div class='structure-of-a-compiler'>
+  <div
+    class='structure-of-a-compiler'
+    v-scroll='handleScroll'
+  >
     <section class='structure-of-a-compiler__left-column'>
       <button
         v-if='exampleIsVisible'
@@ -46,6 +49,7 @@
     </section>
     <section 
       :class='columnClasses(phaseName)'
+      v-if='visibilityOfDescriptions[phaseName]'
       v-for='(phaseName, index) in getPhases'
       :key='index'>
       <div class='structure-of-a-compiler__scrollable'>
@@ -97,6 +101,20 @@ export default {
     'code-generation': CodeGeneration,
     'symbol-table-management': SymbolTableManagement,
   },
+  directives: {
+    scroll: {
+      inserted: function (el, binding) {
+        let f = function (evt) {
+          if (binding.value(evt, el)) {
+            // window.removeEventListener('scroll', f)
+            return;
+          }
+        }
+
+        window.addEventListener('scroll', f)
+      }
+    }
+  },
   mounted: function () {
     EventHub.$on('phase.unhighlighted', this.scrollToTop);
   },
@@ -112,6 +130,10 @@ export default {
     }
   },
   methods: {
+    handleScroll: function (evt, el) {
+      // disable-eslint-next-line
+      console.log(evt);
+    },
     replaceBrackets: function (subject) {
       return subject.replace(/</g, '&#12296;')
         .replace(/>/g, '&#12297;');
@@ -139,7 +161,7 @@ export default {
     columnClasses: function (phaseName) {
       const classes = { 
         'structure-of-a-compiler__right-column': true,
-        'structure-of-a-compiler__right-column--visible': this.visibilityOfDescriptions[phaseName] 
+        'structure-of-a-compiler__right-column--visible': this.visibilityOfDescriptions[phaseName]
       }
 
       if (this.visibleDescription === null && phaseName !== 'lexical-analysis') {

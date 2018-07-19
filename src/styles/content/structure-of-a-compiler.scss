@@ -1,9 +1,7 @@
-$break-small-width: 768px;
-$break-small-height: 1024px;
-
 .structure-of-a-compiler {
-  text-align: center;
   display: flex;
+  justify-content: center;
+  width: calc(100% - (50% - #{$width-box}));
 
   .structure-of-a-compiler__separator {
     width: 50%;
@@ -21,23 +19,13 @@ $break-small-height: 1024px;
   }    
 
   &__scrollable {
-    position: sticky;
-    top: 3em;
+    height: calc(#{$height-menu} - #{$margin-bottom-title} - #{$height-title});
+    bottom: 0;
     display: block;
     overflow: scroll;
-    max-height: 0;
-
-    @media screen and (min-width: $break-small-width) {
-      height: 768px;
-      overflow: scroll;
-      max-height: none;
-    }
-
-    @media screen and (min-height: $break-small-height) {
-      height: 1024px;
-      overflow: scroll;
-      max-height: none;
-    }
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 3;
   }
 
   &__left-column {
@@ -69,7 +57,7 @@ $break-small-height: 1024px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 400px;
+    width: $width-box;
   }
 
   &__example {

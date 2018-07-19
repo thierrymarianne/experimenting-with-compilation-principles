@@ -11,13 +11,13 @@
     display: flex;
     justify-content: flex-start;
     position: fixed;
-    z-index: 2;
     max-height: $height-menu;
     height: $height-menu;
     flex-wrap: wrap;
     width: $width-menu;
     border-top: 1px dotted $color-border-menu;
     margin-left: -1em;
+    z-index: 4;
   }
   
   &__fadeable-enter-active,
