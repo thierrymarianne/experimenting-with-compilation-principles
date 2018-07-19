@@ -103,6 +103,7 @@
 <script>
 import Content from './content';
 import SharedState from '../modules/shared-state';
+import NavigationMenu from '../modules/navigation-menu'
 
 export default {
   components: Content,
@@ -185,24 +186,10 @@ export default {
       return this.menuItems;
     },
     aMenuItemHasBeenSelected: function () {
-      const routeName = this.$route.name;
-
-      if (typeof routeName === 'undefined') {
-        return undefined;
-      }
-
-      const activeMenuItems = this.menuItems.filter(function (item) {
-          if (typeof item.subMenuKeys === 'undefined') {
-            return false;
-          }
-
-          return item.subMenuKeys.indexOf(routeName) !== -1;
-      });
-
-      return activeMenuItems.length === 0;
+      return NavigationMenu.methods.isMenuItem(this.$route.name);
     },
     aSubMenuItemHasBeenSelected: function () {
-      return !this.aMenuItemHasBeenSelected;
+      return NavigationMenu.methods.isSubMenuItem(this.$route.name);      
     },
     getActiveMenuItem: function () {
       const routeName = this.$route.name;
@@ -276,109 +263,13 @@ export default {
     menuItems: {
       type: Array,
       default: function () {
-        return [
-          {
-            key: 'introduction',
-            text: 'Introduction',
-            url: '/introduction',
-            subtitle: 'Language processors',
-          }, {
-            key: 'structure-of-a-compiler',
-            text: 'The Structure of a Compiler',
-            url: '/structure-of-a-compiler/phases-of-a-compiler',
-            subMenuKeys: [
-              'phases-of-a-compiler',
-              'grouping-of-phases-into-passes',
-              'compiler-construction-tools',
-            ]
-          }, {
-            key: 'the-evolution-of-programming-languages',
-            text: 'The Evolution of Programming Languages',
-            url: '/the-evolution-of-programming-languages/the-move-to-higher-level-languages',  
-            introduction: 'the-evolution-of-programming-languages',
-            subtitle: 'The Evolution of programming languages',
-            subMenuKeys: [
-              'the-move-to-higher-level-languages',
-              'impacts-on-compilers',
-            ]
-          }, {
-            key: 'the-science-of-building-a-compiler',
-            text: 'The Science of Building a Compiler',
-            url: '/the-science-of-building-a-compiler',  
-            introduction: 'the-science-of-building-a-compiler',
-            subtitle: 'The Science of Code Optimization'   
-          }, {
-            key: 'applications-of-compiler-technology',
-            text: 'Applications of Compiler Technology',
-            url: '/applications-of-compiler-technology/implementation-of-high-level-programming-languages',  
-            introduction: 'applications-of-compiler-technology',
-            subtitle: 'Implementation of High-Level Programming Languages',
-            subMenuKeys: [
-              'implementation-of-high-level-programming-languages',
-              'optimizations-for-computer-architectures',
-              'program-translations',
-              'software-productivity-tools',
-            ]
-          }, {
-            key: 'about',
-            text: 'About',
-            url: '/about',
-          }
-        ];
+        return NavigationMenu.menuItems;
       }
     },
     subMenuItems: {
       type: Object,
       default: function () {
-        return {
-          'structure-of-a-compiler': [
-            {
-              key: 'phases-of-a-compiler',
-              text: 'Phases of a compiler',
-              url: '/structure-of-a-compiler/phases-of-a-compiler',
-            }, {
-              key: 'grouping-of-phases-into-passes',
-              text: 'Grouping of phases into passes',
-              url: '/structure-of-a-compiler/grouping-of-phases-into-passes'
-            }, {
-              key: 'compiler-construction-tools',              
-              url: '/structure-of-a-compiler/compiler-construction-tools',
-              text: 'Compiler-Construction Tools',              
-            }
-          ],
-          'the-evolution-of-programming-languages': [
-            {
-              key: 'the-move-to-higher-level-languages',
-              text: 'The Move to Higher-level Languages',
-              hasIntroduction: true,
-              url: '/the-evolution-of-programming-languages/the-move-to-higher-level-languages'
-            }, {
-              key: 'impacts-on-compilers',              
-              text: 'Impacts on Compilers',
-              url: '/the-evolution-of-programming-languages/impacts-on-compilers',
-            }
-          ],
-          'applications-of-compiler-technology': [
-            {
-              key: 'implementation-of-high-level-programming-languages',
-              text: 'Implementation of High-Level Programming Languages',
-              hasIntroduction: true,
-              url: '/applications-of-compiler-technology/implementation-of-high-level-programming-languages'
-            }, {
-              key: 'optimizations-for-computer-architectures',
-              text: 'Optimizations for Computer Architectures',
-              url: '/applications-of-compiler-technology/optimizations-for-computer-architectures',
-            }, {
-              key: 'program-translations',
-              text: 'Program Translations',
-              url: '/applications-of-compiler-technology/program-translations',
-            }, {
-              key: 'software-productivity-tools',
-              text: 'Software Productivity Tools',
-              url: '/applications-of-compiler-technology/software-productivity-tools',
-            }
-          ]
-        }; 
+        return NavigationMenu.subMenuItems; 
       }
     }    
   }

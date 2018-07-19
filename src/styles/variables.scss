@@ -75,6 +75,6 @@ $margin-bottom-content: calc(#{$height-menu} + 3rem);
 
 $width-max: calc(100% - 1rem);
 $width-base-content: 500px;
-$width-menu: 100%;
+$width-menu: calc(100% + 1em);
 
 $width-box: 100%;

@@ -11,7 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import App from './components/app.vue';
 import routes from './modules/routes';
+import SharedState from './modules/shared-state';
 import store from './store';
+import NavigationMenu from './modules/navigation-menu';
 
 import './styles/global.css';
 
@@ -30,6 +32,17 @@ const router = new VueRouter({
   scrollBehavior() {
     return { x: 0, y: 0 };
   },
+});
+
+router.afterEach((to, from) => {
+  if (NavigationMenu.methods.isSubMenuItem(from.name)
+  && NavigationMenu.methods.isSubMenuItem(to.name)
+  && (
+    !NavigationMenu.methods.isFirstChildOfMenuItem(to.name, to.path)
+    || NavigationMenu.methods.haveSameParent(from.name, to.name)
+  )) {
+    SharedState.state.tableOfContentsIsVisible = false;
+  }
 });
 
 // eslint-disable-next-line

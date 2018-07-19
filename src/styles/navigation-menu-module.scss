@@ -17,6 +17,7 @@
     flex-wrap: wrap;
     width: $width-menu;
     border-top: 1px dotted $color-border-menu;
+    margin-left: -1em;
   }
   
   &__fadeable-enter-active,
@@ -91,7 +92,7 @@
     position: absolute;
     top: 0;
     left: 100%;
-    width: 100%;
+    width: 200%;
   }
  
   &__sub-menu-item,
