@@ -65,12 +65,12 @@ $font-size-submenu-item: 1.3rem;
 
 $margin-bottom-title: 1rem;
 $margin-top-title: 2.5rem;
+$margin-titles: calc(#{$margin-top-title} + #{$margin-bottom-title} );
 
 $height-title: 40px;
 $height-subtitle: 40px;
 $height-menu-button: 40px;
-$height-titles: calc(#{$margin-top-title} + ( #{$margin-bottom-title} * 2 )); // 3.5rem
-$height-menu: calc(100% - 80px - 3.5rem);
+$height-menu: calc(100% - #{$height-title} - #{$margin-titles});
 $margin-bottom-content: calc(#{$height-menu} + 3rem);
 
 $width-max: calc(100% - 1rem);

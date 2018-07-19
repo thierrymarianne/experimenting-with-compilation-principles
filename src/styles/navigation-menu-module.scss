@@ -43,19 +43,6 @@
     width: auto;
   }
 
-  &__about-icon {
-    color: $color-text-title;
-    display: flex;
-    align-self: center;
-    height: $height-title;
-    margin-top: -0.5rem;
-    margin-bottom: 0.5rem;
-
-    &--hidden {
-      display: none;
-    }
-  }
-
   &__toggle-menu-icon {
     display: flex;
   }

@@ -68,7 +68,6 @@
           <h1 
             :class="getTitleClasses()"
           >{{ getActiveMenuItem.text }}</h1>
-          <font-awesome-icon :class='getPenIconClasses' icon='pen-nib' />
           <div 
             class='navigation-menu__introduction'
             v-if='activeMenuItemHasIntroduction'
@@ -136,18 +135,6 @@ export default {
   computed: {
     activeMenuItemHasIntroduction: function () {
       return this.aMenuItemHasBeenSelected && this.getActiveMenuItem.introduction;
-    },
-    getPenIconClasses: function () {
-      const classes = {
-        'navigation-menu__about-icon': true,
-        'navigation-menu__about-icon--hidden': true,
-      };
-
-      if (!this.shouldShowSubtitle || !this.shouldShowActiveMenuText) {
-        classes['navigation-menu__about-icon--hidden'] = false;
-      }
-
-      return classes;
     },
     showTableOfContents: function () {
       return this.appState.tableOfContentsIsVisible;
