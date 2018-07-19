@@ -3,7 +3,7 @@
     width: 100%;
     display: flex;
     position: relative;
-  } 
+  }
 
   &__header {
     background-color: $color-background-menu;
@@ -16,10 +16,9 @@
     height: $height-menu;
     flex-wrap: wrap;
     width: $width-menu;
-    border-top: 10px dotted $color-border-menu;
-    border-right: 10px dotted $color-border-menu;
+    border-top: 1px dotted $color-border-menu;
   }
-
+  
   &__fadeable-enter-active,
   &__fadeable-leave-active {
     transition: opacity 1s;
@@ -28,26 +27,6 @@
   &__fadeable-enter,
   &__fadeable-leave-to {
     opacity: 0;
-  }
-
-  &__overlay {
-    display: block;
-    height: 5rem;
-    margin-top: -5rem;
-    opacity: 0.5;
-    background: linear-gradient(0deg, $color-background-menu, $color-background-menu, 50%, transparent);
-    width: 100%;
-
-    &--right {
-      background: linear-gradient(90deg, $color-background-menu, $color-background-menu, 50%, transparent);
-      height: 100%;
-      margin-right: -5rem;
-      opacity: 0.5;
-      position: absolute;
-      right: 0;
-      width: 5rem;
-      z-index: 3;
-    }
   }
 
   &__menu {
@@ -63,39 +42,45 @@
     width: auto;
   }
 
-  &__direction {
-    color: $color-button-menu;
-    margin-right: 1rem;
-    transform: rotate(90deg);
-    display: inline-block;
-    line-height: 1rem;
+  &__about-icon {
+    color: $color-text-title;
+    display: flex;
+    align-self: center;
+    height: $height-title;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
 
-    &--open {
-      transform: rotate(-90deg);
+    &--hidden {
+      display: none;
     }
+  }
 
-    &--right {
-      margin-right: auto;
-      margin-left: 1rem;
-    }
+  &__toggle-menu-icon {
+    display: flex;
   }
 
   &__button {
     background-color: $color-background-menu;
-    border: 1px solid $color-border-menu;
-    border-radius: 15px;
-    font-size: 2rem;
+    border: none;
+    display: flex;
+    font-size: 0.8rem;
+    height: 2.5rem;
+    justify-content: space-evenly;
     color: $color-button-menu;
     cursor: pointer;
     opacity: 0.8;
     outline: none;
-    padding: 1rem;
+    padding: 0.2rem;
     position: fixed;
-    right: 3rem;
-    bottom: 1rem;
+    top: 0;
     z-index: 3;
-    text-align: center;
-    width: 300px;
+    width: 100%;
+
+    &-label {
+      margin-right: 1rem;
+      margin-left: 1rem;
+      width: 200px;
+    }
   }
 
   &__sub-menu {
@@ -145,6 +130,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-top: $margin-top-title;
   }
 
   &__introduction {
@@ -165,13 +151,15 @@
     justify-content: flex-end;
   }
 
+  &__title {
+    margin-top: 0;
+  }
+
   &__subtitle {
     color: $color-text-title;
     font-family: $font-family-title;
     font-size: 1.2em;
-    padding-left: 1rem;
     display: flex;
-    justify-content: flex-end;
     margin-top: 1rem;
     margin-bottom: 0;
 

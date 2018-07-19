@@ -62,11 +62,19 @@ $font-family-serif: serif;
 
 $font-size-menu-item: 1.5rem;
 $font-size-submenu-item: 1.3rem;
-$menu-height: calc(#{$font-size-menu-item} + 2rem); 
 
-$height-menu: calc(#{$menu-height} * 6);
+$margin-bottom-title: 1rem;
+$margin-top-title: 2.5rem;
+
+$height-title: 40px;
+$height-subtitle: 40px;
+$height-menu-button: 40px;
+$height-titles: calc(#{$margin-top-title} + ( #{$margin-bottom-title} * 2 )); // 3.5rem
+$height-menu: calc(100% - 80px - 3.5rem);
 $margin-bottom-content: calc(#{$height-menu} + 3rem);
 
 $width-max: calc(100% - 1rem);
 $width-base-content: 500px;
-$width-menu: calc(100% - 5rem);
+$width-menu: 100%;
+
+$width-box: 100%;

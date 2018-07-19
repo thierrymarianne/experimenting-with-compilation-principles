@@ -10,7 +10,7 @@ into meaningful sequences called <em>lexemes</em>.
 For each lexeme, the lexical analyzer produces
 as output a <em>token</em> of the form 
 
-  <em>&#12296; token-name, attribute-value &#12297;</em>
+  <em><span v-html='replaceBrackets("<")'></span>token-name, attribute-value<span v-html='replaceBrackets(">")'></span></em>
 
 that it passes on to the subsequent phase,
 syntax analysis.
@@ -34,6 +34,12 @@ export default {
   components: {
     description: Description
   },
+  methods: {
+    replaceBrackets: function (subject) {
+      return subject.replace(/</g, '&#12296;')
+        .replace(/>/g, '&#12297;');
+    },
+  }
 }
 </script>
 

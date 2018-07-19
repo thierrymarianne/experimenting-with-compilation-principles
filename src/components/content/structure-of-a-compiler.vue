@@ -18,7 +18,9 @@
                 <code-sample 
                   :lines='step.input' />
             </template>
-            <template v-else>{{ step.input }}</template>
+            <template v-else>
+              <span v-html='replaceBrackets(step.input)'></span>
+            </template>
           </arrow>
           <template v-if='step.isTree'>
             <node-tree 
@@ -110,6 +112,10 @@ export default {
     }
   },
   methods: {
+    replaceBrackets: function (subject) {
+      return subject.replace(/</g, '&#12296;')
+        .replace(/>/g, '&#12297;');
+    },
     scrollToTop: function () {
       window.scrollTo(0, 0);
     },
@@ -211,20 +217,20 @@ export default {
               text: 'Lexical analyzer',
               name: 'lexical-analysis',
             }, {
-              input: '⟨id, 1⟩ ⟨=⟩ ⟨id, 2⟩ ⟨+⟩ ⟨id, 3⟩ ⟨*⟩ ⟨60⟩',
+              input: '<id,1> <=> <id, 2> <+> <id, 3> <*> <60>',
               text: 'Syntax analyzer',
               name: 'syntax-analysis',
             }, {
               isTree: true,
               input: {
                 '=': {
-                  left: '⟨id, 1⟩',
+                  left: '<id, 1>',
                   right: {
-                    '⟨+⟩': {
-                      left: '⟨id, 2⟩', 
+                    '<+>': {
+                      left: '<id, 2>', 
                       right: {
-                        '⟨*⟩': {
-                          left: '⟨id, 3⟩',
+                        '<*>': {
+                          left: '<id, 3>',
                           right: '60'
                         }
                       }
@@ -238,13 +244,13 @@ export default {
               isTree: true,
               input: {
                 '=': {
-                  left: '⟨id, 1⟩',
+                  left: '<id, 1>',
                   right: {
-                    '⟨+⟩': {
-                      left: '⟨id, 2⟩', 
+                    '<+>': {
+                      left: '<id, 2>', 
                       right: {
-                        '⟨*⟩': {
-                          left: '⟨id, 3⟩',
+                        '<*>': {
+                          left: '<id, 3>',
                           right: {
                             'inttofloat': {
                               onlyChild: '60'

@@ -1,7 +1,8 @@
 <template>
   <div class='triple-node'>
-    <div class='triple-node__parent'>
-        {{ parent }}
+    <div 
+      class='triple-node__parent'
+      v-html='replaceBrackets(parent)'>
     </div>
     <div
       class='triple-node__arrows'
@@ -40,12 +41,12 @@
       </template>
       <template v-else>
         <template v-if='bothLeftAndRightChildrenAreLeaves'>
-          <div class='triple-node__left-child'>{{ leftNode }}</div>
-          <div class='triple-node__right-child'>{{ rightNode }}</div>
+          <div class='triple-node__left-child' v-html='replaceBrackets(leftNode)'></div>
+          <div class='triple-node__right-child' v-html='replaceBrackets(rightNode)'></div>
         </template>
         <template v-else>
           <template v-if='isLeftChildALeaf'>
-            <div class='triple-node__left-child'>{{ leftNode }}</div>
+            <div class='triple-node__left-child' v-html='replaceBrackets(leftNode)'></div>
             <div class='triple-node__right-child'>
               <node-tree :root='rightNode'></node-tree>
             </div>
@@ -54,7 +55,7 @@
             <div class='triple-node__left-child'>
               <node-tree :root='leftNode'></node-tree>
             </div>
-            <div class='triple-node__right-child'>{{ rightNode }}</div>
+            <div class='triple-node__right-child' v-html='replaceBrackets(rightNode)'></div>
           </template>
         </template>        
       </template>
@@ -69,6 +70,16 @@ export default {
   name: 'triple-node',
   components: {
     'node-tree': () => import('./node-tree.vue')
+  },
+  methods: {
+    replaceBrackets: function (subject) {
+      if (!isString(subject)) {
+        return subject;
+      }
+
+      return subject.replace(/</g, '&#12296;')
+        .replace(/>/g, '&#12297;');
+    },
   },
   computed: {
     bothLeftAndRightChildrenAreLeaves: function () {

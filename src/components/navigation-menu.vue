@@ -1,12 +1,17 @@
 <template>
     <div class="navigation-menu__container">
       <button
-      class='navigation-menu__button'
-      @click='showMenu = ! showMenu'
+        class='navigation-menu__button'
+        @click='toggleTableOfContents'
+        v-on:keyup.shift.191="toggleTableOfContents"
       >
-        <span :class='{"navigation-menu__direction": true, "navigation-menu__direction--open": !showMenu}'>></span>
-        {{ getToggleMenuButtonLabel }}
-        <span :class='{"navigation-menu__direction--right": true, "navigation-menu__direction": true, "navigation-menu__direction--open": !showMenu}'>></span>
+        <font-awesome-icon
+          class='navigation-menu__toggle-menu-icon'
+          :icon='getToggleMenuIcon' />
+        <span class='navigation-menu__button-label'>{{ getToggleMenuButtonLabel }}</span>
+        <font-awesome-icon 
+          class='navigation-menu__toggle-menu-icon'
+          :icon='getToggleMenuIcon' />
       </button>  
       <transition
         name="custom-classes-transition"
@@ -15,7 +20,7 @@
       >
         <header 
           class='navigation-menu__header'
-          v-if='showMenu'
+          v-if='showTableOfContents'
         >
           <div class='navigation-menu__overlay'></div>
           <ul class="navigation-menu__menu">
@@ -54,48 +59,58 @@
           <div class='navigation-menu__overlay--right'></div>
         </header>
       </transition>
-      <div class='navigation-menu__titles-introduction'>
-        <h1 
-          :class="getTitleClasses()"
-          id='top'
-        >{{ getActiveMenuItem.text }}</h1>
-        <div 
-          class='navigation-menu__introduction'
-          v-if='aMenuItemHasBeenSelected && getActiveMenuItem.introduction'
-        >
-          <component
-            v-bind:is='getActiveMenuItem.introduction'></component>
+      <transition
+        name="custom-classes-transition"
+        enter-active-class="animated slideInUp"
+        leave-active-class="animated slideOutDown"
+      >
+        <div class='navigation-menu__titles-introduction'>
+          <h1 
+            :class="getTitleClasses()"
+          >{{ getActiveMenuItem.text }}</h1>
+          <font-awesome-icon :class='getPenIconClasses' icon='pen-nib' />
+          <div 
+            class='navigation-menu__introduction'
+            v-if='activeMenuItemHasIntroduction'
+          >
+            <component
+              v-bind:is='getActiveMenuItem.introduction'></component>
+          </div>
+          <h2 
+            v-if='shouldShowActiveMenuText'
+            :class="getSubtitleClasses()">{{ getActiveSubMenuItem.text }}
+          </h2>
+          <div
+            class='navigation-menu__introduction'
+            v-if='shouldShowIntroductionBeforeContent'
+          >
+            <component
+              v-bind:is='getActiveMenuItem.introduction'></component>
+          </div>
+          <h2
+            v-if='shouldShowSubtitle'
+            :class="getSubtitleClasses()">{{ getActiveMenuItem.subtitle }}
+          </h2>
+          <h2 
+            v-else-if='aSubMenuItemHasBeenSelected'
+            :class="getSubtitleClasses()">{{ getActiveSubMenuItem.text }}
+          </h2>
         </div>
-        <h2 
-          v-if='aMenuItemHasBeenSelected && getActiveSubMenuItem'
-          :class="getSubtitleClasses()">{{ getActiveSubMenuItem.text }}
-        </h2>
-        <div 
-          class='navigation-menu__introduction'
-          v-if='shouldShowIntroductionBeforeContent'
-        >
-          <component
-            v-bind:is='getActiveMenuItem.introduction'></component>
-        </div>
-        <h2
-          v-if='shouldShowSubtitle'
-          :class="getSubtitleClasses()">{{ getActiveMenuItem.subtitle }}
-        </h2>
-        <h2 
-          v-else-if='aSubMenuItemHasBeenSelected'
-          :class="getSubtitleClasses()">{{ getActiveSubMenuItem.text }}
-        </h2>
-      </div>
+      </transition>
     </div>
 </template>
 
 <script>
 import Content from './content';
+import SharedState from '../modules/shared-state';
 
 export default {
   components: Content,
   name: 'navigation-menu',
   methods: {
+    toggleTableOfContents: function () {
+      this.appState.tableOfContentsIsVisible = ! this.appState.tableOfContentsIsVisible;
+    },
     isMenuActive: function (menuItem) {
       return this.getActiveMenuItem.key == menuItem.key      
     },
@@ -118,17 +133,48 @@ export default {
     },    
   },
   computed: {
-    getToggleMenuButtonLabel: function () {
-      if (this.showMenu) {
-        return 'Hide Menu';
+    activeMenuItemHasIntroduction: function () {
+      return this.aMenuItemHasBeenSelected && this.getActiveMenuItem.introduction;
+    },
+    getPenIconClasses: function () {
+      const classes = {
+        'navigation-menu__about-icon': true,
+        'navigation-menu__about-icon--hidden': true,
+      };
+
+      if (!this.shouldShowSubtitle || !this.shouldShowActiveMenuText) {
+        classes['navigation-menu__about-icon--hidden'] = false;
       }
 
-      return 'Show Menu';
+      return classes;
+    },
+    showTableOfContents: function () {
+      return this.appState.tableOfContentsIsVisible;
+    },
+    getToggleMenuIcon: function () {
+      if (this.showTableOfContents) {
+        return 'arrow-alt-circle-down';
+      }
+
+      return 'arrow-alt-circle-up';
+    },
+    getToggleMenuButtonLabel: function () {
+      if (this.showTableOfContents) {
+        return 'Hide Table of Contents';
+      }
+
+      return 'Show Table of Contents';
+    },
+    shouldShowActiveMenuText: function () {
+      return this.aMenuItemHasBeenSelected &&
+        this.getActiveSubMenuItem &&
+        this.getActiveSubMenuItem.text;
+      ;
     },
     shouldShowSubtitle: function () {
       return this.getActiveMenuItem.subtitle &&
-       !this.getActiveMenuItem.introduction || 
-       this.aMenuItemHasBeenSelected;
+       (!this.getActiveMenuItem.introduction || 
+       this.aMenuItemHasBeenSelected);
     },
     shouldShowIntroductionBeforeContent: function () {
       return this.aSubMenuItemHasBeenSelected && 
@@ -216,8 +262,10 @@ export default {
     }
   },
   data: function () {
+    SharedState.state.tableOfContentsIsVisible = this.menuIsVisible;
+    
     return {
-      showMenu: this.menuIsVisible
+      appState: SharedState.state
     };
   },
   props: {
@@ -233,6 +281,7 @@ export default {
             key: 'introduction',
             text: 'Introduction',
             url: '/introduction',
+            subtitle: 'Language processors',
           }, {
             key: 'structure-of-a-compiler',
             text: 'The Structure of a Compiler',

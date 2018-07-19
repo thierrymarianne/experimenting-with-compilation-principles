@@ -22,7 +22,7 @@ $break-small-height: 1024px;
 
   &__scrollable {
     position: sticky;
-    top: 1em;
+    top: 3em;
     display: block;
     overflow: scroll;
     max-height: 0;
@@ -41,7 +41,11 @@ $break-small-height: 1024px;
   }
 
   &__left-column {
+    display: flex;
     flex: 0.5;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: $width-box;
   }
  
   &__right-column {

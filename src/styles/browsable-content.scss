@@ -11,4 +11,13 @@
     justify-content: center;
     margin-bottom: $margin-bottom-content;
   }
+  &__fade-enter-active,  
+  &__fade-leave-active {
+    transition: opacity 1s;
+  }
+
+  &__fade-leave-to,
+  &__fade-enter {
+    opacity: 1;    
+  }
 }

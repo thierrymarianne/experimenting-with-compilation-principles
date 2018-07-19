@@ -7,8 +7,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+let sourceMap = 'eval-source-map';
+if (developmentMode) {
+  sourceMap = 'hidden-source-map';
+}
 module.exports = {
-  mode: 'development',
+  mode: developmentMode ? 'development' : 'production',
   entry: './src/index.js',
   resolve: {
     modules: ['node_modules'],
@@ -22,7 +26,7 @@ module.exports = {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true
+        sourceMap: true,
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
@@ -50,12 +54,7 @@ module.exports = {
             ]
           }, {
             use: [
-              developmentMode ? 'vue-style-loader' : {
-                loader: MiniCssExtractPlugin.loader,
-                options: {
-                  publicPath: path.resolve(__dirname, 'dist'),
-                },
-              },
+              developmentMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
               { 
                 loader: 'css-loader',
                 options: {
@@ -121,5 +120,5 @@ module.exports = {
       chunkFilename: "[id].css"
     })
   ],
-  devtool: '#eval-source-map' 
+  devtool: sourceMap 
 };

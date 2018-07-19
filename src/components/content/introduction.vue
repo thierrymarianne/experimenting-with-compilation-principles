@@ -1,6 +1,5 @@
 <template>
   <div class='introduction__container'>
-    <h2 class="introduction__subtitle">{{ subtitle }}</h2>
     <div class='introduction__question-set'>
       <question>
           <template slot-scope='slotProps'>
