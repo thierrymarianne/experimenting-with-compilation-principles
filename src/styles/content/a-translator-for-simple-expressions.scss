@@ -1,0 +1,24 @@
+$content-width: calc(100% - 2rem);
+
+.content--no-first-letter {
+  .multimedia-content__paragraph {
+    &.paragraph:first-letter {
+      font-size: 1rem; 
+    }
+  }
+
+  .input-area__textarea {
+    width: $content-width;
+    padding: 1rem;
+  }
+
+  .source-code {
+    background-color: transparent;
+    border: 1px solid transparent;
+    border: none;
+    justify-self: flex-start;
+    margin: 0;
+    padding: 1rem;
+    width: $content-width
+  }
+}

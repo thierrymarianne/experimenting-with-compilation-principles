@@ -2,8 +2,8 @@
   <fieldset class="input-area">
     <textarea
       :class='getInputStatusClasses'
-      ref="json"
-      @change='getJson'
+      ref="input"
+      @change='getInputValue'
     ></textarea>
   </fieldset>
 </template>
@@ -29,10 +29,10 @@ export default {
     },  
   },
   methods: {
-    getJson: function () {
-      this.json = this.$refs.json.value
+    getInputValue: function () {
+      this.inputValue = this.$refs.input.value
       EventHub.$emit('source.changed', {
-        json: this.json
+        text: this.inputValue
       });
     },
     highlightInputError: function () {
@@ -41,8 +41,8 @@ export default {
     fixedInput: function (event) {
       this.error = false;
 
-      if (typeof this.$refs.json !== 'undefined') {
-        this.$refs.json.value = JSON.stringify(event.parsedJson);
+      if (typeof this.$refs.input !== 'undefined') {
+        this.$refs.input.value = JSON.stringify(event.parsedJson);
       }
     }
   },

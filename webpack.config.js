@@ -7,9 +7,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-let sourceMap = 'eval-source-map';
+let sourceMap = 'hidden-source-map';
 if (developmentMode) {
-  sourceMap = 'hidden-source-map';
+  sourceMap = 'eval-source-map';
 }
 module.exports = {
   mode: developmentMode ? 'development' : 'production',

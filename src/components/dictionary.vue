@@ -29,14 +29,18 @@
         },
         methods: {
             pasteSource: function (event) {
-                event.json = event.code;
+                event.text = event.code;
                 EventHub.$emit('source.changed', event);
             },
             updateDataStructure: function (event) {
                 const previousDataStructure = this.dataStructure;
 
+                if (this.$route !== 'about') {
+                    return;
+                }
+
                 try {
-                    event.json = event.json
+                    event.json = event.text
                         // Replace names non-enclosed in quotes with names enclosed in quotes
                         .replace(/([^\{,"'\s\{]+)\s*:/g, '"$1":')
                         // Replace values having a non-number with the value enclosed in quotes

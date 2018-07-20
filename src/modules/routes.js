@@ -104,6 +104,10 @@ export default [
             },
           },
         ],
+      }, {
+        path: 'a-translator-for-simple-expressions',
+        name: 'a-translator-for-simple-expressions',
+        component: Content.ATranslatorForSimpleExpressions,
       },
     ],
   }, {

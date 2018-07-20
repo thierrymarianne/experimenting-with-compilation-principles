@@ -1,5 +1,5 @@
 const state = {
-  tableOfContentsIsVisible: true,
+  tableOfContentsIsVisible: false,
 };
 
 export default {

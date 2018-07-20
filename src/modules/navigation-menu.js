@@ -42,6 +42,10 @@ const menuItems = [
       'software-productivity-tools',
     ],
   }, {
+    key: 'a-translator-for-simple-expressions',
+    text: 'A Translator for Simple Expressions',
+    url: '/a-translator-for-simple-expressions',
+  }, {
     key: 'about',
     text: 'About',
     url: '/about',

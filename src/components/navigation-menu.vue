@@ -245,7 +245,7 @@ export default {
   props: {
     menuIsVisible: {
       type: Boolean,
-      default: true,
+      default: () => (SharedState.state.tableOfContentsIsVisible)
     },
     menuItems: {
       type: Array,

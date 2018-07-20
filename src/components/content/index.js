@@ -19,6 +19,8 @@ import OptimizationsForComputerArchitectures from './optimizations-for-computer-
 import ProgramTranslations from './program-translations.vue';
 import SoftwareProductivityTools from './software-productivity-tools.vue';
 
+import ATranslatorForSimpleExpressions from './a-translator-for-simple-expressions.vue';
+
 export default {
   About,
   Introduction,
@@ -35,4 +37,5 @@ export default {
   OptimizationsForComputerArchitectures,
   ProgramTranslations,
   SoftwareProductivityTools,
+  ATranslatorForSimpleExpressions,
 };
