@@ -8,11 +8,14 @@
 </template>
 
 <script>
-import MultimediaContent from '../multimedia-content.vue';
-import InputArea from '../input-area.vue';
-import SourceCode from '../source-code.vue';
-import Parser from '../../modules/a-translator-for-simple-expressions/parser.js';
-import EventHub from '../../modules/event-hub';
+import MultimediaContent from '../../multimedia-content.vue';
+import InputArea from '../../input-area.vue';
+import SourceCode from '../../source-code.vue';
+import {
+  Parser,
+  CharacterReader
+} from './modules/parser.js';
+import EventHub from '../../../modules/event-hub';
 
 export default {
   name: 'a-translator-for-simple-expressions',
@@ -30,12 +33,15 @@ export default {
     };
   },
   methods: {
-    getParser: function (program) {
-      return new Parser(program);
+    getParser: function (reader) {
+      return new Parser(reader);
+    },
+    getCharacterReader: function (program) {
+      return new CharacterReader(program, this.$route.name);
     },
     parseChanges: function ({text}) {
       try {
-        const parser = this.getParser(text);
+        const parser = this.getParser(this.getCharacterReader(text));
         this.postfixTranslation = parser.parse();
       } catch (error) {
         this.postfixTranslation = error.message;
@@ -46,5 +52,5 @@ export default {
 </script>
 
 <style module>
-  @import '../../styles/content/a-translator-for-simple-expressions.scss';
+  @import './a-simple-syntax-directed-translator.scss';
 </style>

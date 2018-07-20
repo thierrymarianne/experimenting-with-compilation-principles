@@ -108,6 +108,10 @@ export default [
         path: 'a-translator-for-simple-expressions',
         name: 'a-translator-for-simple-expressions',
         component: Content.ATranslatorForSimpleExpressions,
+      }, {
+        path: 'a-simple-syntax-directed-translator/lexical-analysis',
+        name: 'lexical-analysis',
+        component: Content.ASimpleSyntaxDirectedTranslator,
       },
     ],
   }, {

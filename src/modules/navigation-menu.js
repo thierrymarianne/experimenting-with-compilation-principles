@@ -46,6 +46,10 @@ const menuItems = [
     text: 'A Translator for Simple Expressions',
     url: '/a-translator-for-simple-expressions',
   }, {
+    key: 'lexical-analysis',
+    text: 'Lexical Analysis',
+    url: '/a-simple-syntax-directed-translator/lexical-analysis',
+  }, {
     key: 'about',
     text: 'About',
     url: '/about',

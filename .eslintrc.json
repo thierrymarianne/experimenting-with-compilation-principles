@@ -16,6 +16,7 @@
       "files": [ "src/**/*.js" ],
       "rules": {
         "no-constant-condition": 0,
+        "prefer-destructuring": 0,
         "no-param-reassign": 0,
         "indent": [
           ["error", 2]

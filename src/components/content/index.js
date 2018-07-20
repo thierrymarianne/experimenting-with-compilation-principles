@@ -19,7 +19,7 @@ import OptimizationsForComputerArchitectures from './optimizations-for-computer-
 import ProgramTranslations from './program-translations.vue';
 import SoftwareProductivityTools from './software-productivity-tools.vue';
 
-import ATranslatorForSimpleExpressions from './a-translator-for-simple-expressions.vue';
+import ASimpleSyntaxDirectedTranslator from './a-simple-syntax-directed-translator';
 
 export default {
   About,
@@ -37,5 +37,6 @@ export default {
   OptimizationsForComputerArchitectures,
   ProgramTranslations,
   SoftwareProductivityTools,
-  ATranslatorForSimpleExpressions,
+  ATranslatorForSimpleExpressions: ASimpleSyntaxDirectedTranslator.ATranslatorForSimpleExpressions,
+  ASimpleSyntaxDirectedTranslator: ASimpleSyntaxDirectedTranslator.LexicalAnalysis,
 };
