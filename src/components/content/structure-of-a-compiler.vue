@@ -1,8 +1,5 @@
 <template>
-  <div
-    class='structure-of-a-compiler'
-    v-scroll='handleScroll'
-  >
+  <div class='structure-of-a-compiler'>
     <section class='structure-of-a-compiler__left-column'>
       <button
         v-if='exampleIsVisible'
@@ -101,20 +98,6 @@ export default {
     'code-generation': CodeGeneration,
     'symbol-table-management': SymbolTableManagement,
   },
-  directives: {
-    scroll: {
-      inserted: function (el, binding) {
-        let f = function (evt) {
-          if (binding.value(evt, el)) {
-            // window.removeEventListener('scroll', f)
-            return;
-          }
-        }
-
-        window.addEventListener('scroll', f)
-      }
-    }
-  },
   mounted: function () {
     EventHub.$on('phase.unhighlighted', this.scrollToTop);
   },
@@ -130,10 +113,6 @@ export default {
     }
   },
   methods: {
-    handleScroll: function (evt, el) {
-      // disable-eslint-next-line
-      console.log(evt);
-    },
     replaceBrackets: function (subject) {
       return subject.replace(/</g, '&#12296;')
         .replace(/>/g, '&#12297;');
