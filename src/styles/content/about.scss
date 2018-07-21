@@ -9,6 +9,7 @@
   &__left-column {
     display: flex;
     flex: 0.5;
+    flex-shrink: 0;
     justify-content: flex-end;
   }
 

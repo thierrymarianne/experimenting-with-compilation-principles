@@ -3,13 +3,13 @@
     <section class='about__left-column'>
       <paragraph align='right'>When playing with <browsable-link href='https://vuejs.org'>vue.js</browsable-link>,
 I've stumbled upon several limitations of
-my own understanding  with regards to
+my own understanding with regards to
 how a source code can be parsed
 before interpretation.
 
-My original intent was to get
-a better sense of data structures
-(as plain and simple as a JavaScript object).
+My original intent was to get a better grasp
+of data structures (as plain and
+simple as a JavaScript object).
         
 I had the following requirements in mind:
  - Drawing visual representations

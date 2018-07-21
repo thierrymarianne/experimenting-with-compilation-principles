@@ -29,13 +29,13 @@
         },
         methods: {
             pasteSource: function (event) {
-                event.text = event.code;
-                EventHub.$emit('source.changed', event);
+                const text = event.code;
+                EventHub.$emit('source.changed', {text: text});
             },
             updateDataStructure: function (event) {
                 const previousDataStructure = this.dataStructure;
 
-                if (this.$route !== 'about') {
+                if (this.$route.name !== 'about') {
                     return;
                 }
 

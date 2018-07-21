@@ -73,8 +73,8 @@ $height-menu-button: 40px;
 $height-menu: calc(100% - #{$height-title} - #{$margin-titles});
 $margin-bottom-content: 0;
 
-$width-max: calc(100% - 1rem);
 $width-base-content: 500px;
-$width-menu: calc(100% + 1em);
-
 $width-box: 400px;
+$width-input-area: 20em;
+$width-max: calc(100% - 1rem);
+$width-menu: calc(100% + 1em);

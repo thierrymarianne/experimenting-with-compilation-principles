@@ -16,7 +16,7 @@
     height: 10em;
     padding: 1em;
     outline: none;
-    width: 20em;
+    width: $width-input-area;
 
     &--error {
       border-color: $color-error;

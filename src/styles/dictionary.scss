@@ -4,13 +4,11 @@
   border-left: 1px solid $color-border;
   margin-top: 1rem;
   padding: 1rem;
-  width: 100%;
+  width: $width-input-area;
 
   &-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+    justify-content: flex-start;
+    width: $width-input-area;
   }
 
   &__key-value {
