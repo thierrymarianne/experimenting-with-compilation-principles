@@ -48,6 +48,8 @@ const menuItems = [
     subMenuKeys: [
       'lexical-analysis',
       'a-translator-for-simple-expressions',
+      'associativity-of-operators',
+      'precedence-of-operators',
     ],
   }, {
     key: 'about',
@@ -113,6 +115,14 @@ const subMenuItems = {
       key: 'lexical-analysis',
       text: 'Lexical Analysis',
       url: '/a-simple-syntax-directed-translator/lexical-analysis',
+    }, {
+      key: 'associativity-of-operators',
+      text: 'Associativity of Operators',
+      url: '/a-simple-syntax-directed-translator/associativity-of-operators',
+    }, {
+      key: 'precedence-of-operators',
+      text: 'Precedence of Operators',
+      url: '/a-simple-syntax-directed-translator/precedence-of-operators',
     },
   ],
 };

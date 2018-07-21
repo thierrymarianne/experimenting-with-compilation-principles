@@ -1,16 +1,62 @@
 const path = require('path');
 
-const developmentMode = process.env.NODE_ENV !== 'production';
+const environment = process.env.NODE_ENV || 'development';
+const developmentMode = environment !== 'production';
+const productionMode = environment === 'production';
 
+const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
+const assetsPluginInstance = new AssetsPlugin({includeManifest: 'manifest'});
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let sourceMap = 'hidden-source-map';
+let styleLoader = MiniCssExtractPlugin.loader;
+if (developmentMode) {
+  styleLoader = 'vue-style-loader';
+}
+
+let sourceMap = 'cheap-module-source-map';
 if (developmentMode) {
   sourceMap = 'eval-source-map';
 }
+
+const sassLoaderOptions = {
+  data: '@import "variables.scss";',
+  sourceMap: true,
+  includePaths: [
+    path.join(__dirname, 'src/styles'),
+    path.join(__dirname, 'src/styles/content'),
+    path.join(__dirname, '/src/styles/structure-of-a-compiler'),
+  ]
+};
+
+let plugins = [
+  new VueLoaderPlugin(),
+  new HtmlWebpackPlugin({
+    title: 'Compilers: Principles, Techniques, and Tools',
+    template: 'index.html.ejs',
+    inject: 'body',
+  }),
+];
+
+if (productionMode) {
+  plugins.concat([
+    new MiniCssExtractPlugin({
+      filename: "[name].[hash].css",
+      chunkFilename: "[id].[hash].css"
+    }),
+    assetsPluginInstance,
+    new webpack.HashedModuleIdsPlugin({
+      hashFunction: 'sha256',
+      hashDigest: 'hex',
+      hashDigestLength: 20
+    })
+  ]);
+}
+
 module.exports = {
   mode: developmentMode ? 'development' : 'production',
   entry: './src/index.js',
@@ -29,7 +75,26 @@ module.exports = {
         sourceMap: true,
       }),
       new OptimizeCSSAssetsPlugin({})
-    ]
+    ],
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true
+        },
+      },
+    },
+    runtimeChunk: {
+      name: "manifest",
+    },
   },
   module: {
     rules: [
@@ -42,37 +107,30 @@ module.exports = {
           {
             resourceQuery: /-module/,
             use: [
-              'vue-style-loader',
+              styleLoader,
               {
                 loader: 'css-loader',
                 options: {
                   modules: true,
                   sourceMap: true,
-                  localIdentName: '[local]_[hash:base64:5]'
-                }
-              }
+                  localIdentName: '[path]_[local]_[hash:base64:5]'
+                },              
+              },
             ]
           }, {
             use: [
-              developmentMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
-              { 
+              'vue-style-loader',
+              {
                 loader: 'css-loader',
                 options: {
-                  importLoaders: 1
+                  importLoaders: 1,
+                  sourceMap: true,
                 }
               },
               'postcss-loader',
               {
                 loader: 'sass-loader',
-                options: {
-                  data: '@import "variables.scss";',
-                  sourceMap: true,
-                  includePaths: [
-                    path.join(__dirname, 'src/styles'),
-                    path.join(__dirname, 'src/styles/content'),
-                    path.join(__dirname, '/src/styles/structure-of-a-compiler'),
-                  ]
-                }
+                options: sassLoaderOptions,
               },
             ]
           }
@@ -111,14 +169,9 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js'
+    filename: '[name].[hash].js',
+    chunkFilename: '[name].[chunkHash].bundle.js',
   },
-  plugins: [
-    new VueLoaderPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "style.css",
-      chunkFilename: "[id].css"
-    })
-  ],
-  devtool: sourceMap 
+  plugins: plugins,
+  devtool: sourceMap, 
 };

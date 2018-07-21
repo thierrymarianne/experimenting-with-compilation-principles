@@ -112,6 +112,18 @@ export default [
         },
         children: [
           {
+            path: 'associativity-of-operators',
+            name: 'associativity-of-operators',
+            components: {
+              content: Content.AssociativityOfOperators,
+            },
+          }, {
+            path: 'precedence-of-operators',
+            name: 'precedence-of-operators',
+            components: {
+              content: Content.PrecedenceOfOperators,
+            },
+          }, {
             path: 'a-translator-for-simple-expressions',
             name: 'a-translator-for-simple-expressions',
             components: {

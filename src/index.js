@@ -14,7 +14,7 @@ import SharedState from './modules/shared-state';
 import store from './store';
 import NavigationMenu from './modules/navigation-menu';
 
-import './styles/global.css';
+import styles from './styles/global.css';
 
 // See https://fontawesome.com/how-to-use/on-the-web/using-with/vuejs
 library.add(faArrowAltCircleUp);
@@ -48,6 +48,7 @@ const app = new Vue({
   el: '#app',
   router,
   store,
+  styles,
   components: {
     app: App,
   },
