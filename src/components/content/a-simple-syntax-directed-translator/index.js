@@ -1,11 +1,11 @@
 import ATranslatorForSimpleExpressions from './a-translator-for-simple-expressions.vue';
-import LexicalAnalysis from './lexical-analysis.vue';
+import ASimpleSyntaxDirectedTranslator from './lexical-analyzer.vue';
 import AssociativityOfOperators from './associativity-of-operators.vue';
 import PrecedenceOfOperators from './precedence-of-operators.vue';
 
 export default {
-  LexicalAnalysis,
   ATranslatorForSimpleExpressions,
+  ASimpleSyntaxDirectedTranslator,
   AssociativityOfOperators,
   PrecedenceOfOperators,
 };

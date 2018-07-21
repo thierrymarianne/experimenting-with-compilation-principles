@@ -2,6 +2,13 @@ import Content from '../components/content';
 
 const programmingLanguageBasicsChildren = [
   {
+    name: 'dynamic-scope',
+    text: 'Dynamic Scope',
+    path: '/programming-language-basics/dynamic-scope',
+    components: {
+      content: Content.DynamicScope,
+    },
+  }, {
     name: 'environments-and-states',
     text: 'Environment and States',
     path: '/programming-language-basics/environments-and-states',
@@ -104,7 +111,7 @@ const menuItems = [
   }, {
     name: 'programming-language-basics',
     text: 'Programming Language Basics',
-    path: '/programming-language-basics/call-by-value',
+    path: '/programming-language-basics/dynamic-scope',
     subMenuNames: programmingLanguageBasicsChildrenNames,
   }, {
     name: 'a-simple-syntax-directed-translator',

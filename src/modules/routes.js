@@ -145,8 +145,8 @@ export default [
               content: Content.ATranslatorForSimpleExpressions,
             },
           }, {
-            path: 'lexical-analysis',
-            name: 'lexical-analysis',
+            path: 'lexical-analyzer',
+            name: 'lexical-analyzer',
             components: {
               content: Content.ASimpleSyntaxDirectedTranslator,
             },
