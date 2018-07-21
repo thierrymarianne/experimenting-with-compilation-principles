@@ -197,6 +197,18 @@ const haveSameParent = (firstRouteName, secondRouteName) => {
   return getParent(firstRouteName) === getParent(secondRouteName);
 };
 
+const willCloseMenuAfterNavigation = (from, to) => {
+  const willCloseMenu = isMenuItem(to.name) || (
+    isSubMenuItem(from.name)
+    && isSubMenuItem(to.name)
+    && (
+      !isFirstChildOfMenuItem(to.name, to.path)
+      || haveSameParent(from.name, to.name)
+    )
+  );
+  return willCloseMenu;
+};
+
 export default {
   menuItems,
   subMenuItems,
@@ -205,5 +217,6 @@ export default {
     isSubMenuItem,
     isFirstChildOfMenuItem,
     haveSameParent,
+    willCloseMenuAfterNavigation,
   },
 };

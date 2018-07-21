@@ -33,12 +33,7 @@ const router = new VueRouter({
 });
 
 router.afterEach((to, from) => {
-  if (NavigationMenu.methods.isSubMenuItem(from.name)
-  && NavigationMenu.methods.isSubMenuItem(to.name)
-  && (
-    !NavigationMenu.methods.isFirstChildOfMenuItem(to.name, to.path)
-    || NavigationMenu.methods.haveSameParent(from.name, to.name)
-  )) {
+  if (NavigationMenu.methods.willCloseMenuAfterNavigation(from, to)) {
     SharedState.state.tableOfContentsIsVisible = false;
   }
 });
