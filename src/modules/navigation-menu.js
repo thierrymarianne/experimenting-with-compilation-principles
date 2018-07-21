@@ -42,13 +42,13 @@ const menuItems = [
       'software-productivity-tools',
     ],
   }, {
-    key: 'a-translator-for-simple-expressions',
-    text: 'A Translator for Simple Expressions',
-    url: '/a-translator-for-simple-expressions',
-  }, {
-    key: 'lexical-analysis',
-    text: 'Lexical Analysis',
-    url: '/a-simple-syntax-directed-translator/lexical-analysis',
+    key: 'a-simple-syntax-directed-translator',
+    text: 'A Simple Syntax Directed Translator',
+    url: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
+    subMenuKeys: [
+      'lexical-analysis',
+      'a-translator-for-simple-expressions',
+    ],
   }, {
     key: 'about',
     text: 'About',
@@ -102,6 +102,17 @@ const subMenuItems = {
       key: 'software-productivity-tools',
       text: 'Software Productivity Tools',
       url: '/applications-of-compiler-technology/software-productivity-tools',
+    },
+  ],
+  'a-simple-syntax-directed-translator': [
+    {
+      key: 'a-translator-for-simple-expressions',
+      text: 'A Translator for Simple Expressions',
+      url: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
+    }, {
+      key: 'lexical-analysis',
+      text: 'Lexical Analysis',
+      url: '/a-simple-syntax-directed-translator/lexical-analysis',
     },
   ],
 };
