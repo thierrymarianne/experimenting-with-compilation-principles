@@ -1,8 +1,11 @@
 import {
-  isDigit,
   Lexer,
-  Tags,
   Token,
+  isDigit,
+  isKeyword,
+  isIdentifier,
+  isTerminal,
+  isNumber,
 } from './lexer';
 
 const SimpleTranslatorSyntaxError = class extends SyntaxError {
@@ -43,10 +46,11 @@ const CharacterReader = class {
     }
 
     if ($routeName === 'lexical-analysis') {
-      if (program.match(/[^0-9+-\s]/)) {
+      if (program.match(/[^a-zA-Z0-9+-\s]/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
       }
     }
+
 
     this.programCharacters = program.split('');
     this.lookaheadPosition = 0;
@@ -65,20 +69,8 @@ const CharacterReader = class {
     return lookahead;
   }
 
-  peek() {
-    if (this.programCharacters.length < this.peekPosition + 1) {
-      return null;
-    }
-
-    const lookahead = this.programCharacters[this.peekPosition];
-
-    this.peekPosition = this.peekPosition + 1;
-
-    return lookahead;
-  }
-
   rewind() {
-    this.peekPosition = this.peekPosition - 1;
+    this.lookaheadPosition = this.lookaheadPosition - 1;
   }
 };
 
@@ -90,18 +82,16 @@ const Parser = class {
   }
 
   appendToken(token) {
-    if (token instanceof Token) {
-      if (token.tag === Tags.TAG_NUM) {
-        this.output = this.output + token.value;
+    if (isNumber(token)) {
+      this.output = this.output + token.value;
 
-        return;
-      }
+      return;
+    }
 
-      if (token.tag === Tags.TAG_ID || token.tag === Tags.TAG_FUNCTION) {
-        this.output = this.output + token.lexeme;
+    if (isIdentifier(token) || isKeyword(token)) {
+      this.output = this.output + token.lexeme;
 
-        return;
-      }
+      return;
     }
 
     this.appendLastCharacter(token);
@@ -123,39 +113,26 @@ const Parser = class {
 
   expr() {
     this.term();
-    let lookahead = this.lookahead;
-    if (lookahead instanceof Token) {
-      lookahead = this.lookahead.tag;
-    }
 
     while (true) {
-      if (lookahead === '+') {
+      if (isTerminal('+', this.lookahead)) {
         this.match('+'); this.term(); this.appendToken('+');
-
-        lookahead = this.lookahead;
-        if (lookahead instanceof Token) {
-          lookahead = this.lookahead.tag;
-        }
-      } else if (lookahead === '-') {
+      } else if (isTerminal('-', this.lookahead)) {
         this.match('-'); this.term(); this.appendToken('-');
-
-        lookahead = this.lookahead;
-        if (lookahead instanceof Token) {
-          lookahead = this.lookahead.tag;
-        }
       } else {
         return;
       }
     }
   }
 
+  isValidTerm() {
+    return isDigit(this.lookahead)
+      || isNumber(this.lookahead)
+      || isIdentifier(this.lookahead);
+  }
+
   term() {
-    if (isDigit(this.lookahead)
-      || (
-        this.lookahead instanceof Token
-        && this.lookahead.tag === Tags.TAG_NUM
-      )
-    ) {
+    if (this.isValidTerm()) {
       this.appendToken(this.lookahead);
       this.match(this.lookahead);
 
