@@ -43,4 +43,9 @@
     display: block;
     content: ' ';  
   }
+
+  strong {
+    color: $color-text-bold;
+    font-weight: 600;
+  }
 }

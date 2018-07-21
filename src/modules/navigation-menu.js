@@ -65,6 +65,72 @@ const programmingLanguageBasicsChildrenNames = programmingLanguageBasicsChildren
   return name;
 });
 
+const aSimpleSyntaxDirectTranslatorChildren = [
+  {
+    name: 'a-model-of-a-compiler-front-end',
+    text: 'A Model of a Compiler Front End',
+    path: '/a-simple-syntax-directed-translator/a-model-of-a-compiler-front-end',
+    components: {
+      content: Content.AModelOfACompilerFrontEnd,
+    },
+  }, {
+    name: 'syntax-definition',
+    text: 'Syntax Definition',
+    path: '/a-simple-syntax-directed-translator/syntax-definition',
+    components: {
+      content: Content.SyntaxDefinition,
+    },
+  }, {
+    name: 'definition-of-grammars',
+    text: 'Definition of Grammars',
+    path: '/a-simple-syntax-directed-translator/definition-of-grammars',
+    components: {
+      content: Content.DefinitionOfGrammars,
+    },
+  }, {
+    name: 'tokens-versus-terminal',
+    text: 'Tokens versus Terminals',
+    path: '/a-simple-syntax-directed-translator/tokens-versus-terminals',
+    components: {
+      content: Content.TokensVersusTerminals,
+    },
+  }, {
+    name: 'a-translator-for-simple-expressions',
+    text: 'A Translator for Simple Expressions',
+    path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
+    components: {
+      content: Content.ATranslatorForSimpleExpressions,
+    },
+  }, {
+    name: 'lexical-analyzer',
+    text: 'Lexical Analysis',
+    path: '/a-simple-syntax-directed-translator/lexical-analyzer',
+    components: {
+      content: Content.LexicalAnalyzer,
+    },
+  }, {
+    name: 'associativity-of-operators',
+    text: 'Associativity of Operators',
+    path: '/a-simple-syntax-directed-translator/associativity-of-operators',
+    components: {
+      content: Content.AssociativityOfOperators,
+    },
+  }, {
+    name: 'precedence-of-operators',
+    text: 'Precedence of Operators',
+    path: '/a-simple-syntax-directed-translator/precedence-of-operators',
+    components: {
+      content: Content.PrecedenceOfOperators,
+    },
+  },
+];
+
+const aSimpleSyntaxDirectTranslatorChildrenNames = aSimpleSyntaxDirectTranslatorChildren
+.map((route) => {
+  const name = route.name;
+  return name;
+});
+
 const menuItems = [
   {
     name: 'introduction',
@@ -116,13 +182,8 @@ const menuItems = [
   }, {
     name: 'a-simple-syntax-directed-translator',
     text: 'A Simple Syntax Directed Translator',
-    path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
-    subMenuNames: [
-      'lexical-analyzer',
-      'a-translator-for-simple-expressions',
-      'associativity-of-operators',
-      'precedence-of-operators',
-    ],
+    path: '/a-simple-syntax-directed-translator/a-model-of-a-compiler-front-end',
+    subMenuNames: aSimpleSyntaxDirectTranslatorChildrenNames,
   }, {
     name: 'about',
     text: 'About',
@@ -179,25 +240,7 @@ const subMenuItems = {
     },
   ],
   'programming-language-basics': programmingLanguageBasicsChildren,
-  'a-simple-syntax-directed-translator': [
-    {
-      name: 'a-translator-for-simple-expressions',
-      text: 'A Translator for Simple Expressions',
-      path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
-    }, {
-      name: 'lexical-analyzer',
-      text: 'Lexical Analysis',
-      path: '/a-simple-syntax-directed-translator/lexical-analyzer',
-    }, {
-      name: 'associativity-of-operators',
-      text: 'Associativity of Operators',
-      path: '/a-simple-syntax-directed-translator/associativity-of-operators',
-    }, {
-      name: 'precedence-of-operators',
-      text: 'Precedence of Operators',
-      path: '/a-simple-syntax-directed-translator/precedence-of-operators',
-    },
-  ],
+  'a-simple-syntax-directed-translator': aSimpleSyntaxDirectTranslatorChildren,
 };
 
 const isMenuItem = (routeName) => {
@@ -309,6 +352,10 @@ export default {
   routes: {
     'programming-language-basics': (prefix) => {
       const routes = routeFactory(programmingLanguageBasicsChildren, prefix);
+      return routes;
+    },
+    'a-simple-syntax-directed-translator': (prefix) => {
+      const routes = routeFactory(aSimpleSyntaxDirectTranslatorChildren, prefix);
       return routes;
     },
   },

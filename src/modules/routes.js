@@ -2,6 +2,18 @@ import Content from '../components/content';
 import BrowsableContent from '../components/browsable-content.vue';
 import NavigationMenu from './navigation-menu';
 
+const simpleSyntaxDirectedTranslatorRoutes = ((path) => {
+  const routes = {
+    path,
+    component: BrowsableContent,
+    props: {
+      showNavigationMenu: false,
+    },
+    children: NavigationMenu.routes[path](path),
+  };
+  return routes;
+})('a-simple-syntax-directed-translator');
+
 const programmingLanguageBasicsRoutes = ((path) => {
   const routes = {
     path,
@@ -119,40 +131,7 @@ export default [
         ],
       },
       programmingLanguageBasicsRoutes,
-      {
-        path: 'a-simple-syntax-directed-translator',
-        component: BrowsableContent,
-        props: {
-          showNavigationMenu: false,
-        },
-        children: [
-          {
-            path: 'associativity-of-operators',
-            name: 'associativity-of-operators',
-            components: {
-              content: Content.AssociativityOfOperators,
-            },
-          }, {
-            path: 'precedence-of-operators',
-            name: 'precedence-of-operators',
-            components: {
-              content: Content.PrecedenceOfOperators,
-            },
-          }, {
-            path: 'a-translator-for-simple-expressions',
-            name: 'a-translator-for-simple-expressions',
-            components: {
-              content: Content.ATranslatorForSimpleExpressions,
-            },
-          }, {
-            path: 'lexical-analyzer',
-            name: 'lexical-analyzer',
-            components: {
-              content: Content.ASimpleSyntaxDirectedTranslator,
-            },
-          },
-        ],
-      },
+      simpleSyntaxDirectedTranslatorRoutes,
     ],
   }, {
     path: '*',
