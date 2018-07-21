@@ -20,8 +20,9 @@ import ProgramTranslations from './program-translations.vue';
 import SoftwareProductivityTools from './software-productivity-tools.vue';
 
 import ASimpleSyntaxDirectedTranslator from './a-simple-syntax-directed-translator';
+import ProgrammingLanguageBasics from './programming-language-basics';
 
-export default {
+const ContentItems = {
   About,
   Introduction,
   StructureOfACompiler,
@@ -37,8 +38,12 @@ export default {
   OptimizationsForComputerArchitectures,
   ProgramTranslations,
   SoftwareProductivityTools,
-  ATranslatorForSimpleExpressions: ASimpleSyntaxDirectedTranslator.ATranslatorForSimpleExpressions,
-  ASimpleSyntaxDirectedTranslator: ASimpleSyntaxDirectedTranslator.LexicalAnalysis,
-  AssociativityOfOperators: ASimpleSyntaxDirectedTranslator.AssociativityOfOperators,
-  PrecedenceOfOperators: ASimpleSyntaxDirectedTranslator.PrecedenceOfOperators,
 };
+
+const Content = {
+  ...ContentItems,
+  ...ASimpleSyntaxDirectedTranslator,
+  ...ProgrammingLanguageBasics,
+};
+
+export default Content;

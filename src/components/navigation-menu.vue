@@ -8,7 +8,9 @@
         <font-awesome-icon
           class='navigation-menu__toggle-menu-icon'
           :icon='getToggleMenuIcon' />
-        <span class='navigation-menu__button-label'>{{ getToggleMenuButtonLabel }}</span>
+        <span class='navigation-menu__button-label'>
+          {{ getToggleMenuButtonLabel }}
+        </span>
         <font-awesome-icon 
           class='navigation-menu__toggle-menu-icon'
           :icon='getToggleMenuIcon' />
@@ -28,8 +30,8 @@
               v-for="item in getMenuItems"
             >
               <router-link 
-                :key='item.key'
-                :to='item.url'
+                :key='item.name'
+                :to='item.path'
                 active-class='navigation-menu__menu-item--active'
                 class='navigation-menu__menu-item'
                 :class='{"navigation-menu__menu-item--active": isMenuActive(item)}'
@@ -38,14 +40,14 @@
                 {{ item.text }}  
               </router-link>
               <li 
-                v-if='getSubMenuItems(item.key) && isMenuActive(item)'
+                v-if='getSubMenuItems(item.name) && isMenuActive(item)'
                 class='navigation-menu__menu-item-sub-menu'
               >
                 <ul class='navigation-menu__sub-menu'>
                   <router-link 
-                    v-for="subItem in getSubMenuItems(item.key)"
-                    :key='subItem.key'
-                    :to='subItem.url'
+                    v-for="subItem in getSubMenuItems(item.name)"
+                    :key='subItem.name'
+                    :to='subItem.path'
                     active-class='navigation-menu__sub-menu-item--active'
                     class='navigation-menu__sub-menu-item'
                     tag='li' 
@@ -109,10 +111,18 @@ export default {
   name: 'navigation-menu',
   methods: {
     toggleTableOfContents: function () {
+      if (this.tableOfContentsTogglingLocked) {
+        return;
+      }
+
       this.appState.tableOfContentsIsVisible = ! this.appState.tableOfContentsIsVisible;
+      this.tableOfContentsTogglingLocked = true;
+      setTimeout(() => {
+        this.tableOfContentsTogglingLocked = false;
+      }, 500);
     },
     isMenuActive: function (menuItem) {
-      return this.getActiveMenuItem.key == menuItem.key      
+      return this.getActiveMenuItem.name == menuItem.name      
     },
     getTitleClasses: function () {
       return {
@@ -186,7 +196,7 @@ export default {
       }
 
       let activeMenuItems = this.menuItems.filter(function (item) {
-          return item.key === routeName;
+          return item.name === routeName;
       });
 
       if (activeMenuItems.length === 1) {
@@ -194,15 +204,15 @@ export default {
       }
 
       activeMenuItems = this.menuItems.filter(function (item) {
-          if (typeof item.subMenuKeys === 'undefined') {
+          if (typeof item.subMenuNames === 'undefined') {
             return false;
           }
 
-          return item.subMenuKeys.indexOf(routeName) !== -1;
+          return item.subMenuNames.indexOf(routeName) !== -1;
       });
 
       if (activeMenuItems.length !== 1) {
-        throw `The submenu has a wrong definition for key "${activeMenuItem}"`;
+        throw `The submenu has a wrong definition for name "${activeMenuItem}"`;
       }
 
       return activeMenuItems[0];
@@ -220,16 +230,16 @@ export default {
         return undefined;
       }
 
-      if (typeof this.subMenuItems[activeMenuItem.key] === 'undefined') {
+      if (typeof this.subMenuItems[activeMenuItem.name] === 'undefined') {
         return undefined;
       }
 
-      let activeSubMenuItems = this.subMenuItems[activeMenuItem.key].filter(function (item) {
-          return item.key === routeName;
+      let activeSubMenuItems = this.subMenuItems[activeMenuItem.name].filter(function (item) {
+          return item.name === routeName;
       });
 
       if (activeSubMenuItems.length !== 1) {
-        throw `The submenu has a wrong definition for key "${activeMenuItem.key}"`;
+        throw `The submenu has a wrong definition for name "${activeMenuItem.name}"`;
       }
 
       return activeSubMenuItems[0];
@@ -239,7 +249,8 @@ export default {
     SharedState.state.tableOfContentsIsVisible = this.menuIsVisible;
     
     return {
-      appState: SharedState.state
+      appState: SharedState.state,
+      tableOfContentsTogglingLocked: false,
     };
   },
   props: {

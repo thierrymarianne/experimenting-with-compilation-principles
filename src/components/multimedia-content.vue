@@ -9,6 +9,11 @@ export default {
   render: function (createElement) {
     let paragraphIndexes = 0;
     let groupedVNodes = [];
+
+    if (typeof this.$slots.default === 'undefined') {
+      this.$slots.default = [];
+    }
+
     groupedVNodes = this.$slots.default.reduce((groupedVNodes, vnode) => {
       if (vnode.tag === 'br') {
         paragraphIndexes++;

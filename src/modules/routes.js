@@ -1,5 +1,18 @@
 import Content from '../components/content';
 import BrowsableContent from '../components/browsable-content.vue';
+import NavigationMenu from './navigation-menu';
+
+const programmingLanguageBasicsRoutes = ((path) => {
+  const routes = {
+    path,
+    component: BrowsableContent,
+    props: {
+      showNavigationMenu: false,
+    },
+    children: NavigationMenu.routes[path](path),
+  };
+  return routes;
+})('programming-language-basics');
 
 export default [
   {
@@ -104,7 +117,9 @@ export default [
             },
           },
         ],
-      }, {
+      },
+      programmingLanguageBasicsRoutes,
+      {
         path: 'a-simple-syntax-directed-translator',
         component: BrowsableContent,
         props: {
