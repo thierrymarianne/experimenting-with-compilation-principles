@@ -1,5 +1,6 @@
 .triple-node {
   &__parent {
+    display: flex;
     color: $color-text-tree;
     justify-content: center;
   }

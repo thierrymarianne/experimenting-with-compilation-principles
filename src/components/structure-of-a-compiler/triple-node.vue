@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { isString } from 'lodash'
+import _ from 'lodash';
 
 export default {
   name: 'triple-node',
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     replaceBrackets: function (subject) {
-      if (isString(subject)) {
+      if (!_.isString(subject)) {
         return subject;
       }
 
@@ -86,16 +86,16 @@ export default {
       return this.isLeftChildALeaf && this.isRightChildALeaf;
     },
     isLeftChildALeaf: function () {
-      return isString(this.leftNode);
+      return _.isString(this.leftNode);
     },
     isRightChildALeaf: function () {
-      return isString(this.rightNode);
+      return _.isString(this.rightNode);
     },
     hasOnlyChild: function () {
       return typeof this.onlyChildNode !== 'undefined';
     },
     isOnlyChildALeaf: function () {
-      return isString(this.onlyChildNode);
+      return _.isString(this.onlyChildNode);
     }
   },
   props: {

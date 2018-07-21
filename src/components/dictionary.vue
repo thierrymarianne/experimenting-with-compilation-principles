@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import { isString } from 'lodash'
+    import _ from 'lodash'
     import EventHub from '../modules/event-hub'
 
     export default {
@@ -63,12 +63,12 @@
                     'dictionary__value': true
                 };
 
-                classes['dictionary__value--string'] = isString(property.value);
+                classes['dictionary__value--string'] = _.isString(property.value);
 
                 return classes;
             },
             isString: function (subject) {
-                return isString(subject);
+                return _.isString(subject);
             }
         },
         computed: {
