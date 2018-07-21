@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     replaceBrackets: function (subject) {
-      if (!isString(subject)) {
+      if (isString(subject)) {
         return subject;
       }
 
@@ -86,16 +86,16 @@ export default {
       return this.isLeftChildALeaf && this.isRightChildALeaf;
     },
     isLeftChildALeaf: function () {
-      return _.isString(this.leftNode);
+      return isString(this.leftNode);
     },
     isRightChildALeaf: function () {
-      return _.isString(this.rightNode);
+      return isString(this.rightNode);
     },
     hasOnlyChild: function () {
       return typeof this.onlyChildNode !== 'undefined';
     },
     isOnlyChildALeaf: function () {
-      return _.isString(this.onlyChildNode);
+      return isString(this.onlyChildNode);
     }
   },
   props: {

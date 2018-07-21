@@ -1,0 +1,10 @@
+.expr {
+  display: inline-flex;
+  color: $color-text-code;
+  font-family: $font-family-code;
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  text-align: left;
+  margin: 0;
+  white-space: pre;
+}

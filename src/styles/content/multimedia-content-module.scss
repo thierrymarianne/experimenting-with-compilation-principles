@@ -25,6 +25,15 @@
       &:first-letter {
         margin-left: 1rem;
       }
+
+      &:first-child {
+        margin-bottom: 0;
+      }
+
+      &:not(:first-child) {
+        margin-top: 0;
+        padding-top: 0;
+      }
     }
   }
 

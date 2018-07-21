@@ -39,4 +39,6 @@ export default {
   SoftwareProductivityTools,
   ATranslatorForSimpleExpressions: ASimpleSyntaxDirectedTranslator.ATranslatorForSimpleExpressions,
   ASimpleSyntaxDirectedTranslator: ASimpleSyntaxDirectedTranslator.LexicalAnalysis,
+  AssociativityOfOperators: ASimpleSyntaxDirectedTranslator.AssociativityOfOperators,
+  PrecedenceOfOperators: ASimpleSyntaxDirectedTranslator.PrecedenceOfOperators,
 };
