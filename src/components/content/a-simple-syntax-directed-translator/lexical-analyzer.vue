@@ -1,7 +1,7 @@
 <template>
   <div class='content content--no-first-letter'>
-    <multimedia-content>
-    </multimedia-content>
+      <multimedia-content>
+      </multimedia-content>
     <input-area></input-area>
     <source-code v-html='postfixTranslation'></source-code>
   </div>
@@ -20,9 +20,9 @@ import {
 import EventHub from '../../../modules/event-hub';
 
 export default {
-  name: 'lexical-analysis',
+  name: 'lexical-analyzer',
   components: {
-    'multimedia-content': MultimediaContent,
+    MultimediaContent,
     'input-area': InputArea,
     'source-code': SourceCode,
   },

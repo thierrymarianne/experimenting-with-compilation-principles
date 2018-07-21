@@ -118,7 +118,7 @@ const menuItems = [
     text: 'A Simple Syntax Directed Translator',
     path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
     subMenuNames: [
-      'lexical-analysis',
+      'lexical-analyzer',
       'a-translator-for-simple-expressions',
       'associativity-of-operators',
       'precedence-of-operators',
@@ -185,9 +185,9 @@ const subMenuItems = {
       text: 'A Translator for Simple Expressions',
       path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
     }, {
-      name: 'lexical-analysis',
+      name: 'lexical-analyzer',
       text: 'Lexical Analysis',
-      path: '/a-simple-syntax-directed-translator/lexical-analysis',
+      path: '/a-simple-syntax-directed-translator/lexical-analyzer',
     }, {
       name: 'associativity-of-operators',
       text: 'Associativity of Operators',
