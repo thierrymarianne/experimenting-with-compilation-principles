@@ -43,6 +43,8 @@ export default {
       return new Lexer(reader);
     },
     parseChanges: function ({text}) {
+      this.postfixTranslation = '';
+
       try {
         const lexer = this.getLexer(this.getCharacterReader(text));
         const parser = this.getParser(lexer);
@@ -50,6 +52,8 @@ export default {
       } catch (error) {
         if (error instanceof SimpleTranslatorSyntaxError) {
           this.postfixTranslation = error.message;
+
+          return;
         }
 
         throw error;
