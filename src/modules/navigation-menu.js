@@ -130,25 +130,11 @@ const aSimpleSyntaxDirectedTranslatorChildren = [
       content: Content.PrecedenceOfOperators,
     },
   }, {
-  //   name: 'postfix-notation',
-  //   text: 'Postfix Notation',
-  //   path: '/a-simple-syntax-directed-translator/postfix-notation',
-  //   components: {
-  //     content: Content.PostfixNotation,
-  //   },
-  // }, {
     name: 'lexical-analyzer',
     text: 'Lexical Analysis',
     path: '/a-simple-syntax-directed-translator/lexical-analyzer',
     components: {
       content: Content.LexicalAnalyzer,
-    },
-  }, {
-    name: 'symbol-tables',
-    text: 'Symbol Tables',
-    path: '/a-simple-syntax-directed-translator/symbol-tables',
-    components: {
-      content: Content.SymbolTables,
     },
   },
 ];

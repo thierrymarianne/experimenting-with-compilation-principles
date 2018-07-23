@@ -6,10 +6,8 @@ import Ambiguity from './ambiguity.vue';
 import TokensVersusTerminals from './tokens-versus-terminals.vue';
 import AssociativityOfOperators from './associativity-of-operators.vue';
 import PrecedenceOfOperators from './precedence-of-operators.vue';
-import PostfixNotation from './postfix-notation.vue';
 import ATranslatorForSimpleExpressions from './a-translator-for-simple-expressions.vue';
 import LexicalAnalyzer from './lexical-analyzer.vue';
-import SymbolTables from './symbol-tables.vue';
 
 export default {
   AModelOfACompilerFrontEnd,
@@ -20,8 +18,6 @@ export default {
   TokensVersusTerminals,
   AssociativityOfOperators,
   PrecedenceOfOperators,
-  PostfixNotation,
   ATranslatorForSimpleExpressions,
   LexicalAnalyzer,
-  SymbolTables,
 };
