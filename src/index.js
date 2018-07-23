@@ -13,6 +13,7 @@ import routes from './modules/routes';
 import SharedState from './modules/shared-state';
 import store from './store';
 import NavigationMenu from './modules/navigation-menu';
+import EventHub from './modules/event-hub';
 
 import styles from './styles/global.css';
 
@@ -35,7 +36,11 @@ const router = new VueRouter({
 router.afterEach((to, from) => {
   if (NavigationMenu.methods.willCloseMenuAfterNavigation(from, to)) {
     SharedState.state.tableOfContentsIsVisible = false;
+
+    return;
   }
+
+  EventHub.$emit('menu_item.clicked');
 });
 
 // eslint-disable-next-line
