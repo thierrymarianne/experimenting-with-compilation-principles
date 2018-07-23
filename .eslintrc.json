@@ -16,6 +16,7 @@
       "files": [ "src/**/*.js" ],
       "rules": {
         "no-debugger": 0,
+        "no-console": 0,
         "no-constant-condition": 0,
         "prefer-destructuring": 0,
         "no-param-reassign": 0,

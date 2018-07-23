@@ -63,6 +63,11 @@ if (productionMode) {
 }
 
 module.exports = {
+  node: {
+    module: 'empty',
+    net: 'empty', 
+    fs: 'empty',
+  },
   mode: developmentMode ? 'development' : 'production',
   entry: './src/index.js',
   resolve: {
@@ -167,7 +172,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          configFile: path.join(__dirname, ), eslintConfig
+          configFile: path.join(__dirname, eslintConfig),
         }
       }      
     ],

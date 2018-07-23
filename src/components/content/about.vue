@@ -47,6 +47,11 @@ in learning the basics of compilation</paragraph>
             :literal-object="emptyExample"
             ref="dictionary">
           </dictionary>
+          <dictionary 
+            :literal-object="emptyExample"
+            activeParser
+            ref="parsedJSON">
+          </dictionary>
         </div>
       </div>
     </section>
@@ -59,7 +64,7 @@ import BrowsableLink from '../browsable-link.vue'
 import InputArea from '../input-area.vue'
 import Dictionary from '../dictionary.vue'  
 import SourceCode from '../source-code.vue'
-import EventHub  from '../../modules/event-hub'
+import EventHub from '../../modules/event-hub'
 
 export default {
   name: 'about',
@@ -72,15 +77,20 @@ export default {
   },
   computed: {
     getDefaultJsonExample: function () {
-      return JSON.stringify(this.example)
+      const defaultExample = JSON.stringify(this.example)
         .replace(/,(?!\s)/g, ', ');
+      return defaultExample;
     }
   },  
   methods: { 
     copyToInputArea: function (event) {
+      const json = event.target.innerText
       EventHub.$emit(
         'source.copied',
-        {code: event.target.innerText}
+        {
+          code: json,
+          ref: this.$refs['parsedJSON'],
+        }
       )
     }
   }, 
