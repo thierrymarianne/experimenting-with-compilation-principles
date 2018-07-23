@@ -31,30 +31,42 @@ SimpleTranslatorSyntaxError.operationsShouldNotContainWhitespaces = 'This transl
 
 const CharacterReader = class {
   constructor(program, $routeName) {
-    if ($routeName === 'a-translator-for-simple-expressions') {
-      if (program.match(/[0-9]{2,}/)) {
-        throw SimpleTranslatorSyntaxError.guardAgainstNumbersAsOperands();
-      }
-
-      if (program.match(/\s/)) {
-        throw SimpleTranslatorSyntaxError.guardAgainstWhitespaces();
-      }
-
-      if (program.match(/[^0-9+-]/)) {
-        throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
-      }
-    }
-
-    if ($routeName === 'lexical-analysis') {
-      if (program.match(/[^a-zA-Z0-9+-\s]/)) {
-        throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
-      }
-    }
-
-
     this.programCharacters = program.split('');
     this.lookaheadPosition = 0;
     this.peekPosition = 0;
+    this.guardAgainstExceptions($routeName);
+  }
+
+  guardAgainstExceptions(routeName) {
+    if (routeName === 'a-translator-for-simple-expressions') {
+      if (this.programCharacters.match(/[0-9]{2,}/)) {
+        throw SimpleTranslatorSyntaxError.guardAgainstNumbersAsOperands();
+      }
+
+      if (this.programCharacters.match(/\s/)) {
+        throw SimpleTranslatorSyntaxError.guardAgainstWhitespaces();
+      }
+
+      if (this.programCharacters.match(/[^0-9+-]/)) {
+        throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
+      }
+
+      return;
+    }
+
+    if (routeName === 'lexical-analysis') {
+      if (this.programCharacters.match(/[^a-zA-Z0-9+-\s]/)) {
+        throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
+      }
+
+      return;
+    }
+
+    if (routeName === 'symbol-tables') {
+      if (this.programCharacters.match(/[^a-zA-Z0-9{}\s]/)) {
+        throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
+      }
+    }
   }
 
   scan() {

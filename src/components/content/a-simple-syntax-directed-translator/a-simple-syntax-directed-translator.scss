@@ -1,11 +1,7 @@
 $content-width: calc(100% - 2rem);
-
 .content--no-first-letter {
-  .multimedia-content__paragraph {
-    &.paragraph:first-letter {
-      font-size: 1rem; 
-    }
-  }
+  margin-top: 2rem;
+  width: $width-base-content;
 
   .input-area__textarea {
     width: $content-width;

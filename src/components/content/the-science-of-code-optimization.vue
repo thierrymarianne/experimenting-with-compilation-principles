@@ -33,7 +33,6 @@ We need a good understanding of the behavior of programs to start
 with and thorough experimentation and evaluation to validate our intuitions.
 <br />
 Compiler optimizations must meet the following design objectives:
-<br />
 <ul>
   <li>The optimization must be correct, that is,
 preserve the meaning of the compiled program,</li>

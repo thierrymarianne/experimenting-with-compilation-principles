@@ -21,6 +21,7 @@ import SoftwareProductivityTools from './software-productivity-tools.vue';
 
 import ASimpleSyntaxDirectedTranslator from './a-simple-syntax-directed-translator';
 import ProgrammingLanguageBasics from './programming-language-basics';
+import LexicalAnalysis from './3-lexical-analysis';
 
 const ContentItems = {
   About,
@@ -44,6 +45,7 @@ const Content = {
   ...ContentItems,
   ...ASimpleSyntaxDirectedTranslator,
   ...ProgrammingLanguageBasics,
+  ...LexicalAnalysis,
 };
 
 export default Content;

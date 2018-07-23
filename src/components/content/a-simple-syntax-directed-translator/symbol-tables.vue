@@ -1,5 +1,7 @@
 <template>
   <div class='content content--no-first-letter'>
+      <multimedia-content>
+      </multimedia-content>
     <input-area></input-area>
     <source-code v-html='postfixTranslation'></source-code>
   </div>
@@ -18,11 +20,11 @@ import {
 import EventHub from '../../../modules/event-hub';
 
 export default {
-  name: 'lexical-analyzer',
+  name: 'symbol-tables',
   components: {
     MultimediaContent,
-    'input-area': InputArea,
-    'source-code': SourceCode,
+    InputArea,
+    SourceCode,
   },
   mounted: function () {
     EventHub.$on('source.changed', this.parseChanges);

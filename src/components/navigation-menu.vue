@@ -160,8 +160,8 @@
         });
 
         if (activeMenuItems.length !== 1) {
-          // throw `The submenu has a wrong definition for route with name "${routeName}"`;
-          return false;
+          console.error(`The submenu has a wrong definition for route with name "${routeName}"`);
+          return activeMenuItems[0];
         }
 
         return activeMenuItems[0];
@@ -180,6 +180,7 @@
         }
 
         if (typeof this.subMenuItems[activeMenuItem.name] === 'undefined') {
+          debugger;
           return undefined;
         }
 

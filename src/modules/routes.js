@@ -2,29 +2,26 @@ import Content from '../components/content';
 import BrowsableContent from '../components/browsable-content.vue';
 import NavigationMenu from './navigation-menu';
 
-const simpleSyntaxDirectedTranslatorRoutes = ((path) => {
-  const routes = {
-    path,
-    component: BrowsableContent,
-    props: {
-      showNavigationMenu: false,
-    },
-    children: NavigationMenu.routes[path](path),
-  };
-  return routes;
-})('a-simple-syntax-directed-translator');
+const routesCollection = {};
+[
+  'programming-language-basics',
+  'a-simple-syntax-directed-translator',
+  'lexical-analysis',
+].reduce((collection, chapter) => {
+  collection[chapter] = ((path) => {
+    const routes = {
+      path,
+      component: BrowsableContent,
+      props: {
+        showNavigationMenu: false,
+      },
+      children: NavigationMenu.routes[path](path),
+    };
+    return routes;
+  })(chapter);
 
-const programmingLanguageBasicsRoutes = ((path) => {
-  const routes = {
-    path,
-    component: BrowsableContent,
-    props: {
-      showNavigationMenu: false,
-    },
-    children: NavigationMenu.routes[path](path),
-  };
-  return routes;
-})('programming-language-basics');
+  return routesCollection;
+}, routesCollection);
 
 export default [
   {
@@ -130,8 +127,9 @@ export default [
           },
         ],
       },
-      programmingLanguageBasicsRoutes,
-      simpleSyntaxDirectedTranslatorRoutes,
+      routesCollection['programming-language-basics'],
+      routesCollection['a-simple-syntax-directed-translator'],
+      routesCollection['lexical-analysis'],
     ],
   }, {
     path: '*',

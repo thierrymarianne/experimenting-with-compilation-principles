@@ -21,6 +21,14 @@ export default {
         return groupedVNodes;
       }
 
+      if (vnode.tag === 'h3') {
+        paragraphIndexes++;
+        groupedVNodes[paragraphIndexes] = [vnode];
+        paragraphIndexes++;
+
+        return groupedVNodes;
+      }
+
       if (typeof groupedVNodes[paragraphIndexes] === 'undefined') {
         groupedVNodes[paragraphIndexes] = [vnode];
 
@@ -32,11 +40,15 @@ export default {
       return groupedVNodes;
     }, groupedVNodes);
 
-    const paragraphs = groupedVNodes.map(function (vodes) {
+    const paragraphs = groupedVNodes.map(function (VNodes) {
+      if (VNodes[0].tag === 'h3') {
+        return VNodes[0];
+      }
+
       return createElement(
         'paragraph',
         { class: 'multimedia-content__paragraph' },
-        vodes
+        VNodes
       );
     });
 

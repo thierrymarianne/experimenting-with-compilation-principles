@@ -65,7 +65,7 @@ const programmingLanguageBasicsChildrenNames = programmingLanguageBasicsChildren
   return name;
 });
 
-const aSimpleSyntaxDirectTranslatorChildren = [
+const aSimpleSyntaxDirectedTranslatorChildren = [
   {
     name: 'a-model-of-a-compiler-front-end',
     text: 'A Model of a Compiler Front End',
@@ -95,18 +95,25 @@ const aSimpleSyntaxDirectTranslatorChildren = [
       content: Content.TokensVersusTerminals,
     },
   }, {
+    name: 'parse-trees',
+    text: 'Parse Trees',
+    path: '/a-simple-syntax-directed-translator/parse-trees',
+    components: {
+      content: Content.ParseTrees,
+    },
+  }, {
+    name: 'ambiguity',
+    text: 'Ambiguity',
+    path: '/a-simple-syntax-directed-translator/ambiguity',
+    components: {
+      content: Content.Ambiguity,
+    },
+  }, {
     name: 'a-translator-for-simple-expressions',
     text: 'A Translator for Simple Expressions',
     path: '/a-simple-syntax-directed-translator/a-translator-for-simple-expressions',
     components: {
       content: Content.ATranslatorForSimpleExpressions,
-    },
-  }, {
-    name: 'lexical-analyzer',
-    text: 'Lexical Analysis',
-    path: '/a-simple-syntax-directed-translator/lexical-analyzer',
-    components: {
-      content: Content.LexicalAnalyzer,
     },
   }, {
     name: 'associativity-of-operators',
@@ -122,10 +129,48 @@ const aSimpleSyntaxDirectTranslatorChildren = [
     components: {
       content: Content.PrecedenceOfOperators,
     },
+  }, {
+    name: 'postfix-notation',
+    text: 'Postfix Notation',
+    path: '/a-simple-syntax-directed-translator/postfix-notation',
+    components: {
+      content: Content.PostfixNotation,
+    },
+  }, {
+    name: 'lexical-analyzer',
+    text: 'Lexical Analysis',
+    path: '/a-simple-syntax-directed-translator/lexical-analyzer',
+    components: {
+      content: Content.LexicalAnalyzer,
+    },
+  }, {
+    name: 'symbol-tables',
+    text: 'Symbol Tables',
+    path: '/a-simple-syntax-directed-translator/symbol-tables',
+    components: {
+      content: Content.SymbolTables,
+    },
   },
 ];
 
-const aSimpleSyntaxDirectTranslatorChildrenNames = aSimpleSyntaxDirectTranslatorChildren
+const aSimpleSyntaxDirectedTranslatorChildrenNames = aSimpleSyntaxDirectedTranslatorChildren
+.map((route) => {
+  const name = route.name;
+  return name;
+});
+
+const lexicalAnalysisChildren = [
+  {
+    name: 'from-regular-expressions-to-automata',
+    text: 'From Regular Expressions to Automata',
+    path: '/a-simple-syntax-directed-translator/from-regular-expressions-to-automata',
+    components: {
+      content: Content.FromRegularExpressionsToAutomata,
+    },
+  },
+];
+
+const lexicalAnalysisChildrenNames = lexicalAnalysisChildren
 .map((route) => {
   const name = route.name;
   return name;
@@ -183,7 +228,12 @@ const menuItems = [
     name: 'a-simple-syntax-directed-translator',
     text: 'A Simple Syntax Directed Translator',
     path: '/a-simple-syntax-directed-translator/a-model-of-a-compiler-front-end',
-    subMenuNames: aSimpleSyntaxDirectTranslatorChildrenNames,
+    subMenuNames: aSimpleSyntaxDirectedTranslatorChildrenNames,
+  }, {
+    name: 'lexical-analysis',
+    text: 'Lexical Analysis',
+    path: '/lexical-analysis/from-regular-expressions-to-automata',
+    subMenuNames: lexicalAnalysisChildrenNames,
   }, {
     name: 'about',
     text: 'About',
@@ -240,7 +290,8 @@ const subMenuItems = {
     },
   ],
   'programming-language-basics': programmingLanguageBasicsChildren,
-  'a-simple-syntax-directed-translator': aSimpleSyntaxDirectTranslatorChildren,
+  'a-simple-syntax-directed-translator': aSimpleSyntaxDirectedTranslatorChildren,
+  'lexical-analysis': lexicalAnalysisChildren,
 };
 
 const isMenuItem = (routeName) => {
@@ -355,7 +406,11 @@ export default {
       return routes;
     },
     'a-simple-syntax-directed-translator': (prefix) => {
-      const routes = routeFactory(aSimpleSyntaxDirectTranslatorChildren, prefix);
+      const routes = routeFactory(aSimpleSyntaxDirectedTranslatorChildren, prefix);
+      return routes;
+    },
+    'lexical-analysis': (prefix) => {
+      const routes = routeFactory(lexicalAnalysisChildren, prefix);
       return routes;
     },
   },

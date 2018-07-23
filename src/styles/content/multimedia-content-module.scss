@@ -6,14 +6,22 @@
 
   h3 {
     display: block;
+    color: $color-text-title; 
     font-family: $font-family-title;
     font-size: 1rem;
     margin-top: 1rem;
+    margin-bottom: 0.5rem;
     text-align: center;
   }
     
   em {
     color: $color-text-emphasis; 
+  }
+
+  li {
+    br {
+      margin-bottom: 0;
+    }
   }
 
   &__paragraph {

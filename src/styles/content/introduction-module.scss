@@ -12,8 +12,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
-    width: 500px;
-    margin: auto;    
+    width: $width-base-content;
+    margin: auto;
   }
 
   &__subtitle {

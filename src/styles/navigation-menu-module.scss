@@ -7,16 +7,17 @@
 
   &__header {
     background-color: $color-background-menu;
+    border-top: 1px dotted $color-border-menu;
     bottom: 0;
     display: flex;
-    justify-content: flex-start;
-    position: fixed;
-    max-height: $height-menu;
-    height: $height-menu;
     flex-wrap: wrap;
-    width: $width-menu;
-    border-top: 1px dotted $color-border-menu;
+    height: $height-menu;
+    justify-content: flex-start;
     margin-left: -1em;
+    max-height: $height-menu;
+    overflow-y: scroll;
+    position: fixed;
+    width: $width-menu;
     z-index: 4;
   }
   
@@ -87,6 +88,7 @@
     display: flex;
     color: $color-text-clickable;
     cursor: pointer;
+    flex-shrink: 0;
     text-decoration: underline;
     padding: 1rem;
     font-size: $font-size-menu-item;
@@ -153,6 +155,7 @@
 
     &:last-child {
       margin-top: 0;
+      height: 1.2rem;
     }
   }
 }

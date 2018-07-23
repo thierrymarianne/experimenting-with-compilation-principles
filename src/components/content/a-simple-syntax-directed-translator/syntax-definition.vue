@@ -21,7 +21,24 @@ Such a rule is called a <em>production</em>.
 In a production, lexical elements like the keyword <strong>if</strong>
 and the parentheses are called <em>terminals</em>.
 Variables like <em>expr</em> and <em>stmt</em> represent sequences
-of terminals and are called <em>nonterminals</em>.</multimedia-content>
+of terminals and are called <em>nonterminals</em>.
+<h3>Derivation</h3>
+A grammar derives strings by beginning with the start symbol
+and repeatedly replacing a nonterminal by the body of a production
+for that nonterminal. The terminal strings that can be derived
+from the start symbol form the <em>language</em> defined by the grammar.
+<br />
+<em>Parsing</em> is the problem of taking a string
+of terminals and figuring out how to derive it
+from the start symbol of the grammar,
+and if it cannot be derived frorn the start symbol of the grammar,
+then reporting syntax errors within the string.
+Parsing is one of the most fundamental problems in all of compiling.
+For simplicity, we begin, vith source programs like <expr>9-5+2</expr>
+in which each character is a terminal;
+in general, a source program has multicharacter lexemes
+that are grouped by the lexical analyzer into tokens,
+whose first components are the terminals processed by the parser.</multimedia-content>
   </div>
 </template>
 

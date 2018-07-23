@@ -23,6 +23,11 @@ if (developmentMode) {
   sourceMap = 'eval-source-map';
 }
 
+let eslintConfig = '.eslintrc.production.json';
+if (developmentMode) {
+  eslintConfig = '.eslintrc.json';
+}
+
 const sassLoaderOptions = {
   data: '@import "variables.scss";',
   sourceMap: true,
@@ -162,7 +167,7 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          configFile: path.join(__dirname, '.eslintrc.json'),
+          configFile: path.join(__dirname, ), eslintConfig
         }
       }      
     ],
