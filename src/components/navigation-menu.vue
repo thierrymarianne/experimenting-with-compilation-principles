@@ -8,7 +8,11 @@
       <font-awesome-icon class='navigation-menu__toggle-menu-icon' :icon='getToggleMenuIcon' />
     </button>
     <transition name="custom-classes-transition" enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
-      <header class='navigation-menu__header' v-if='showTableOfContents'>
+      <header
+        class='navigation-menu__header' 
+        v-if='showTableOfContents'
+        ref='header'
+      >
         <div class='navigation-menu__overlay'></div>
         <ul class="navigation-menu__menu">
           <template v-for="item in getMenuItems">
@@ -50,178 +54,184 @@
 </template>
 
 <script>
-  import Content from './content';
-  import SharedState from '../modules/shared-state';
-  import NavigationMenu from '../modules/navigation-menu'
+import Content from './content';
+import SharedState from '../modules/shared-state';
+import NavigationMenu from '../modules/navigation-menu'
+import EventHub from '../modules/event-hub';
 
-  export default {
-    components: Content,
-    name: 'navigation-menu',
-    methods: {
-      toggleTableOfContents: function () {
-        if (this.tableOfContentsTogglingLocked) {
-          return;
-        }
+export default {
+  components: Content,
+  name: 'navigation-menu',
+  mounted: function () {
+    EventHub.$on('menu_item.clicked', this.scrollToMenuTop);
+  },
+  methods: {
+    scrollToMenuTop: function () {
+      this.$refs['header'].scrollTop = 0;
+    },
+    toggleTableOfContents: function () {
+      if (this.tableOfContentsTogglingLocked) {
+        return;
+      }
 
-        this.appState.tableOfContentsIsVisible = !this.appState.tableOfContentsIsVisible;
-        this.tableOfContentsTogglingLocked = true;
-        setTimeout(() => {
-          this.tableOfContentsTogglingLocked = false;
-        }, 500);
-      },
-      isMenuActive: function (menuItem) {
-        return this.getActiveMenuItem.name == menuItem.name
-      },
-      getTitleClasses: function () {
-        return {
-          'navigation-menu__title': true,
-        };
-      },
-      getSubtitleClasses: function () {
-        return {
-          'navigation-menu__subtitle': true,
-        };
-      },
-      getSubMenuItems: function (menu) {
-        if (typeof this.subMenuItems[menu] === 'undefined') {
+      this.appState.tableOfContentsIsVisible = !this.appState.tableOfContentsIsVisible;
+      this.tableOfContentsTogglingLocked = true;
+      setTimeout(() => {
+        this.tableOfContentsTogglingLocked = false;
+      }, 500);
+    },
+    isMenuActive: function (menuItem) {
+      return this.getActiveMenuItem.name == menuItem.name
+    },
+    getTitleClasses: function () {
+      return {
+        'navigation-menu__title': true,
+      };
+    },
+    getSubtitleClasses: function () {
+      return {
+        'navigation-menu__subtitle': true,
+      };
+    },
+    getSubMenuItems: function (menu) {
+      if (typeof this.subMenuItems[menu] === 'undefined') {
+        return false;
+      }
+
+      return this.subMenuItems[menu];
+    },
+  },
+  computed: {
+    activeMenuItemHasIntroduction: function () {
+      return this.aMenuItemHasBeenSelected && this.getActiveMenuItem.introduction;
+    },
+    showTableOfContents: function () {
+      return this.appState.tableOfContentsIsVisible;
+    },
+    getToggleMenuIcon: function () {
+      if (this.showTableOfContents) {
+        return 'arrow-alt-circle-down';
+      }
+
+      return 'arrow-alt-circle-up';
+    },
+    getToggleMenuButtonLabel: function () {
+      if (this.showTableOfContents) {
+        return 'Hide Table of Contents';
+      }
+
+      return 'Show Table of Contents';
+    },
+    shouldShowActiveMenuText: function () {
+      return this.aMenuItemHasBeenSelected &&
+        this.getActiveSubMenuItem &&
+        this.getActiveSubMenuItem.text;
+      ;
+    },
+    shouldShowSubtitle: function () {
+      return this.getActiveMenuItem.subtitle &&
+        (!this.getActiveMenuItem.introduction ||
+          this.aMenuItemHasBeenSelected);
+    },
+    shouldShowIntroductionBeforeContent: function () {
+      return this.aSubMenuItemHasBeenSelected &&
+        this.getActiveMenuItem.introduction &&
+        this.getActiveSubMenuItem.hasIntroduction;
+    },
+    getMenuItems: function () {
+      return this.menuItems;
+    },
+    aMenuItemHasBeenSelected: function () {
+      return NavigationMenu.methods.isMenuItem(this.$route.name);
+    },
+    aSubMenuItemHasBeenSelected: function () {
+      return NavigationMenu.methods.isSubMenuItem(this.$route.name);
+    },
+    getActiveMenuItem: function () {
+      const routeName = this.$route.name;
+
+      if (typeof routeName === 'undefined') {
+        return undefined;
+      }
+
+      let activeMenuItems = this.menuItems.filter(function (item) {
+        return item.name === routeName;
+      });
+
+      if (activeMenuItems.length === 1) {
+        return activeMenuItems[0];
+      }
+
+      activeMenuItems = this.menuItems.filter(function (item) {
+        if (typeof item.subMenuNames === 'undefined') {
           return false;
         }
 
-        return this.subMenuItems[menu];
-      },
-    },
-    computed: {
-      activeMenuItemHasIntroduction: function () {
-        return this.aMenuItemHasBeenSelected && this.getActiveMenuItem.introduction;
-      },
-      showTableOfContents: function () {
-        return this.appState.tableOfContentsIsVisible;
-      },
-      getToggleMenuIcon: function () {
-        if (this.showTableOfContents) {
-          return 'arrow-alt-circle-down';
-        }
+        return item.subMenuNames.indexOf(routeName) !== -1;
+      });
 
-        return 'arrow-alt-circle-up';
-      },
-      getToggleMenuButtonLabel: function () {
-        if (this.showTableOfContents) {
-          return 'Hide Table of Contents';
-        }
-
-        return 'Show Table of Contents';
-      },
-      shouldShowActiveMenuText: function () {
-        return this.aMenuItemHasBeenSelected &&
-          this.getActiveSubMenuItem &&
-          this.getActiveSubMenuItem.text;
-        ;
-      },
-      shouldShowSubtitle: function () {
-        return this.getActiveMenuItem.subtitle &&
-          (!this.getActiveMenuItem.introduction ||
-            this.aMenuItemHasBeenSelected);
-      },
-      shouldShowIntroductionBeforeContent: function () {
-        return this.aSubMenuItemHasBeenSelected &&
-          this.getActiveMenuItem.introduction &&
-          this.getActiveSubMenuItem.hasIntroduction;
-      },
-      getMenuItems: function () {
-        return this.menuItems;
-      },
-      aMenuItemHasBeenSelected: function () {
-        return NavigationMenu.methods.isMenuItem(this.$route.name);
-      },
-      aSubMenuItemHasBeenSelected: function () {
-        return NavigationMenu.methods.isSubMenuItem(this.$route.name);
-      },
-      getActiveMenuItem: function () {
-        const routeName = this.$route.name;
-
-        if (typeof routeName === 'undefined') {
-          return undefined;
-        }
-
-        let activeMenuItems = this.menuItems.filter(function (item) {
-          return item.name === routeName;
-        });
-
-        if (activeMenuItems.length === 1) {
-          return activeMenuItems[0];
-        }
-
-        activeMenuItems = this.menuItems.filter(function (item) {
-          if (typeof item.subMenuNames === 'undefined') {
-            return false;
-          }
-
-          return item.subMenuNames.indexOf(routeName) !== -1;
-        });
-
-        if (activeMenuItems.length !== 1) {
-          console.error(`The submenu has a wrong definition for route with name "${routeName}"`);
-          return activeMenuItems[0];
-        }
-
+      if (activeMenuItems.length !== 1) {
+        console.error(`The submenu has a wrong definition for route with name "${routeName}"`);
         return activeMenuItems[0];
-      },
-      getActiveSubMenuItem: function () {
-        const activeMenuItem = this.getActiveMenuItem;
+      }
 
-        if (typeof activeMenuItem === 'undefined') {
-          return undefined;
-        }
+      return activeMenuItems[0];
+    },
+    getActiveSubMenuItem: function () {
+      const activeMenuItem = this.getActiveMenuItem;
 
-        const routeName = this.$route.name;
+      if (typeof activeMenuItem === 'undefined') {
+        return undefined;
+      }
 
-        if (typeof routeName === 'undefined') {
-          return undefined;
-        }
+      const routeName = this.$route.name;
 
-        if (typeof this.subMenuItems[activeMenuItem.name] === 'undefined') {
-          debugger;
-          return undefined;
-        }
+      if (typeof routeName === 'undefined') {
+        return undefined;
+      }
 
-        let activeSubMenuItems = this.subMenuItems[activeMenuItem.name].filter(function (item) {
-          return item.name === routeName;
-        });
+      if (typeof this.subMenuItems[activeMenuItem.name] === 'undefined') {
+        return undefined;
+      }
 
-        if (activeSubMenuItems.length !== 1) {
-          throw `The submenu has a wrong definition for name "${activeMenuItem.name}"`;
-        }
+      let activeSubMenuItems = this.subMenuItems[activeMenuItem.name].filter(function (item) {
+        return item.name === routeName;
+      });
 
-        return activeSubMenuItems[0];
+      if (activeSubMenuItems.length !== 1) {
+        throw `The submenu has a wrong definition for name "${activeMenuItem.name}"`;
+      }
+
+      return activeSubMenuItems[0];
+    }
+  },
+  data: function () {
+    SharedState.state.tableOfContentsIsVisible = this.menuIsVisible;
+
+    return {
+      appState: SharedState.state,
+      tableOfContentsTogglingLocked: false,
+    };
+  },
+  props: {
+    menuIsVisible: {
+      type: Boolean,
+      default: () => (SharedState.state.tableOfContentsIsVisible)
+    },
+    menuItems: {
+      type: Array,
+      default: function () {
+        return NavigationMenu.menuItems;
       }
     },
-    data: function () {
-      SharedState.state.tableOfContentsIsVisible = this.menuIsVisible;
-
-      return {
-        appState: SharedState.state,
-        tableOfContentsTogglingLocked: false,
-      };
-    },
-    props: {
-      menuIsVisible: {
-        type: Boolean,
-        default: () => (SharedState.state.tableOfContentsIsVisible)
-      },
-      menuItems: {
-        type: Array,
-        default: function () {
-          return NavigationMenu.menuItems;
-        }
-      },
-      subMenuItems: {
-        type: Object,
-        default: function () {
-          return NavigationMenu.subMenuItems;
-        }
+    subMenuItems: {
+      type: Object,
+      default: function () {
+        return NavigationMenu.subMenuItems;
       }
     }
   }
+}
 </script>
 
 <style module>

@@ -1,0 +1,40 @@
+.transition-table {
+  color: $color-text-symbol;
+  font-family: $font-family-code;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+
+    &--header {
+      font-weight: bold;
+    }
+
+    &--last {
+      border-bottom: 1px solid $color-border-symbol;      
+    }
+  }
+
+  &__symbol,
+  &__destination,
+  &__state {
+    border: 1px solid $color-border-symbol;
+    border-right: none;
+    border-bottom: none;
+    display: flex;
+    flex-direction: row;
+    font-size: 1rem;
+    height: 1.2rem;
+    justify-content: center;
+    padding: 1rem;
+    width: 100px;
+
+    &:last-child {
+      border-right: 1px solid $color-border-symbol;
+    }
+  }
+}

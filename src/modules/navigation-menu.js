@@ -130,13 +130,13 @@ const aSimpleSyntaxDirectedTranslatorChildren = [
       content: Content.PrecedenceOfOperators,
     },
   }, {
-    name: 'postfix-notation',
-    text: 'Postfix Notation',
-    path: '/a-simple-syntax-directed-translator/postfix-notation',
-    components: {
-      content: Content.PostfixNotation,
-    },
-  }, {
+  //   name: 'postfix-notation',
+  //   text: 'Postfix Notation',
+  //   path: '/a-simple-syntax-directed-translator/postfix-notation',
+  //   components: {
+  //     content: Content.PostfixNotation,
+  //   },
+  // }, {
     name: 'lexical-analyzer',
     text: 'Lexical Analysis',
     path: '/a-simple-syntax-directed-translator/lexical-analyzer',
@@ -163,7 +163,7 @@ const lexicalAnalysisChildren = [
   {
     name: 'from-regular-expressions-to-automata',
     text: 'From Regular Expressions to Automata',
-    path: '/a-simple-syntax-directed-translator/from-regular-expressions-to-automata',
+    path: '/lexical-analysis/from-regular-expressions-to-automata',
     components: {
       content: Content.FromRegularExpressionsToAutomata,
     },

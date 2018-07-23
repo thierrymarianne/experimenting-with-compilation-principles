@@ -34,28 +34,28 @@ const CharacterReader = class {
     this.programCharacters = program.split('');
     this.lookaheadPosition = 0;
     this.peekPosition = 0;
-    this.guardAgainstExceptions($routeName);
+    CharacterReader.guardAgainstExceptions($routeName, program);
   }
 
-  guardAgainstExceptions(routeName) {
+  static guardAgainstExceptions(routeName, program) {
     if (routeName === 'a-translator-for-simple-expressions') {
-      if (this.programCharacters.match(/[0-9]{2,}/)) {
+      if (program.match(/[0-9]{2,}/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstNumbersAsOperands();
       }
 
-      if (this.programCharacters.match(/\s/)) {
+      if (program.match(/\s/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstWhitespaces();
       }
 
-      if (this.programCharacters.match(/[^0-9+-]/)) {
+      if (program.match(/[^0-9+-]/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
       }
 
       return;
     }
 
-    if (routeName === 'lexical-analysis') {
-      if (this.programCharacters.match(/[^a-zA-Z0-9+-\s]/)) {
+    if (routeName === 'lexical-analyzer') {
+      if (program.match(/[^a-zA-Z0-9+-\s]/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
       }
 
@@ -63,7 +63,7 @@ const CharacterReader = class {
     }
 
     if (routeName === 'symbol-tables') {
-      if (this.programCharacters.match(/[^a-zA-Z0-9{}\s]/)) {
+      if (program.match(/[^a-zA-Z0-9{}\s]/)) {
         throw SimpleTranslatorSyntaxError.guardAgainstNonAdditiveOperations();
       }
     }
@@ -151,7 +151,7 @@ const Parser = class {
       return;
     }
 
-    throw new SimpleTranslatorSyntaxError();
+    throw new SimpleTranslatorSyntaxError('Invalid term');
   }
 
   match(t) {
@@ -166,7 +166,7 @@ const Parser = class {
       return;
     }
 
-    throw new SimpleTranslatorSyntaxError();
+    throw new SimpleTranslatorSyntaxError(`Unknown token: ${lookahead}`);
   }
 };
 

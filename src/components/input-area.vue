@@ -58,5 +58,3 @@ export default {
 <style scoped lang="scss">
   @import '../styles/input-area.scss';
 </style>
-
-

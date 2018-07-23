@@ -1,0 +1,43 @@
+$topNdfa: calc(11em);
+
+.from-regular-expressions-to-automata {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .multimedia-content {
+    width: $width-base-content;
+  }
+
+  .input-area {
+    width: $width-base-content;
+  }
+
+  a {
+    outline: none;
+  }
+  
+  &__visualizations {
+    padding-bottom: 3em;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    justify-content: center;
+    display: flex;
+    min-width: calc(#{$width-base-content} - 4em);
+  }
+
+  &__visualization {
+    align-self: center;
+    background-color: white;
+    display: flex;
+    padding-right: 4em;
+    padding-bottom: 3em;
+    padding-top: 2.5em;
+    min-width: calc(#{$width-base-content} - 4em);
+
+    &--dfa {
+      margin-top: 1rem;
+    }    
+  }
+}
