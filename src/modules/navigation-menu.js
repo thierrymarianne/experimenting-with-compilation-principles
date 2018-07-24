@@ -153,6 +153,13 @@ const lexicalAnalysisChildren = [
     components: {
       content: Content.FromRegularExpressionsToAutomata,
     },
+  }, {
+    name: 'json-parser',
+    text: 'JSON parser',
+    path: '/lexical-analysis/json-parser',
+    components: {
+      content: Content.JsonParser,
+    },
   },
 ];
 

@@ -44,11 +44,11 @@ in learning the basics of compilation</paragraph>
         <div class="about__example">
           <input-area></input-area>
           <dictionary 
-            :literal-object="emptyExample"
+            :literal-object="defaultExample"
             ref="dictionary">
           </dictionary>
           <dictionary 
-            :literal-object="emptyExample"
+            :literal-object="defaultExample"
             activeParser
             v-show='!showError'
             ref="parsedJSON">

@@ -533,5 +533,7 @@ JSONParser.prototype.value = function() {
 
 export default {
     JSONParser,
-    PairContext
+    PairContext,
+    ObjContext,
+    ArrayContext,
 };

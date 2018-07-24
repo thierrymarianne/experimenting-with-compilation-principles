@@ -1,11 +1,10 @@
 <template>
     <div class="dictionary-container">
-        <div
-           class="dictionary"
-           v-if='activeParser'
-           v-html='html'
-        >
-        </div>
+        <json 
+            v-if='activeParser'
+            v-html='json'
+            ref='json'>
+        </json>
         <div
            class="dictionary"
            v-else
@@ -24,10 +23,14 @@
 <script>
 import _ from 'lodash'
 import EventHub from '../modules/event-hub'
+import Json from './json/json.vue'
 import antlr from '../modules/antlr'
 
 export default {
     name: 'dictionary',
+    components: {
+        Json,
+    },
     props: {
         "literal-object": {
             type: Object
@@ -41,13 +44,25 @@ export default {
         EventHub.$on('source.changed', this.updateDataStructure);
         EventHub.$on('source.changed', this.parseChangedSource);
         EventHub.$on('source.copied', this.pasteSource);
+
+        if (this.activeParser && this.literalObject !== 'undefined') {
+            this.parseJson(JSON.stringify(this.literalObject), this);
+        }
     },
     methods: {
         parseChangedSource: function (event) {
+            if (!this.activeParser) {
+                return;
+            }
+
+            if (event.text.trim() == '') {
+                event.text = '{}';
+            }
+
             this.parseJson(event.text, this);
         },
         parseJson: function (text, component) {
-            component.$data.html = '';
+            component.$data.json = '';
             try {
                 antlr.parseJSON(text, component);
             } catch (error) {
@@ -56,7 +71,7 @@ export default {
                         'parsing.antlr.failed',
                         { errorMessage: error.message }
                     );
-                    return;
+                    // return;
                 }
 
                 throw error;
@@ -94,6 +109,7 @@ export default {
                     .replace(/'/g, '"')
 
                 this.dataStructure = JSON.parse(event.json);
+                EventHub.$emit('parsing.succeeded', { 'parsedJson': JSON.parse(event.text) });
             } catch (error) {
                 this.dataStructure = previousDataStructure;
                 EventHub.$emit('parsing.failed', { error: error });
@@ -133,7 +149,7 @@ export default {
     data: function () {
         return {
             dataStructure: this.literalObject,
-            html: '',
+            json: '',
         }
     }
 };

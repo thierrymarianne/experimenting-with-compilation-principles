@@ -9,7 +9,9 @@ $color-black: #1e1e1e;
 $color-black-light: #252526;
 $color-beige: #d4d4d4;
 $color-orange: #ce9178;
+$color-red: #CF4647;
 $color-green: #b4cea8;
+$color-greener: #2aa19b;
 $color-yellow: #dab988;
 
 $color-background: $color-black;
@@ -43,7 +45,7 @@ $color-text-active: $color-orange;
 $color-text-answer: $color-beige;
 $color-text-code: $color-beige;
 $color-text-clickable: $color-green;
-$color-text-error: #CF4647;
+$color-text-error: $color-red;
 $color-textarea: #d4d4d3;
 $color-error: #94151b;
 $color-border: #ced4d4;

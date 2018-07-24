@@ -1,0 +1,24 @@
+.json-parser {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: auto;
+
+  .input-area {
+    height: 20rem;
+    margin-bottom: 1rem;
+  }
+
+  .input-area__textarea {
+    height: calc(20em - 2rem);
+    width: 728px;
+  } 
+
+  .json__container,
+  .dictionary-container {
+    display: flex;
+    min-width: calc(#{$width-base-content} - 2rem);
+    width: auto;
+  }
+}

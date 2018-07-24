@@ -3,6 +3,7 @@
     <textarea
       :class='getInputStatusClasses'
       ref="input"
+      v-model='text'
       @change='getInputValue'
     ></textarea>
   </fieldset>
@@ -49,7 +50,8 @@ export default {
   data: function () {
     return {
       json: {},
-      error: false
+      error: false,
+      text: '{}',
     }
   }
 }
