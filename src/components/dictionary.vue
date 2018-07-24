@@ -24,7 +24,7 @@
 <script>
 import _ from 'lodash'
 import EventHub from '../modules/event-hub'
-import getJsonParser from '../modules/antlr'
+import antlr from '../modules/antlr'
 
 export default {
     name: 'dictionary',
@@ -39,14 +39,36 @@ export default {
     },
     mounted: function () {
         EventHub.$on('source.changed', this.updateDataStructure);
-        EventHub.$on('source.copied', this.pasteSource)
+        EventHub.$on('source.changed', this.parseChangedSource);
+        EventHub.$on('source.copied', this.pasteSource);
     },
     methods: {
+        parseChangedSource: function (event) {
+            this.parseJson(event.text, this);
+        },
+        parseJson: function (text, component) {
+            component.$data.html = '';
+            try {
+                antlr.parseJSON(text, component);
+            } catch (error) {
+                if (error instanceof antlr.AntlrError) {
+                    EventHub.$emit(
+                        'parsing.antlr.failed',
+                        { errorMessage: error.message }
+                    );
+                    return;
+                }
+
+                throw error;
+            }
+
+            EventHub.$emit('parsing.antlr.succeeded');
+        },
         pasteSource: function (event) {
             const text = event.code;
 
             if (this.activeParser) {
-                getJsonParser(text, event.ref);
+                this.parseJson(text, event.ref)
                 return;
             }
 
@@ -72,7 +94,6 @@ export default {
                     .replace(/'/g, '"')
 
                 this.dataStructure = JSON.parse(event.json);
-                EventHub.$emit('parsing.succeeded', { 'parsedJson': this.dataStructure });
             } catch (error) {
                 this.dataStructure = previousDataStructure;
                 EventHub.$emit('parsing.failed', { error: error });

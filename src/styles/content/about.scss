@@ -33,5 +33,14 @@
     flex-wrap: wrap;
     top: 3rem;
     position: sticky;    
+
+    .source-code {
+      border: none;
+      background-color: transparent;
+      color: $color-text-error;
+      margin-top: 1rem;
+      margin-left: 0;
+      padding: 0;
+    }
   }
 }

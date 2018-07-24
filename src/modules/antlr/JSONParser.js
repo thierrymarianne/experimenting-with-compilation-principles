@@ -3,6 +3,7 @@
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 import JSONListener from './JSONListener';
+import JSONErrorListener from './JSONErrorListener';
 
 var serializedATN = ["\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964",
     "\u0003\u000e:\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
@@ -58,7 +59,9 @@ var symbolicNames = [ null, null, null, null, null, null, null, null, null,
 var ruleNames =  [ "json", "obj", "pair", "array", "value" ];
 
 function JSONParser (input) {
-	antlr4.Parser.call(this, input);
+    antlr4.Parser.call(this, input);
+    this.removeErrorListeners();
+    this.addErrorListener(JSONErrorListener);
     this._interp = new antlr4.atn.ParserATNSimulator(this, atn, decisionsToDFA, sharedContextCache);
     this.ruleNames = ruleNames;
     this.literalNames = literalNames;

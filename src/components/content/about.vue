@@ -50,8 +50,13 @@ in learning the basics of compilation</paragraph>
           <dictionary 
             :literal-object="emptyExample"
             activeParser
+            v-show='!showError'
             ref="parsedJSON">
           </dictionary>
+          <source-code 
+            v-html='errorMessage'
+            v-show='showError'
+          ></source-code>
         </div>
       </div>
     </section>
@@ -69,18 +74,22 @@ import EventHub from '../../modules/event-hub'
 export default {
   name: 'about',
   components: {
-    paragraph: Paragraph,
-    'browsable-link': BrowsableLink,
-    'source-code': SourceCode,
-    InputArea,
+    BrowsableLink,
     Dictionary,
+    InputArea,
+    Paragraph,
+    SourceCode,
+  },
+  mounted: function () {
+    EventHub.$on('parsing.antlr.failed', this.handleFailedParsing);
+    EventHub.$on('parsing.antlr.succeeded', this.hideErrorMessageContainer);
   },
   computed: {
     getDefaultJsonExample: function () {
       const defaultExample = JSON.stringify(this.example)
         .replace(/,(?!\s)/g, ', ');
       return defaultExample;
-    }
+    },
   },  
   methods: { 
     copyToInputArea: function (event) {
@@ -91,7 +100,14 @@ export default {
           code: json,
           ref: this.$refs['parsedJSON'],
         }
-      )
+      );
+    },
+    handleFailedParsing: function (event) {
+      this.errorMessage = event.errorMessage;
+      this.showError = true;
+    },
+    hideErrorMessageContainer: function () {
+      this.showError = false;
     }
   }, 
   props: {
@@ -114,7 +130,9 @@ export default {
   },
   data: function () {
     return {
-      example: this.defaultExample
+      example: this.defaultExample,
+      errorMessage: '',
+      showError: false,
     };
   }
 }

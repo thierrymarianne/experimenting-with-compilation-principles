@@ -32,7 +32,7 @@ export default {
     getInputValue: function () {
       this.inputValue = this.$refs.input.value
       EventHub.$emit('source.changed', {
-        text: this.inputValue
+        text: this.inputValue,
       });
     },
     highlightInputError: function () {
