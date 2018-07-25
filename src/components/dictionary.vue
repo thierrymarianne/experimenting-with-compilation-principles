@@ -1,9 +1,16 @@
 <template>
     <div class="dictionary-container">
-        <json 
+        <json
+            :jsonProps='json'
+            ref='json'
             v-if='activeParser'
-            v-html='json'
-            ref='json'>
+        >
+            <div 
+                class=json__container
+                slot-scope='slotProps'
+                v-html='slotProps.json'
+            >
+            </div>
         </json>
         <div
            class="dictionary"

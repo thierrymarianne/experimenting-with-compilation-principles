@@ -536,4 +536,6 @@ export default {
     PairContext,
     ObjContext,
     ArrayContext,
+    JsonContext,
+    ValueContext,
 };

@@ -1,4 +1,6 @@
 $line-height: 1.4em;
+$padding-between-properties: 0.5em / 2; 
+$color-punctuation: $color-beige;
 
 .json {
   flex-wrap: wrap;
@@ -11,30 +13,6 @@ $line-height: 1.4em;
     padding: 1rem;
     width: $width-input-area;
   }
-
-  &__parentheses,
-  &__square-bracket {
-    display: flex;
-    width: 100%;
-  }
-
-  &__key-value {
-    padding: 0;
-
-    &:not(:last-child) {
-      display: inline-block;
-    }
-
-    &:first-child {
-      display: inline-block;
-    }
-
-    &:last-child {
-      display: inline-block;
-    }
-  }
-
-  $padding-between-properties: 0.5em / 2; 
 
   &__key {
     line-height: $line-height;
@@ -66,7 +44,7 @@ $line-height: 1.4em;
     }
 
     &--array-item {
-      display: inline;
+      display: inline-flex;
     }
   }
 
@@ -74,40 +52,174 @@ $line-height: 1.4em;
   &__object {
     display: flex;
     flex-direction: column;
-    padding-left: 2rem;
   }
-  span {
+
+  &__object-container,
+  &__array-container {
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-left: 2rem;
   }
 
   &__key-value {
+    display: flex-inline;
+    padding: 0;
+
+    &:not(:last-child) {
+      display: inline-block;
+    }
+
+    &:first-child {
+      display: inline-flex;
+    }
+
+    &:last-child {
+      display: inline-flex;
+    }
+
     > span {
-      display: inline; 
       font-size: 1em;
+
+      &.json__object-container,
+      &.json__array-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
     }
 
     line-height: $line-height;
-
+  
     .json__array,
     .json__object {
       flex-direction: column;
-      display: flex;
+      display: inline-flex;
     }
+  }
+
+  &__colon {
+    margin-right: 0.5em;
   }
 
   &__parentheses,
   &__square-bracket {
+    color: $color-punctuation;
     display: flex;
+    width: 100%;
+
+    &:last-child {
+      display: inline-flex;
+    }
+
+    &--left {
+      display: none;
+    }
+
+    &--right {
+      display: inline;
+
+      &:after {
+        content: ', ';
+      }
+    }
   }
 
+  &__parentheses--right {
+    margin-left: -2rem;
+  }
+
+  > .json__object-container {
+    margin-left: 0;
+
+    > .json__parentheses--left,
+    > .json__square-bracket--left {
+      display: flex;
+    }
+
+    > .json__parentheses--right,
+    > .json__square-bracket--right {
+      margin-left: 0;
+
+      &:after {
+        content: '';
+      }
+    }
+
+    > .json__object {
+      margin-left: 2rem;
+    }
+  }
+
+  .json__array > .json__value > .json__object-container {
+    .json__parentheses--left {
+      display: flex;
+    }
+
+    > .json__parentheses--right {
+      margin-left: 0em;
+    }
+  }
+
+  .json__pair > .json__value > .json__array-container {
+    margin-left: 0;
+
+    > .json__array {
+      margin-left: 2rem;
+
+      > .json__value > .json__object-container {
+        margin-left: 0rem;
+
+        > .json__object {
+          margin-left: 2rem;
+        }
+      }
+    }
+  }
+ 
   &__pair {
-    display: flex-inline;
+    display: inline-flex;
+
+    .json__colon {
+      color: $color-punctuation;
+
+      &:after {
+        content: '';
+      }
+      
+    }
+
+    &--no-children {
+      .json__value {
+        &:after {
+          content: ',';
+        }
+      }
+    }
 
     &--object,
     &--array {
-      display: block;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
       line-height: $line-height;
       padding: 0 $padding-between-properties 0 0;
+
+      > .json__key-value > .json__colon {
+        color: $color-punctuation;
+
+        &:after {
+          content: '{';
+          color: $color-punctuation;
+        }
+      }
+    }
+
+    &--array {
+      > .json__key-value > .json__colon {
+        &:after {
+          content: '[';
+        }
+      }
     }
   }
 }

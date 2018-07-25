@@ -1,0 +1,23 @@
+<template>
+  <div
+    class='json__array-container'
+    :class='{"json__array-container--empty": !hasChildren}'
+  >
+    <span class="json__square-bracket json__square-bracket--left">[</span>
+    <span v-if='hasChildren' class="json__array">
+      <slot></slot>
+    </span>
+    <span class="json__square-bracket json__square-bracket--right">]</span>
+  </div>
+</template>
+<script>
+export default {
+  name: 'json-array',
+  props: {
+    hasChildren: {
+      type: Boolean,
+      default: false,
+    },
+  },
+};
+</script>

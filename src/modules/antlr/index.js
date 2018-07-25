@@ -15,7 +15,13 @@ const parseJSON = (inputText, component) => {
     const drawer = new JSONDrawer(component);
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(drawer, tree);
   } catch (error) {
-    throw new AntlrError(error.message);
+    const antlrError = new AntlrError(
+      error.message,
+      error.fileName,
+      error.lineNumber,
+      error,
+    );
+    throw antlrError;
   }
 };
 

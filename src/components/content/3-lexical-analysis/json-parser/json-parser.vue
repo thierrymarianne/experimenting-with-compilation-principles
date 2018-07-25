@@ -8,9 +8,8 @@
       ref="parsedJSON">
     </dictionary>
     <source-code 
-      v-html='errorMessage'
       v-show='showError'
-    ></source-code>
+    >{{ errorMessage }}</source-code>
   </div>
 </template>
 
