@@ -5,6 +5,15 @@
   justify-content: center;
   width: auto;
 
+  .dictionaries {
+    flex-direction: row;
+    display: flex;
+
+    .dictionary-container {
+      flex: 0.5;
+    }
+  }
+
   .input-area {
     height: 20rem;
     margin-bottom: 1rem;

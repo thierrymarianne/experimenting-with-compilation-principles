@@ -3,8 +3,7 @@ const AntlrError = class extends SyntaxError {
     super(message, fileName, lineNumber);
     if (typeof previous !== 'undefined') {
       this.previous = previous;
-      this.message = `${previous.stack}\n\n${this.stack}`;
-      this.shortMessage = message;
+      this.stack = `${previous.stack}\n\n${this.stack}`;
     }
   }
 };

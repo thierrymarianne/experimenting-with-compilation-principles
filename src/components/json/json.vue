@@ -4,14 +4,22 @@ import JsonValue from './json-value.vue';
 import JsonPair from './json-pair.vue';
 import JsonArray from './json-array.vue';
 import JsonObject from './json-object.vue';
+import SharedState from '../../modules/shared-state';
 
 export default {
   name: 'json',
-  class: 'json',
   props: {
-    jsonProp: {
+    isEditable: {
+        type: Boolean,
+        default: false,
+    },
+    template: {
       type: String,
-      default: ''
+      default: () => (SharedState.state.template),
+    },
+    json: {
+      type: String,
+      default: () => (SharedState.state.json),
     },
     dynamic: {
       type: Boolean,
@@ -19,54 +27,92 @@ export default {
     }
   },
   methods: {
-    compileJsonTemplate: function () {
-      return Vue.compile(this.json); 
-    }
+    compileJsonTemplate: function (template) {
+      return Vue.compile(template);
+    },
   },
   render: function (createElement) {
-    if (typeof this.$slots.default !== 'undefined'
-    && this.$slots.default.length === 0) {
-      return;
-    }
-
-    if (!this.dynamic) {
-      const compilationResult = this.compileJsonTemplate();
-      const child = createElement(
-        {
-          name: 'json',
-          components: {
-            JsonValue,
-            JsonPair,
-            JsonArray,
-            JsonObject,
-          },
-          render: compilationResult.render,
-          staticRenderFns: compilationResult.staticRenderFns,
-        }, {
-          props: {
-            jsonProp: this.json,
-            dynamic: true,
-          }
-        }
+    if (this.dynamic) {
+      const dynamicChildCompilation = this.compileJsonTemplate(this.sharedState.template);
+      let editableJsonObjectData = {
+        name: 'editableJson',
+        components: {
+          JsonValue,
+          JsonPair,
+          JsonArray,
+          JsonObject,
+        },
+        data: function () {
+          return { sharedState: SharedState };
+        },
+        render: dynamicChildCompilation.render,
+        staticRenderFns: dynamicChildCompilation.staticRenderFns,
+      }
+      const editableJson = createElement(
+        editableJsonObjectData,
+        { class: 'content', },
+        [SharedState.template]
       );
-
-      return createElement(
+      const dyanmicJson = createElement(
+        editableJsonObjectData,
+        { class: 'content', },
+        [SharedState.template]
+      );
+      const jsonPanelsElement = createElement(
         'div',
-        { class: 'json__container' },
-        [child],
+        { class: 'json__panels' },
+        [
+          createElement(
+            'div',
+            { class: 'editable-json' }, 
+            [editableJson]
+          ), 
+          createElement(
+            'div',
+            { class: 'dynamic-json' }, 
+            [dyanmicJson]
+          )
+        ]
       );
+
+      return jsonPanelsElement;
     }
 
-    const dynamicComponent = createElement(
-      'div',
-      { class: 'json__container' },
+    let children = [];
+    if (!this.dynamic && this.$slots.default !== 'undefined'
+    && typeof this.$slots.default[0] !== 'undefined') {
+      children.push(this.$slots.default[0]);
+    }
+
+    children.push(
+      createElement(
+        'input',
+        {
+          attr: {
+            value: SharedState.json
+          },
+          domProps: {
+            type: 'hidden',
+            value: SharedState.json,
+          },
+        },
+      )
     );
 
-    return dynamicComponent;
+    const element = createElement(
+      'div',
+      { 
+        class: 'json__container',
+        ref: 'parent',
+      },
+      children
+    );
+
+    return element;
   },
   data: function () {
     return {
-      json: this.jsonProp,
+      sharedState: SharedState.state,
     }
   }
 };

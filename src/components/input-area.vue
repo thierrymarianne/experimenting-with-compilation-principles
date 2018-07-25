@@ -47,7 +47,16 @@ export default {
       }
     }
   },
+  props: {
+    paste: {
+      type: null
+    }
+  },
   data: function () {
+    const eventHandler = function (event) {
+      console.log(event);
+    };
+
     return {
       json: {},
       error: false,

@@ -20,7 +20,7 @@ const JSONDrawer = class extends JSONListener {
   constructor(component) {
     super();
     this.component = component;
-    this.jsonComponent = this.component.$refs.json;
+    this.editor = this.component.$refs.jsonEditor;
     this.scopes = {
       json: [],
       object: [],
@@ -37,14 +37,14 @@ const JSONDrawer = class extends JSONListener {
 
   exitJson() {
     if (typeof this.component === 'undefined'
-    || typeof this.jsonComponent === 'undefined') {
+    || typeof this.editor === 'undefined') {
       return;
     }
 
     const valueContent = this.scopes.value[this.scopes.value.length - 1].content;
     const template = `<span class="json">${valueContent}</span>`;
 
-    this.jsonComponent.$data.json = template;
+    this.editor.setJsonTemplate(template);
     this.scopes.json.pop();
   }
 

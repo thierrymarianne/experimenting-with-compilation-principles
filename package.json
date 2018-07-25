@@ -2,12 +2,12 @@
   "name": "compilers-principles-techniques-and-tools",
   "license": "MIT",
   "scripts": {
-    "build": "npx webpack --config webpack.config.js",
-    "distribute": "export NODE_ENV='production' && rm -f dist/*css && rm -f dist/*js && npx webpack --config webpack.config.js --optimize-minimize --mode=production",
-    "stats": "export NODE_ENV='production' && npx webpack --profile --json > stats.json",
-    "watch": "npx webpack --watch",
-    "lint": "npx eslint src/ .js",
-    "start:dev": "npx webpack-serve --config ./webpack.config.js --port=8888 --open --content='dist'"
+    "build": "make build",
+    "distribute": "make distribute",
+    "stats": "make stats",
+    "watch": "make watch",
+    "lint": "make lint",
+    "start:dev": "make start-dev"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.53",
@@ -56,6 +56,9 @@
     "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-vue-jsx": "^3.7.0",
     "lodash": "^4.17.10",
+    "node-uuid": "^1.4.8",
+    "simple-xpath-position": "^2.0.2",
+    "uuid": "^3.3.2",
     "viz.js": "^2.0.0",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",

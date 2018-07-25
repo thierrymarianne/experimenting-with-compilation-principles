@@ -1,11 +1,10 @@
 <template>
   <div class='json-parser content content--no-first-letter'>
-    <input-area :text="JSON.stringify(defaultExample)"></input-area>
-    <dictionary 
+    <input-area :text="JSON.stringify(defaultExample)" paste='getClipboardPasteHandler'></input-area>
+    <dictionary
       :literal-object="defaultExample"
       activeParser
-      v-show='!showError'
-      ref="parsedJSON">
+      v-show='!showError'>
     </dictionary>
     <source-code 
       v-show='showError'
@@ -38,6 +37,13 @@ export default {
     hideErrorMessageContainer: function () {
       this.showError = false;
     }
+  },
+  computed: {
+    getClipboardPasteHandler: function () {
+      return (event) => {
+        debugger;
+      };
+    },
   },
   data: function () {
     return {

@@ -1,17 +1,12 @@
 <template>
     <div class="dictionary-container">
-        <json
-            :jsonProps='json'
-            ref='json'
-            v-if='activeParser'
-        >
-            <div 
-                class=json__container
-                slot-scope='slotProps'
-                v-html='slotProps.json'
+        <template v-if='activeParser'>
+            <json-editor
+                :json='json'
+                ref='jsonEditor'
             >
-            </div>
-        </json>
+            </json-editor>
+        </template>
         <div
            class="dictionary"
            v-else
@@ -31,12 +26,14 @@
 import _ from 'lodash'
 import EventHub from '../modules/event-hub'
 import Json from './json/json.vue'
+import JsonEditor from './json/json-editor/json-editor.vue'
 import antlr from '../modules/antlr'
 
 export default {
     name: 'dictionary',
     components: {
         Json,
+        JsonEditor,
     },
     props: {
         "literal-object": {
@@ -78,7 +75,7 @@ export default {
                         'parsing.antlr.failed',
                         { errorMessage: error.message }
                     );
-                    // return;
+                    return;
                 }
 
                 throw error;
@@ -156,7 +153,7 @@ export default {
     data: function () {
         return {
             dataStructure: this.literalObject,
-            json: '',
+            json: '{}',
         }
     }
 };

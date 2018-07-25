@@ -179,13 +179,16 @@ $color-punctuation: $color-beige;
   &__pair {
     display: inline-flex;
 
+    &---button {
+      color: $color-text-clickable;
+    }
+     
     .json__colon {
       color: $color-punctuation;
 
       &:after {
         content: '';
       }
-      
     }
 
     &--no-children {

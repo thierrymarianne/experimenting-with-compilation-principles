@@ -1,0 +1,25 @@
+.json-editor {
+  .json__panels {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .editable-json,
+  .dynamic-json {
+    min-width: 500px;
+
+    .json__pair---button {
+      cursor: pointer;
+      border: none;
+      outline: unset;
+      background-color: transparent;
+      font-size: 1rem;
+    }
+  }
+
+  .dynamic-json {
+    .json__pair---button {
+      display: none;
+    }
+  }
+}
