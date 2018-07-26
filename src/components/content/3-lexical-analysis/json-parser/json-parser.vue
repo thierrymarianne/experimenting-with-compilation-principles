@@ -6,6 +6,7 @@
       ></input-area>
       <button 
         v-clipboard="clipboardReadyJSON"
+        v-on:mouseover="updateClipboardReadyJSON"
         @success="copyToClipboard"
         @error="failedToCopy"
         class='json-parser__button'
@@ -56,10 +57,7 @@ export default {
     })
   },
   updated: function () {
-    this.clipboardReadyJSON = this.getClipboardReadyJson();
-
     this.$nextTick(function () {
-      debugger;
       this.clipboardReadyJSON = this.getClipboardReadyJson();
     })
   },
@@ -73,7 +71,12 @@ export default {
       });
     },
     failedToCopy: function () {
-      throw new Error('Ooops, I may need a better suited way of handling errors');
+      this.sharedState.error(
+        new Error(
+          'Ooops, I may need a better suited way for handling errors',
+          'json-parser',
+        )
+      );
     },
     handleFailedParsing: function (event) {
       this.errorMessage = event.errorMessage;
@@ -116,8 +119,6 @@ export default {
       .$refs['dynamic-json'];
 
       dynamicJSONPlaceholder.classList.add('with-punctuation');
-
-      debugger
 
       // Remove node from the DOM to copy inner text
       this.sharedState.noPendingCopy = false;

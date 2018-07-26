@@ -3,10 +3,12 @@
     <json 
       isEditable
     >
-      <component
-        v-bind:is='editor'
-        ref='editable-json'
-        dynamic></component>
+      <keep-alive>
+        <component
+          v-bind:is='editor'
+          ref='editable-json'
+          dynamic></component>
+      </keep-alive>
     </json>
     <slot name='read-only'></slot>
   </div>

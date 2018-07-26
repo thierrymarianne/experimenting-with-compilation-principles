@@ -15,6 +15,14 @@ const state = {
       },
     );
   },
+  error(error, file) {
+    Raven.captureException(
+      error,
+      {
+        logger: file,
+      },
+    );
+  },
 };
 
 export default {
