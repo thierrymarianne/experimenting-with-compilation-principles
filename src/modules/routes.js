@@ -23,10 +23,11 @@ const routesCollection = {};
   return routesCollection;
 }, routesCollection);
 
+const defaultRedirect = '/lexical-analysis/json-parser';
 export default [
   {
     path: '/',
-    redirect: '/introduction',
+    redirect: defaultRedirect,
     component: BrowsableContent,
     children: [
       {
@@ -133,6 +134,6 @@ export default [
     ],
   }, {
     path: '*',
-    redirect: '/introduction',
+    redirect: defaultRedirect,
   },
 ];
