@@ -1,5 +1,5 @@
 <template>
-  <fragment-transition>
+  <fragment-transition v-if='isShown'>
     <transition 
       name="custom-classes-transition" 
       mode='in-out'
