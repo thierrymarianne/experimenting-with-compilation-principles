@@ -45,7 +45,12 @@ make distribute
 
 ## Possible applications of the underling concepts 
 
- - Order methods by criteria
- - Order class member variables by criteria
- - In general, refactor code in a reproducible way (think wayback machine / time travel for code)
- - Allow an interactive selection of packages among those available from remotes (e.g. package.json with npmjs.org or composer.json with packagist.org) to remove tedium in these tasks
+ - Allow an interactive selection of packages among those available from remotes
+ (e.g. package.json with npmjs.org or composer.json with packagist.org) to remove tedium 
+ from these tasks
+ - Make a semantic diff of parsed tokens (in order to consider not only characters deletion / 
+ additions but also variations in language usage, control flow, variables and methods between
+ refactoring sessions to identify patterns of improvement by grouping small and repeatable
+ actions already indexed at https://refactoring.com), to provide help in reorganizing code in a
+ reproducible way (think wayback machine / time travel for code) so that code review might also
+ be an occasion to replay how decisions were made in context.
