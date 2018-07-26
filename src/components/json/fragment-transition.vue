@@ -2,10 +2,10 @@
   <transition
     mode='in-out'
     name="custom-classes-transition"
-    enter-active-class="animated slideInLeft"
-    leave-active-class="animated slideOutRight"
+    enter-active-class="transition animated fadeInLeftBig"
+    leave-active-class="transition animated hinge"
   >
-    <div v-show='visible'>
+    <div v-if='dataVisible'>
       <slot></slot>
     </div>
   </transition>
@@ -15,14 +15,14 @@
 export default {
   name: 'fragment-transition',
   props: {
-    isVisible: { 
+    isVisibleAtFirst: { 
       type: Boolean,
       default: true
     }
   },
   data: function () {
     return {
-      visible: this.isVisible,
+      dataVisible: this.isVisibleAtFirst,
     } 
   }
 };

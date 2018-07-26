@@ -25,14 +25,12 @@
 <script>
 import _ from 'lodash'
 import EventHub from '../modules/event-hub'
-import Json from './json/json.vue'
 import JsonEditor from './json/json-editor/json-editor.vue'
 import antlr from '../modules/antlr'
 
 export default {
     name: 'dictionary',
     components: {
-        Json,
         JsonEditor,
     },
     props: {

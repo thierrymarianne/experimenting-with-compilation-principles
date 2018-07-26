@@ -16,12 +16,14 @@ const state = {
     );
   },
   error(error, file) {
-    Raven.captureException(
-      error,
-      {
-        logger: file,
-      },
-    );
+    console.log({ error, file });
+    // return;
+    // Raven.captureException(
+    //   error,
+    //   {
+    //     logger: file,
+    //   },
+    // );
   },
 };
 

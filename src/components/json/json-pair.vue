@@ -1,6 +1,9 @@
 <template>
-  <fragment-transition v-if='isShown'>
+  <fragment-transition 
+    v-if='isShown'
+  >
     <transition 
+      v-if='isShown'
       name="custom-classes-transition" 
       mode='in-out'
       enter-active-class="animated fadeInLeftBig" 
@@ -9,7 +12,7 @@
       <span 
         v-if='isShown'
         :class="classes"
-        :ref='uuid' 
+        :ref='uuid'
         :data-uuid='uuid'
         :data-editable='isEditable'
       >
@@ -21,8 +24,8 @@
         <span class="json__comma">,</span>
       </span>
     </transition>
-    <button 
-      v-if='!isArrayOrObject'
+    <button
+      v-if='!isArrayOrObject && isShown'
       class='json__pair---button'
       v-on:click='toggleVisibility'>
       <font-awesome-icon

@@ -5,22 +5,40 @@
       <span class='json__comma'>,</span>
     </span>
   </fragment-transition>
-  <span v-else :class='classes'><slot></slot></span>
+  <span 
+    v-else
+    :class='classes'
+    @click='makeContentEditable'
+    :data-edited='isEdited'
+    :data-uuid='uuid'
+    :ref='uuid'
+  ><slot></slot></span>
 </template>
 
 <script>
 import FragmentTransition from './fragment-transition.vue';
+import EventHub from '../../modules/event-hub';
+import editable from './editable';
 
 export default {
   name: 'json-value',
   components: {
     FragmentTransition,
   },
+  mixins: [Object.assign({}, editable)],
   props: {
     isArrayItem: {
       type: Boolean,
       default: false,
     },
+  },
+  methods: {
+    makeContentEditable: function () {
+      EventHub.$emit(
+        'node.made_editable',
+        { element: this.$refs.value }
+      );
+    }
   },
   data: function () {
     let text;
@@ -35,6 +53,8 @@ export default {
   },
   computed: {
     classes: function () {
+      const defaultClasses = 'json__value json__value--editable';
+
       let booleanClass = '';
       if (this.text === 'false'
       || this.text === 'true') {
@@ -46,7 +66,7 @@ export default {
         nullClass = ' json__value--null';
       }
 
-      return `json__value${booleanClass}${nullClass}`;
+      return `${defaultClasses}${booleanClass}${nullClass}`;
     },
   },
 };

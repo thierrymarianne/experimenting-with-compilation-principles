@@ -1,10 +1,10 @@
 <script>
 import Vue from 'vue';
-import JsonValue from './json-value.vue';
-import JsonPair from './json-pair.vue';
-import JsonArray from './json-array.vue';
-import JsonObject from './json-object.vue';
-import SharedState from '../../modules/shared-state';
+import JsonValue from '../json-value.vue';
+import JsonPair from '../json-pair.vue';
+import JsonArray from '../json-array.vue';
+import JsonObject from '../json-object.vue';
+import SharedState from '../../../modules/shared-state';
 
 export default {
   name: 'json',
@@ -127,6 +127,6 @@ export default {
 };
 </script>
 
-<style module>
+<style lang='scss'>
 @import 'json.scss';
 </style>

@@ -26,8 +26,8 @@ $color-punctuation: $color-beige;
         }
       }
 
-      .json__array > div {
-        &:last-child {
+      .json__array > [is-visible] {
+        &:nth-last-child(1) {
           > .json__value--array-item > .json__comma {
             display: none;
           }
@@ -100,6 +100,20 @@ $color-punctuation: $color-beige;
             &:after {
               content: none;
             }
+          }
+        }
+      }
+    }
+
+    .editable-json {
+      .json {
+        &__value {
+          &---editable {
+            cursor: pointer;
+          }
+  
+          &---edited {
+            cursor: auto;
           }
         }
       }

@@ -4,16 +4,11 @@ import SharedState from '../../modules/shared-state';
 import namespaces from '../../modules/namespace';
 
 const editable = {
-  props: {
-    isVisibleAtFirst: {
-      type: Boolean,
-      default: true,
-    },
-  },
   data: function () {
     return {
       isEditable: false,
-      isVisible: this.isVisibleAtFirst,
+      isEdited: false,
+      isVisible: true,
       noPendingCopy: SharedState.state.noPendingCopy,
       sharedState: SharedState.state,
     };

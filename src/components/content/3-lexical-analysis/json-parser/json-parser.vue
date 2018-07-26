@@ -131,12 +131,7 @@ export default {
           '\t'
         );
       } catch (error) {
-        Raven.captureException(
-          error,
-          {
-            logger: 'json-parser'
-          }
-        );
+        this.sharedState.error(error, 'json-parser');
         prettifiedJSON = '{}';
       }
       

@@ -18,7 +18,7 @@
 import Vue from 'vue';
 import EventHub from '../../../modules/event-hub';
 import SharedState from '../../../modules/shared-state';
-import Json from '../json.vue';
+import Json from '../json/json.vue';
 
 const XPathPosition = require('simple-xpath-position');
 
@@ -46,6 +46,9 @@ export default {
     },
     registerNode: function ({ component, uuidAttribute }) {
       this.$refs[uuidAttribute] = component;
+      this.$nextTick(function () {
+        this.getTwinOf(component.$el);
+      });
     },
     getTwinOf(element) {
       let path;
@@ -63,7 +66,7 @@ export default {
         twinVNode: this.$refs[twin.getAttribute('data-uuid')],
       };
     },
-    toggleElementVisibility: function ({element}) {
+    toggleNodeVisibility: function ({element}) {
       const { twinVNode, elementVNode } = this.getTwinOf(element);
       elementVNode.isEditable = true;
 
@@ -76,11 +79,25 @@ export default {
       twinVNode.isVisible = !twinVNode.isVisible;
       EventHub.$emit('node.altered');
     },
+    toggleNodeEdition: function ({element}) {
+      const { twinVNode, elementVNode } = this.getTwinOf(element);
+      elementVNode.isEditable = true;
+
+      if (elementVNode.isEdited && !(elementVNode.uuid in this.editableToDynamic)) {
+        this.editableToDynamic[elementVNode.uuid] = twinVNode.uuid;
+        this.dynamicToEditable[twinVNode.uuid] = elementVNode.uuid;
+      }
+
+      elementVNode.isEdited = !elementVNode.isEdited;
+      twinVNode.isEdited = !twinVNode.isEdited;
+      EventHub.$emit('node.altered');
+    },
   },
   mounted: function () {
-    EventHub.$on('node.shown', this.toggleElementVisibility);
-    EventHub.$on('node.hidden', this.toggleElementVisibility);
+    EventHub.$on('node.shown', this.toggleNodeVisibility);
+    EventHub.$on('node.hidden', this.toggleNodeVisibility);
     EventHub.$on('node.registered', this.registerNode);
+    EventHub.$on('node.made_editable', this.toggleNodetEdition);
   },
   data: function () {
     return {
