@@ -35,4 +35,24 @@
     min-width: calc(#{$width-base-content} - 2rem);
     width: auto;
   }
+
+  &__input {
+    display: flex;
+  }
+
+  &__button {
+    color: $color-text-clickable;
+    font-size: 1rem;
+  }
+
+  &__icon-copy {
+    align-self: center;
+    color: $color-text-clickable;
+    cursor: pointer; 
+    display: flex;
+    font-size: 10rem;
+    justify-content: flex-end;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+  }
 }

@@ -12,6 +12,98 @@ $color-punctuation: $color-beige;
     margin-top: 1rem;
     padding: 1rem;
     width: $width-input-area;
+
+    .dynamic-json.with-punctuation {
+      .json__comma {
+        display: inline-flex;
+      }
+
+      .json__object > div {
+        &:last-child {
+          > .json__pair > .json__comma {
+            display: none;
+          }
+        }
+      }
+
+      .json__array > div {
+        &:last-child {
+          > .json__value--array-item > .json__comma {
+            display: none;
+          }
+        }
+      }
+
+      .json__parentheses,
+      .json__square-bracket {
+        &--left {
+          display: inline-flex;
+        }
+
+        &--right {
+          &:after {
+            content: none;
+          }
+        }
+      }
+
+      .json__pair {
+        .json__colon {
+          &:after {
+            content: none;
+          }
+        }
+
+        &--no-children {
+          .json__value {
+            &:after {
+              content: none;
+            }
+          }
+        }
+      }
+      
+      .json__pair {
+        display: inline-flex;
+    
+        &---button {
+          color: $color-text-clickable;
+        }
+         
+        .json__colon {
+          color: $color-punctuation;
+    
+          &:after {
+            content: '';
+          }
+        }
+    
+        &--no-children {
+          .json__value {
+            &:after {
+              content: none;
+            }
+          }
+        }
+    
+        &--object,
+        &--array {
+          > .json__key-value > .json__colon {
+            &:after {
+              content: none;
+            }
+          }
+        }
+    
+        &--array {
+          > .json__key-value > .json__colon {
+            &:after {
+              content: none;
+            }
+          }
+        }
+      }
+    }
   }
 
   &__key {
@@ -46,6 +138,10 @@ $color-punctuation: $color-beige;
     &--array-item {
       display: inline-flex;
     }
+  }
+
+  &__comma {
+    display: none;
   }
 
   &__array,

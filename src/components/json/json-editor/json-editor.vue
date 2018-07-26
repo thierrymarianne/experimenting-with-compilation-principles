@@ -46,17 +46,33 @@ export default {
       this.$refs[uuidAttribute] = component;
     },
     getTwinOf(element) {
-      const path = XPathPosition.fromNode(element, this.$el.querySelector('.editable-json'));
-      const twin = XPathPosition.toNode(path, this.$el.querySelector('.dynamic-json'));
+      let path;
+      let twin;
+      if (element.getAttribute('data-uuid') in this.editableToDynamic) {
+        return {
+          elementVNode: this.$refs[element.getAttribute('data-uuid')],
+          twinVNode: this.$refs[this.editableToDynamic[element.getAttribute('data-uuid')]],
+        }
+      }
+      path = XPathPosition.fromNode(element, this.$el.querySelector('.editable-json'));
+      twin = XPathPosition.toNode(path, this.$el.querySelector('.dynamic-json'));
       return {
         elementVNode: this.$refs[element.getAttribute('data-uuid')],
-        twinVnode: this.$refs[twin.getAttribute('data-uuid')],
+        twinVNode: this.$refs[twin.getAttribute('data-uuid')],
       };
     },
     toggleElementVisibility: function ({element}) {
-      const { twinVnode, elementVNode } = this.getTwinOf(element);
+      const { twinVNode, elementVNode } = this.getTwinOf(element);
       elementVNode.isEditable = true;
-      twinVnode.isVisible = !twinVnode.isVisible;
+
+      if (elementVNode.isVisible && !(elementVNode.uuid in this.editableToDynamic)) {
+        this.editableToDynamic[elementVNode.uuid] = twinVNode.uuid;
+        this.dynamicToEditable[twinVNode.uuid] = elementVNode.uuid;
+      }
+
+      elementVNode.isVisible = !elementVNode.isVisible;
+      twinVNode.isVisible = !twinVNode.isVisible;
+      EventHub.$emit('node.altered');
     },
   },
   mounted: function () {

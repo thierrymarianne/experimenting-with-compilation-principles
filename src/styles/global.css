@@ -8,8 +8,18 @@ body {
   scroll-behavior: smooth;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+  outline: unset;
+}
+
 #app {
   display: flex;
   width: 100%;
   justify-content: center;
+}
+
+.hide {
+  display: none !important;
 }

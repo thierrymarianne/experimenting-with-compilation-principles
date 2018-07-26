@@ -1,11 +1,25 @@
 <template>
   <div class='json-parser content content--no-first-letter'>
-    <input-area
-      :text-at-first="prettyPrintedExample"
-    ></input-area>
+    <section class='json-parser__input'>
+      <input-area
+        :text-at-first="prettyPrintedExample"
+      ></input-area>
+      <button 
+        v-clipboard="clipboardReadyJSON"
+        @success="copyToClipboard"
+        @error="failedToCopy"
+        class='json-parser__button'
+      >
+        <font-awesome-icon
+          class='json-parser__icon-copy'
+          icon='copy' />
+        Copy JSON
+      </button>
+    </section>
     <dictionary
       :literal-object="defaultExample"
       activeParser
+      ref='dictionary'
       v-show='!showError'>
     </dictionary>
     <source-code 
@@ -15,11 +29,15 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
+import EventHub from '../../../../modules/event-hub';
 import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
-import SourceCode from '../../../source-code.vue';
-import EventHub from '../../../../modules/event-hub';
 import PackageJson from '../../../../../package.json';
+import SharedState from '../../../../modules/shared-state';
+import SourceCode from '../../../source-code.vue';
+import Raven from 'raven-js';
 
 export default {
   name: 'lexical-analyzer',
@@ -31,25 +49,115 @@ export default {
   mounted: function () {
     EventHub.$on('parsing.antlr.failed', this.handleFailedParsing);
     EventHub.$on('parsing.antlr.succeeded', this.hideErrorMessageContainer);
+    EventHub.$on('node.altered', this.updateClipboardReadyJSON);
+
+    this.$nextTick(function () {
+      this.clipboardReadyJSON = this.getClipboardReadyJson();
+    })
+  },
+  updated: function () {
+    this.clipboardReadyJSON = this.getClipboardReadyJson();
+
+    this.$nextTick(function () {
+      debugger;
+      this.clipboardReadyJSON = this.getClipboardReadyJson();
+    })
   },
   methods: {
+    copyToClipboard: function () {
+      this.$notify({
+        group: 'actions',
+        title: 'What could possibly go wrong?',
+        text: 'This edited version of your JSON has been successfully copied to your clipboard.',
+        position: 'top left',
+      });
+    },
+    failedToCopy: function () {
+      throw new Error('Ooops, I may need a better suited way of handling errors');
+    },
     handleFailedParsing: function (event) {
       this.errorMessage = event.errorMessage;
       this.showError = true;
     },
     hideErrorMessageContainer: function () {
       this.showError = false;
+    },
+    updateClipboardReadyJSON: function () {
+      this.clipboardReadyJSON = this.getClipboardReadyJson();
+    },
+    getClipboardReadyJson: function () {
+      let clibpardReadyJSON = '';
+      if (typeof this.$refs.dictionary === 'undefined') {
+        return clibpardReadyJSON;
+      }
+
+      if (typeof this.$refs.dictionary.$refs.jsonEditor === 'undefined') {
+        return clibpardReadyJSON;
+      }
+
+      if (typeof this.$refs.dictionary.$refs.jsonEditor === 'undefined') {
+        return clibpardReadyJSON;
+      }
+
+      if (typeof this.$refs.dictionary.$refs.jsonEditor
+      .$refs['editable-json'] === 'undefined') {
+        return clibpardReadyJSON;
+      }
+
+      if (typeof this.$refs.dictionary.$refs.jsonEditor
+      .$refs['editable-json']
+      .$refs['dynamic-json'] === 'undefined') {
+        return clibpardReadyJSON;
+      }
+      
+      const dynamicJSONPlaceholder = this.$refs.dictionary
+      .$refs.jsonEditor
+      .$refs['editable-json']
+      .$refs['dynamic-json'];
+
+      dynamicJSONPlaceholder.classList.add('with-punctuation');
+
+      debugger
+
+      // Remove node from the DOM to copy inner text
+      this.sharedState.noPendingCopy = false;
+
+      let prettifiedJSON;
+      try {
+        prettifiedJSON = JSON.stringify(
+          JSON.parse(dynamicJSONPlaceholder.innerText),
+          null,
+          '\t'
+        );
+      } catch (error) {
+        Raven.captureException(
+          error,
+          {
+            logger: 'json-parser'
+          }
+        );
+        prettifiedJSON = '{}';
+      }
+      
+      // Restore node into the DOM to copy inner text
+      this.sharedState.noPendingCopy = true;
+
+      dynamicJSONPlaceholder.classList.remove('with-punctuation');
+
+      return prettifiedJSON;
     }
   },
   computed: {
     prettyPrintedExample: function () {
       return JSON.stringify(this.defaultExample, null, '\t');
-    }
+    },
   },
   data: function () {
     return {
+      clipboardReadyJSON: '',
       defaultExample: PackageJson,
       errorMessage: '',
+      sharedState: SharedState.state,
       showError: false,
     };
   },

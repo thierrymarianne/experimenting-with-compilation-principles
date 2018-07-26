@@ -1,14 +1,14 @@
 <template>
   <fragment-transition>
-      <transition 
-        name="custom-classes-transition" 
-        mode='in-out'
-        enter-active-class="animated fadeInLeftBig" 
-        leave-active-class="animated hinge"
-      >
+    <transition 
+      name="custom-classes-transition" 
+      mode='in-out'
+      enter-active-class="animated fadeInLeftBig" 
+      leave-active-class="animated hinge"
+    >
       <span 
+        v-if='isShown'
         :class="classes"
-        v-show='isEditable || isVisible'
         :ref='uuid' 
         :data-uuid='uuid'
         :data-editable='isEditable'
@@ -18,6 +18,7 @@
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>
+        <span class="json__comma">,</span>
       </span>
     </transition>
     <button 
@@ -37,7 +38,7 @@ import editable from './editable';
 
 export default {
   name: 'json-pair',
-  mixins: [editable],
+  mixins: [Object.assign({}, editable)],
   components: {
     FragmentTransition,
   },
@@ -58,8 +59,6 @@ export default {
   data: function () {
     return {
       text: '',
-      isVisible: this.isVisibleAtFirst,
-      isEditable: false,
     }
   },
   computed: {
@@ -76,8 +75,12 @@ export default {
       if (!this.isArrayOrObject) {
         noChildrenClass = ' json__pair--no-children';
       }
+      let hideClass='';
+      if (!this.noPendingCopy) {
+        hideClass = ' hide';
+      }
 
-      return `json__pair${objectClass}${arrayClass}${noChildrenClass}`;
+      return `json__pair${objectClass}${arrayClass}${noChildrenClass}${hideClass}`;
     },
   },
 };

@@ -1,6 +1,11 @@
 <template>
   <div class="browsable-content">
     <template v-if='showNavigationMenu'>
+      <notifications 
+        group="actions"
+        position='top left'
+        classes='browsable-content__notifications' 
+      />
       <navigation-menu></navigation-menu>
       <transition name='browsable-content__fade'>
         <template
@@ -20,9 +25,9 @@
 </template>
 
 <script>
-import NavigationMenu from './navigation-menu.vue'
+import NavigationMenu from '../navigation-menu.vue'
 import RouterView from 'vue-router'
-import SharedState from '../modules/shared-state';
+import SharedState from '../../modules/shared-state';
 
 export default {
   name: 'browsable-content',
@@ -48,6 +53,6 @@ export default {
 }
 </script>
 
-<style scoped lang='scss'>
-  @import '../styles/browsable-content.scss'; 
+<style module>
+  @import 'browsable-content-module.scss'; 
 </style>

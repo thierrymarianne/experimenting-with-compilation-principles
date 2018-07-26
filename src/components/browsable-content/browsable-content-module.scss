@@ -1,0 +1,66 @@
+.browsable-content {
+  display: flex;
+  flex-wrap: wrap;
+  width: $width-max;
+  justify-content: center;
+  position: relative;
+
+  &__content {
+    display: flex;
+    width: $width-max;
+    justify-content: center;
+    margin-bottom: $margin-bottom-content;
+  }
+  &__fade-enter-active,  
+  &__fade-leave-active {
+    transition: opacity 1s;
+  }
+
+  &__fade-leave-to,
+  &__fade-enter {
+    opacity: 0;
+  }
+
+  .notifications {
+    .notification {
+      &-wrapper {
+        margin: 0.5rem 0.5rem;
+
+        &:not(:first-child) {
+          margin-top: 0;
+        }
+      }
+    } 
+
+    .browsable-content__notifications {
+      background-color: $color-black;
+      border: 1px solid $color-beige;
+      border-top: 0;
+      padding: 0.5rem;
+      cursor: pointer;
+
+      .notification {
+        &-title {
+          border-bottom: 1px dotted $color-beige;
+          font-family: $font-family-title;
+          font-size: 1rem;
+          font-weight: bold;
+          color: $color-notification-title;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.2rem;
+        }
+      
+        &-content {
+          display: flex;
+          font-family: $font-family-paragraph;
+          font-size: 0.9rem;
+          color: $color-beige;
+          height: 4.2rem;
+          line-height: 2rem;
+          justify-content: flex-end;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import Content from '../components/content';
-import BrowsableContent from '../components/browsable-content.vue';
+import BrowsableContent from '../components/browsable-content/browsable-content.vue';
 import NavigationMenu from './navigation-menu';
 
 const routesCollection = {};

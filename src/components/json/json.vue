@@ -34,7 +34,7 @@ export default {
   render: function (createElement) {
     if (this.dynamic) {
       const dynamicChildCompilation = this.compileJsonTemplate(this.sharedState.template);
-      let editableJsonObjectData = {
+      let JSONObjectData = {
         name: 'editableJson',
         components: {
           JsonValue,
@@ -49,12 +49,15 @@ export default {
         staticRenderFns: dynamicChildCompilation.staticRenderFns,
       }
       const editableJson = createElement(
-        editableJsonObjectData,
+        JSONObjectData,
         { class: 'content', },
         [SharedState.template]
       );
-      const dyanmicJson = createElement(
-        editableJsonObjectData,
+      
+      let JSONObjectDataCopy = Object.assign({}, JSONObjectData);
+      JSONObjectDataCopy.name = 'dynamicJson';
+      const dynamicJson = createElement(
+        JSONObjectDataCopy,
         { class: 'content', },
         [SharedState.template]
       );
@@ -64,13 +67,19 @@ export default {
         [
           createElement(
             'div',
-            { class: 'editable-json' }, 
+            { 
+              class: 'editable-json',
+              ref: 'editable-json',
+            }, 
             [editableJson]
           ), 
           createElement(
             'div',
-            { class: 'dynamic-json' }, 
-            [dyanmicJson]
+            {
+              class: 'dynamic-json',
+              ref: 'dynamic-json',              
+            }, 
+            [dynamicJson]
           )
         ]
       );

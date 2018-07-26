@@ -13,6 +13,7 @@ $color-red: #CF4647;
 $color-green: #b4cea8;
 $color-greener: #2aa19b;
 $color-yellow: #dab988;
+$color-blue: #569CD3;
 
 $color-background: $color-black;
 $color-background-menu: $color-black-light;
@@ -50,7 +51,8 @@ $color-textarea: #d4d4d3;
 $color-error: #94151b;
 $color-border: #ced4d4;
 $color-value: #ce9178;
-$color-property: #569CD3;
+$color-property: $color-blue;
+$color-notification-title: $color-blue;
 $color-button-menu: $color-text-clickable;
 
 $font-family-monospace: 'Ubuntu Mono', monospace;
