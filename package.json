@@ -2,12 +2,10 @@
   "name": "compilers-principles-techniques-and-tools",
   "license": "MIT",
   "scripts": {
-    "build": "make build",
     "distribute": "make distribute",
-    "stats": "make stats",
-    "watch": "make watch",
     "lint": "make lint",
-    "start:dev": "make start-dev"
+    "start:dev": "make start-dev",
+    "stats": "make stats"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.53",

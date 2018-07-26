@@ -10,17 +10,12 @@ help:
 distribute: ## Distribute package
 	@/bin/bash -c 'export NODE_ENV='production' && rm -f dist/*css && rm -f dist/*js && npx webpack --config webpack.config.js --optimize-minimize --mode=production'
 
+lint: ## Lint project files
+	@/bin/bash -c 'npx eslint src/ .js'
+
 stats: ## Statistics about dependencies
 	@/bin/bash -c 'export NODE_ENV='production' && npx webpack --profile --json > stats.json'
 
-build: ## Build
-	@/bin/bash -c 'npx webpack --config webpack.config.js'
-
-lint: ## Lint
-	@/bin/bash -c 'npx eslint src/ .js'
-
-start-dev: ## Start deelopment server
+webpack-serve: ## Start development server
 	@/bin/bash -c "npx webpack-serve --config ./webpack.config.js --port=8888 --open --content='dist'"
 
-watch: ## Watch
-	@/bin/bash -c 'npx webpack --watch'
