@@ -43,3 +43,9 @@ make webpack-server
 make distribute
 ```
 
+## Possible applications of the underling concepts 
+
+ - Order methods by criteria
+ - Order class member variables by criteria
+ - In general, refactor code in a reproducible way (think wayback machine / time travel for code)
+ - Allow an interactive selection of packages among those available from remotes (e.g. package.json with npmjs.org or composer.json with packagist.org) to remove tedium in these tasks
