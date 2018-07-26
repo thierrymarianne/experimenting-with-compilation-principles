@@ -41,9 +41,9 @@ export default {
     },
     fixedInput: function (event) {
       this.error = false;
-
       if (typeof this.$refs.input !== 'undefined') {
-        this.$refs.input.value = JSON.stringify(event.parsedJson);
+        this.text = JSON.stringify(event.parsedJson);
+        this.$refs.input.value = this.text;
       }
     }
   },

@@ -66,6 +66,10 @@ export default {
             this.parseJson(event.text, this);
         },
         parseJson: function (text, component) {
+            if (typeof component === 'undefined') {
+                return;
+            }
+
             component.$data.json = '';
             try {
                 antlr.parseJSON(text, component);
@@ -95,8 +99,8 @@ export default {
         },
         updateDataStructure: function (event) {
             const previousDataStructure = this.dataStructure;
-
-            if (this.$route.name !== 'about' || this.activeParser) {
+            const exampleFromAboutPage = this.$route.name === 'about';
+            if (!exampleFromAboutPage || this.activeParser) {
                 return;
             }
 
@@ -113,7 +117,11 @@ export default {
                     .replace(/'/g, '"')
 
                 this.dataStructure = JSON.parse(event.json);
-                EventHub.$emit('parsing.succeeded', { 'parsedJson': JSON.parse(event.text) });
+                let parsedJSON = this.dataStructure;
+                if (!exampleFromAboutPage) {
+                    parsedJSON = JSON.parse(event.text);
+                }
+                EventHub.$emit('parsing.succeeded', { 'parsedJson': parsedJSON });
             } catch (error) {
                 this.dataStructure = previousDataStructure;
                 EventHub.$emit('parsing.failed', { error: error });

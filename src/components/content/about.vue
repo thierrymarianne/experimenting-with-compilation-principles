@@ -34,7 +34,7 @@ using regular expressions
 to fix half-compliant JSON
 would not help much to deal with 
 the task at hand, I've decided to dive into 
-<em>Compilers - Principles, Techniques, & Tools</em>
+<browsable-link href='https://bit.ly/compilers-principles'>Compilers - Principles, Techniques, & Tools</browsable-link>
 in order to exercice myself
 in learning the basics of compilation</paragraph>
     </section>
