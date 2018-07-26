@@ -1,6 +1,8 @@
 <template>
   <div class='json-parser content content--no-first-letter'>
-    <input-area :text="JSON.stringify(defaultExample)" paste='getClipboardPasteHandler'></input-area>
+    <input-area
+      :text-at-first="prettyPrintedExample"
+    ></input-area>
     <dictionary
       :literal-object="defaultExample"
       activeParser
@@ -17,6 +19,7 @@ import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
 import SourceCode from '../../../source-code.vue';
 import EventHub from '../../../../modules/event-hub';
+import PackageJson from '../../../../../package.json';
 
 export default {
   name: 'lexical-analyzer',
@@ -39,15 +42,13 @@ export default {
     }
   },
   computed: {
-    getClipboardPasteHandler: function () {
-      return (event) => {
-        debugger;
-      };
-    },
+    prettyPrintedExample: function () {
+      return JSON.stringify(this.defaultExample, null, '\t');
+    }
   },
   data: function () {
     return {
-      defaultExample: {},
+      defaultExample: PackageJson,
       errorMessage: '',
       showError: false,
     };
