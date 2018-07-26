@@ -28,6 +28,11 @@ if (developmentMode) {
   eslintConfig = '.eslintrc.json';
 }
 
+let outputDirectory = 'docs'
+if (developmentMode) {
+  outputDirectory = 'dist';
+}
+
 const sassLoaderOptions = {
   data: '@import "variables.scss";',
   sourceMap: true,
@@ -183,7 +188,7 @@ module.exports = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, outputDirectory),
     filename: '[name].[hash].js',
     chunkFilename: '[name].[chunkHash].bundle.js',
   },
