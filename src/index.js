@@ -47,6 +47,17 @@ router.afterEach((to, from) => {
   EventHub.$emit('menu_item.clicked');
 });
 
+router.beforeEach((to, from, next) => {
+  if (typeof from.query.peek !== 'undefined'
+  && typeof to.query.peek === 'undefined'
+  ) {
+    next({ name: to.name, query: from.query });
+    return;
+  }
+
+  next();
+});
+
 // eslint-disable-next-line
 const app = new Vue({
   el: '#app',
