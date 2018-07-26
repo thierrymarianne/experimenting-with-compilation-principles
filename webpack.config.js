@@ -18,12 +18,12 @@ if (developmentMode) {
   styleLoader = 'vue-style-loader';
 }
 
-let sourceMap = 'cheap-module-source-map';
+let sourceMap = 'source-map';
 if (developmentMode) {
   sourceMap = 'eval-source-map';
 }
 
-let eslintConfig = '.eslintrc.production.json';
+let eslintConfig = '.eslintrc-production.json';
 if (developmentMode) {
   eslintConfig = '.eslintrc.json';
 }
@@ -83,6 +83,11 @@ module.exports = {
         cache: true,
         parallel: true,
         sourceMap: true,
+        uglifyOptions: {
+          output: {
+            ascii_only: true
+          }
+        }
       }),
       new OptimizeCSSAssetsPlugin({})
     ],
