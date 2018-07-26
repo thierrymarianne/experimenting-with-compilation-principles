@@ -32,14 +32,12 @@
 </template>
 
 <script>
-import uuidv5 from 'uuid/v5';
-
 import FragmentTransition from './fragment-transition.vue';
-import EventHub from './../../modules/event-hub';
-import namespaces from './../../modules/namespace';
+import editable from './editable';
 
 export default {
   name: 'json-pair',
+  mixins: [editable],
   components: {
     FragmentTransition,
   },
@@ -56,10 +54,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    isVisibleAtFirst: {
-      type: Boolean,
-      default: true,
-    },
   },
   data: function () {
     return {
@@ -68,40 +62,7 @@ export default {
       isEditable: false,
     }
   },
-  moounted: function () {
-    this.isEditable = this.canBeEdited;
-  },
-  methods: {
-    mounted: function () {
-      this.isEditable = this.canBeEdited();
-    },
-    toggleVisibility: function () {
-      this.isVisible = !this.isVisible;
-
-      if (!this.isVisible) {
-        EventHub.$emit('node.hidden', { element: this.$refs[this.uuid] });
-        return;
-      }
-
-      if (this.isVisible) {
-        EventHub.$emit('node.shown', { element: this.$refs[this.uuid] });
-      }
-    },
-  },
   computed: {
-    uuid: function () {
-      let namespace = namespaces.pair;
-      const uuidAttribute = uuidv5(`${this._uid}`, namespace);
-      EventHub.$emit('node.registered', { component: this, uuidAttribute });
-      return uuidAttribute;
-    },
-    getIconName: function () {
-      if (this.isVisible) {
-        return 'eye-slash';
-      }
-
-      return 'eye';
-    },
     classes: function () {
       let objectClass = '';
       if (this.isFirstChildObject) {

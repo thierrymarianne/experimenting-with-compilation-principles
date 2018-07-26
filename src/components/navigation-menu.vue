@@ -16,13 +16,26 @@
         <div class='navigation-menu__overlay'></div>
         <ul class="navigation-menu__menu">
           <template v-for="item in getMenuItems">
-            <router-link :key='item.name' :to='item.path' active-class='navigation-menu__menu-item--active' class='navigation-menu__menu-item'
-              :class='{"navigation-menu__menu-item--active": isMenuActive(item)}' tag='li'>
+            <router-link
+              :key='item.name'
+              :to='item.path'
+              active-class='navigation-menu__menu-item--active'
+              class='navigation-menu__menu-item'
+              :class='{"navigation-menu__menu-item--active": isMenuActive(item)}'
+              v-if='isPublic(item)'
+              tag='li'>
               {{ item.text }}
             </router-link>
-            <li v-if='getSubMenuItems(item.name) && isMenuActive(item)' class='navigation-menu__menu-item-sub-menu'>
+            <li 
+              v-if='getSubMenuItems(item.name) && isMenuActive(item) && isPublic(item)'
+              class='navigation-menu__menu-item-sub-menu'
+            >
               <ul class='navigation-menu__sub-menu'>
-                <router-link v-for="subItem in getSubMenuItems(item.name)" :key='subItem.name' :to='subItem.path' active-class='navigation-menu__sub-menu-item--active'
+                <router-link 
+                  v-for="subItem in getSubMenuItems(item.name)"
+                  :key='subItem.name'
+                  :to='subItem.path'
+                  active-class='navigation-menu__sub-menu-item--active'
                   class='navigation-menu__sub-menu-item' tag='li'>
                   {{ subItem.text }}
                 </router-link>
@@ -100,8 +113,14 @@ export default {
 
       return this.subMenuItems[menu];
     },
+    isPublic: function (item) {
+      return item.isPublic || this.wouldLoveToAccessCopyrightedMaterialsForNoCommercialUse;
+    },
   },
   computed: {
+    wouldLoveToAccessCopyrightedMaterialsForNoCommercialUse: function () {
+      return 'peek' in this.$route.query;
+    },
     activeMenuItemHasIntroduction: function () {
       return this.aMenuItemHasBeenSelected && this.getActiveMenuItem.introduction;
     },
@@ -203,7 +222,7 @@ export default {
       }
 
       return activeSubMenuItems[0];
-    }
+    },
   },
   data: function () {
     SharedState.state.tableOfContentsIsVisible = this.menuIsVisible;

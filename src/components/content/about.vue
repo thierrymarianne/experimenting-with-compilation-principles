@@ -47,12 +47,6 @@ in learning the basics of compilation</paragraph>
             :literal-object="defaultExample"
             ref="dictionary">
           </dictionary>
-          <dictionary 
-            :literal-object="defaultExample"
-            activeParser
-            v-show='!showError'
-            ref="parsedJSON">
-          </dictionary>
           <source-code 
             v-html='errorMessage'
             v-show='showError'

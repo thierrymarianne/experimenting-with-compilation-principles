@@ -155,6 +155,7 @@ const lexicalAnalysisChildren = [
     },
   }, {
     name: 'json-parser',
+    isPublic: true,
     text: 'JSON parser',
     path: '/lexical-analysis/json-parser',
     components: {
@@ -227,10 +228,12 @@ const menuItems = [
     text: 'Lexical Analysis',
     path: '/lexical-analysis/from-regular-expressions-to-automata',
     subMenuNames: lexicalAnalysisChildrenNames,
+    isPublic: true,
   }, {
     name: 'about',
     text: 'About',
     path: '/about',
+    isPublic: true,
   },
 ];
 
