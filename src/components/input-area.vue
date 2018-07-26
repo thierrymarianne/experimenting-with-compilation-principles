@@ -48,19 +48,16 @@ export default {
     }
   },
   props: {
-    paste: {
-      type: null
+    textAtFirst: {
+      type: String,
+      default: '',
     }
   },
   data: function () {
-    const eventHandler = function (event) {
-      console.log(event);
-    };
-
     return {
       json: {},
       error: false,
-      text: '{}',
+      text: this.textAtFirst,
     }
   }
 }

@@ -1,8 +1,12 @@
 <template>
   <div class='from-regular-expressions-to-automata content content--no-first-letter'>
-    <input-area></input-area>
+    <input-area text-at-first='ab+'></input-area>
     <br />
-    <multimedia-content>Visualization implemented with <browsable-link href='https://github.com/hokein/Automata.js'>Automata.js</browsable-link>
+    <multimedia-content>
+      Change the regular expression and click out of the text field
+to generate a transition table, a Non-Deterministic Finite Automaton (NFA),
+and a Deterministic Finite Automaton (DFA).
+      See <browsable-link href='https://github.com/hokein/Automata.js'>Automata.js</browsable-link>
 and <browsable-link href='https://github.com/mdaines/viz.js'>Viz.js</browsable-link>
     </multimedia-content>
     <div
