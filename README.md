@@ -1,5 +1,11 @@
 # Learning how compilers work
 
+## Demo
+
+![JSON Editor made with Vue components and ANTLR4](https://thierry.marianne.io/compilers/compilers-principles-techniques-and-tools.gif)
+
+## About
+
 A simple JSON editor implemented as an exercice
 to learn more about:
  - context-free grammars (BNF)
