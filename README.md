@@ -15,6 +15,12 @@ to learn more about:
 
 ## Installation
 
+Install [git](https://git-scm.org) and clone the project repository
+
+```
+git clone https://github.com/thierrymarianne/project-learning-compilers.git
+```
+
 Install [node.js](https://nodejs.org), 
 preferally with [nvm](https://github.com/creationix/nvm)
 
