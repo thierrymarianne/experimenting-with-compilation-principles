@@ -111,6 +111,7 @@ export default {
 
       if (twins.elementVNode.isVisible
       && !(twins.elementVNode.uuid in this.editableToDynamic)) {
+        twins.elementVNode.isEditable = true;
         this.editableToDynamic[twins.elementVNode.uuid] = twins.twinVNode.uuid;
         this.dynamicToEditable[twins.twinVNode.uuid] = twins.elementVNode.uuid;
       }
@@ -136,20 +137,30 @@ export default {
       let plainText;
 
       if (this.isNodeWithUuidBeingEdited()(nodeUuid)) {
-        nodeComponent.$el.removeAttribute('contenteditable');
         if (nodeComponent.$el.innerText.trim().length === 0) {
-          nodeComponent.$el.innerText = '';
+          nodeComponent.$el.innerText = 'null';
         }
-        const plainTextEnclosedInAppostrophes = `"${nodeComponent.$el.innerText}"`;
-        nodeComponent.$el.innerText = plainTextEnclosedInAppostrophes;
+        const plainTextEnclosedInAppostrophes = `${nodeComponent.$el.innerText.trim()}`;
+
+        nodeComponent.isEdited = false;
+        nodeComponent.text = plainTextEnclosedInAppostrophes;
+
+        nodeComponent.$el.removeAttribute('contenteditable');
         nodeComponent.$el.classList.remove('json__value--edited');
+        nodeComponent.$el.innerText = plainTextEnclosedInAppostrophes;
+        nodeComponent.$el.innerHtml = plainTextEnclosedInAppostrophes;
+        nodeComponent.$slots.default[0] = plainTextEnclosedInAppostrophes;
 
         this.saveValue({
           uuid: nodeUuid,
           value: plainTextEnclosedInAppostrophes
         });
 
-        console.log(this.editableToDynamic[nodeUuid]);
+        const twin = this.$refs[this.editableToDynamic[nodeUuid]];
+        twin.text = plainTextEnclosedInAppostrophes;
+        twin.$slots.default[0] = plainTextEnclosedInAppostrophes;
+        twin.$el.innerHtml = plainTextEnclosedInAppostrophes;
+        twin.$el.innerText = plainTextEnclosedInAppostrophes;
 
         return;
       }
@@ -158,11 +169,10 @@ export default {
         uuid: nodeUuid,
       });
 
+      nodeComponent.isEdited = true;
       nodeComponent.$el.setAttribute('contenteditable', true);
       nodeComponent.$el.classList.add('json__value--edited');
-      plainText = nodeComponent.$el.innerText
-        .replace(/^"/, '')
-        .replace(/"$/, '')
+      plainText = nodeComponent.$el.innerText;
       nodeComponent.$el.innerText = plainText;
       nodeComponent.$el.focus();
     },

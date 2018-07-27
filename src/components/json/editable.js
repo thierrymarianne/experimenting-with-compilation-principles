@@ -31,8 +31,8 @@ const Editable = {
 
         const togglingEvent = {
           element: this.$refs[this.uuid],
-          uuid: this.uuid
-        }
+          uuid: this.uuid,
+        };
 
         if (!this.isVisible) {
           EventHub.$emit('node.hidden', togglingEvent);

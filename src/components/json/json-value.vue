@@ -38,6 +38,17 @@ export default {
       default: false,
     },
   },
+  updated: function () {
+    this.$nextTick(function () {
+      if (!this.hasText || this.isEditable) { 
+        return;
+      }
+
+      this.$slots.default[0] = this.text;
+      this.$el.innerText = this.text
+      this.$el.innerHtml = this.text;
+    });
+  },
   methods: {
     ...mapMutations([
       MutationTypes.SET_PREVIOUS_VALUE,

@@ -11,6 +11,8 @@ const JsonEditor = {
     [MutationTypes.COMMIT_VALUE](state, node) {
       const { uuid, value } = node;
       state.nodes[uuid].value = value;
+      const twin = state.nodes[uuid];
+      state.nodes[twin.uuid].value = value;
     },
     [MutationTypes.MAKE_CONTENT_NON_EDITABLE](state, node) {
       const { uuid } = node;
