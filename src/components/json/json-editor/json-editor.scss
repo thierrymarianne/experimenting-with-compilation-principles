@@ -11,15 +11,16 @@
     .json__pair---button {
       cursor: pointer;
       border: none;
+      display: none;
       outline: unset;
       background-color: transparent;
       font-size: 1rem;
     }
   }
 
-  .dynamic-json {
+  .editable-json.editable-json--ready {
     .json__pair---button {
-      display: none;
+      display: inline;
     }
   }
 }

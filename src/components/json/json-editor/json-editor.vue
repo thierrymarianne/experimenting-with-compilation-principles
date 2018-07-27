@@ -6,7 +6,7 @@
       <keep-alive>
         <component
           v-bind:is='editor'
-          ref='editable-json'
+          ref='json-editor'
           dynamic></component>
       </keep-alive>
     </json>
@@ -98,6 +98,19 @@ export default {
     EventHub.$on('node.hidden', this.toggleNodeVisibility);
     EventHub.$on('node.registered', this.registerNode);
     EventHub.$on('node.made_editable', this.toggleNodetEdition);
+    this.$nextTick(function () {
+      if (typeof this.$refs['json-editor'] === 'undefined') {
+        return;
+      }
+
+      if (typeof this.$refs['json-editor'].$refs['editable-json'] === 'undefined') {
+        return;
+      }
+
+      this.$refs['json-editor']
+      .$refs['editable-json']
+      .classList.add('editable-json--ready');
+    });
   },
   data: function () {
     return {
