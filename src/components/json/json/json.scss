@@ -106,15 +106,16 @@ $color-punctuation: $color-beige;
     }
 
     .editable-json {
-      .json {
-        &__value {
-          &---editable {
-            cursor: pointer;
-          }
-  
-          &---edited {
-            cursor: auto;
-          }
+      .json__value {
+        &--editable {
+          cursor: pointer;
+        }
+
+        &--edited {
+          color: $color-text-edited;
+          cursor: auto;
+          border-bottom: 1px solid $color-beige; 
+          outline: unset;
         }
       }
     }

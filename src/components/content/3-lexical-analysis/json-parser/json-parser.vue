@@ -17,6 +17,10 @@
         Copy JSON
       </button>
     </section>
+    <multimedia-content>
+      Suggestions and issues can provided at
+      <browsable-link href='http://bit.ly/new-issue-json-editor'>http://bit.ly/new-issue-json-editor</browsable-link>
+    </multimedia-content>
     <dictionary
       :literal-object="defaultExample"
       activeParser
@@ -32,9 +36,11 @@
 <script>
 import Vue from 'vue';
 
+import BrowsableLink from '../../../browsable-link.vue';
 import EventHub from '../../../../modules/event-hub';
 import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
+import MultimediaContent from '../../../multimedia-content.vue';
 import PackageJson from '../../../../../package.json';
 import SharedState from '../../../../modules/shared-state';
 import SourceCode from '../../../source-code.vue';
@@ -45,6 +51,8 @@ export default {
   components: {
     Dictionary,
     InputArea,
+    MultimediaContent,
+    BrowsableLink,
     SourceCode,
   },
   mounted: function () {
@@ -66,8 +74,10 @@ export default {
       this.$notify({
         group: 'actions',
         title: 'What could possibly go wrong?',
-        text: 'This edited version of your JSON has been successfully copied to your clipboard.',
+        text: `This edited version of your JSON should have been copied to your clipboard
+        If not please kindly open an issue at http://bit.ly/new-issue-json-editor`,
         position: 'top left',
+        duration: 10000,
       });
     },
     failedToCopy: function () {

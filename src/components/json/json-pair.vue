@@ -37,11 +37,11 @@
 
 <script>
 import FragmentTransition from './fragment-transition.vue';
-import editable from './editable';
+import Editable from './editable';
 
 export default {
   name: 'json-pair',
-  mixins: [Object.assign({}, editable)],
+  mixins: [Object.assign({}, Editable.Editable)],
   components: {
     FragmentTransition,
   },
@@ -62,6 +62,7 @@ export default {
   data: function () {
     return {
       text: '',
+      nodeType: this.getNodeTypes().value,
     }
   },
   computed: {

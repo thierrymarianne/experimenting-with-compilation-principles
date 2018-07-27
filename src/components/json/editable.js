@@ -1,10 +1,17 @@
+import _ from 'lodash';
+
 import uuidv5 from 'uuid/v5';
 import EventHub from '../../modules/event-hub';
 import SharedState from '../../modules/shared-state';
 import namespaces from '../../modules/namespace';
-import _ from 'lodash';
 
-const editable = {
+const NODE_TYPES = {
+  undeclared: null,
+  value: 'json-value',
+  pair: 'json-pair',
+};
+
+const Editable = {
   data: function () {
     return {
       isEditable: false,
@@ -12,30 +19,50 @@ const editable = {
       isVisible: true,
       noPendingCopy: SharedState.state.noPendingCopy,
       sharedState: SharedState.state,
+      nodeType: NODE_TYPES.undeclared,
     };
   },
   methods: {
-    toggleVisibility: _.debounce(function () {
+    toggleVisibility: _.debounce(
+      function () {
+        if (this.isEdited) {
+          return;
+        }
+
+        const togglingEvent = {
+          element: this.$refs[this.uuid],
+          uuid: this.uuid
+        }
+
         if (!this.isVisible) {
-          EventHub.$emit('node.hidden', { element: this.$refs[this.uuid] });
+          EventHub.$emit('node.hidden', togglingEvent);
           return;
         }
 
         if (this.isVisible) {
-          EventHub.$emit('node.shown', { element: this.$refs[this.uuid] });
+          EventHub.$emit('node.shown', togglingEvent);
         }
       },
       500,
     ),
+    getNodeTypes: function () {
+      return NODE_TYPES;
+    },
+    getNodeType: function () {
+      return this.nodeType;
+    },
+    isValueNode: function () {
+      return this.nodeType === NODE_TYPES.value;
+    },
+    isPairNode: function () {
+      return this.nodeType === NODE_TYPES.pair;
+    },
   },
   computed: {
     isShown: function () {
       return this.isEditable
       || this.isVisible
       || !this.sharedState.noPendingCopy;
-    },
-    isConcreteNode() {
-      return this.isShown && this.sharedState.noPendingCopy;
     },
     uuid: function () {
       const namespace = namespaces.pair;
@@ -53,4 +80,7 @@ const editable = {
   },
 };
 
-export default editable;
+export default {
+  NODE_TYPES,
+  Editable,
+};

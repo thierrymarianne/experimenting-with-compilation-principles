@@ -39,9 +39,11 @@ Vue.use(VueRouter);
 Vue.use(Notifications);
 Vue.use(VueClipboards);
 
-Raven.config('https://ef89d78c721a44f9ae1585ac0fb6b7e7@sentry.io/1250682')
-    .addPlugin(RavenVue, Vue)
-    .install();
+if (SharedState.productionMode) {
+  Raven.config('https://ef89d78c721a44f9ae1585ac0fb6b7e7@sentry.io/1250682')
+  .addPlugin(RavenVue, Vue)
+  .install();
+}
 
 const router = new VueRouter({
   routes,

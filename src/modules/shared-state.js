@@ -1,6 +1,7 @@
 import Raven from 'raven-js';
 
 const state = {
+  productionMode: false,
   tableOfContentsIsVisible: false,
   template: '<div class="json__container"></div>',
   json: '{}',
@@ -16,14 +17,12 @@ const state = {
     );
   },
   error(error, file) {
-    console.log({ error, file });
-    // return;
-    // Raven.captureException(
-    //   error,
-    //   {
-    //     logger: file,
-    //   },
-    // );
+    Raven.captureException(
+      error,
+      {
+        logger: file,
+      },
+    );
   },
 };
 
