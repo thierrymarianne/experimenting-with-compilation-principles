@@ -158,6 +158,12 @@
           display: inline-flex;
         }
       }
+
+      * {
+        &:after {
+          content: none !important;
+       }
+      }
     }
   }
 }

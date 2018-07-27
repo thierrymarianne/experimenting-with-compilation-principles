@@ -1,7 +1,9 @@
 import Raven from 'raven-js';
 
-const productionMode = true;
-const punctuationDebug = false;
+const developmentMode = true;
+
+const productionMode = !developmentMode;
+const punctuationDebug = developmentMode;
 const state = {
   debug: {
     punctuation: punctuationDebug,
