@@ -103,19 +103,19 @@ export default {
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor
-      .$refs['editable-json'] === 'undefined') {
+      .$refs['json-editor'] === 'undefined') {
         return clibpardReadyJSON;
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor
-      .$refs['editable-json']
+      .$refs['json-editor']
       .$refs['dynamic-json'] === 'undefined') {
         return clibpardReadyJSON;
       }
       
       const dynamicJSONPlaceholder = this.$refs.dictionary
       .$refs.jsonEditor
-      .$refs['editable-json']
+      .$refs['json-editor']
       .$refs['dynamic-json'];
 
       dynamicJSONPlaceholder.classList.add('with-punctuation');
