@@ -34,6 +34,10 @@ export default {
   },
   methods: {
     makeContentEditable: function () {
+      if (this.hasNoText) {
+        return;
+      }
+
       EventHub.$emit(
         'node.made_editable',
         { element: this.$refs.value }
@@ -52,6 +56,16 @@ export default {
     }
   },
   computed: {
+    hasText: function () {
+      if (typeof this.text === 'undefined') {
+        return false;
+      }
+
+      return this.text.trim().length > 0;
+    },
+    hasNoText: function () {
+      return !this.hasText;
+    },
     classes: function () {
       const defaultClasses = 'json__value json__value--editable';
 
