@@ -62,7 +62,7 @@ const jsonExamples = {
   leftpad: Leftpad,
 };
 
-const PackageJson = jsonExamples.learningCompilers;
+const PackageJson = jsonExamples.leftpad;
 
 export default {
   name: 'lexical-analyzer',

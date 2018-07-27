@@ -91,7 +91,21 @@ $color-punctuation: $color-beige;
         margin-left: -2rem;
       }
     }
+
+    > .json__comma {
+      display: none;
+    }
+
+    > div > .json__value--array-item > .json__value {
+      &:after {
+        content: ','
+      }
+    }
   }
+
+  &__object > div > .json__pair > .json__comma {
+    display: none;
+  } 
 
   &__object-container,
   &__array-container {
@@ -246,12 +260,6 @@ $color-punctuation: $color-beige;
         &:after {
           content: ',';
         }
-
-        // &:last-child {
-        //   &:after {
-        //     content: none;
-        //   }          
-        // }
       }
     }
 
