@@ -25,7 +25,7 @@
       </button>
     </section>
     <multimedia-content>
-      Suggestions and issues can provided at
+      Suggestions and issues can be provided at
       <browsable-link href='http://bit.ly/new-issue-json-editor'>http://bit.ly/new-issue-json-editor</browsable-link>
     </multimedia-content>
     <dictionary
