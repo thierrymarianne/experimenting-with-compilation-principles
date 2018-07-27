@@ -2,6 +2,7 @@ import uuidv5 from 'uuid/v5';
 import EventHub from '../../modules/event-hub';
 import SharedState from '../../modules/shared-state';
 import namespaces from '../../modules/namespace';
+import _ from 'lodash';
 
 const editable = {
   data: function () {
@@ -14,16 +15,18 @@ const editable = {
     };
   },
   methods: {
-    toggleVisibility: function () {
-      if (!this.isVisible) {
-        EventHub.$emit('node.hidden', { element: this.$refs[this.uuid] });
-        return;
-      }
+    toggleVisibility: _.debounce(function () {
+        if (!this.isVisible) {
+          EventHub.$emit('node.hidden', { element: this.$refs[this.uuid] });
+          return;
+        }
 
-      if (this.isVisible) {
-        EventHub.$emit('node.shown', { element: this.$refs[this.uuid] });
-      }
-    },
+        if (this.isVisible) {
+          EventHub.$emit('node.shown', { element: this.$refs[this.uuid] });
+        }
+      },
+      500,
+    ),
   },
   computed: {
     isShown: function () {
