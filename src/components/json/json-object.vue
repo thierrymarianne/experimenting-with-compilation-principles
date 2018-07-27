@@ -1,5 +1,5 @@
 <template>
-  <span class='json__object-container'>
+  <span class='json__object-container' ref='container'>
     <span 
       class="json__parentheses json__parentheses--left"
     >{</span>
@@ -10,12 +10,37 @@
   </span>
 </template>
 <script>
+import EventHub from '../../modules/event-hub';
+
 export default {
   name: 'json-object',
   props: {
     hasChildren: {
       type: Boolean,
       default: false,
+    },
+  },
+  mounted: function () {
+    EventHub.$on('node.altered', this.selfUpdate);
+  },
+  methods: {
+    selfUpdate: function ({ component }) {
+      if (this.$refs.container.contains(component.$el)) {
+        if (this.$children.length === 1) {
+          return;
+        }
+
+        const visibleChildren = this.$children.filter(
+          (child) => (child.isShown)
+        );
+        
+        if (visibleChildren.length === 0) {
+          return;
+        } 
+
+        this.$children.map((child) => (child.isLastChild = false))
+        visibleChildren[visibleChildren.length - 1].isLastChild = true;
+      }
     },
   },
 };

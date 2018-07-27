@@ -7281,6 +7281,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-click-outside@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/vue-click-outside/-/vue-click-outside-1.0.7.tgz#cdd2b1605e3c4944784e1794eae4a12a0f700bd6"
+
 vue-clipboards@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/vue-clipboards/-/vue-clipboards-1.2.4.tgz#31bc7e47f962c6ce0ba974649fc6f8a35d83a6ef"

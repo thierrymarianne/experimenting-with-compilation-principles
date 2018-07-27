@@ -74,7 +74,7 @@ const JSONDrawer = class extends JSONListener {
       return contents;
     }, contentCollection);
 
-    const objectPairs = contentCollection.reverse().join('');
+    const objectPairs = contentCollection.reverse().join('<span class="json__comma">,</span>');
     const template = `<json-object${hasChildrenAttr}>${objectPairs}</json-object>`;
     this.scopes.object[this.scopes.object.length - 1].appendContent(template);
   }
@@ -105,7 +105,7 @@ const JSONDrawer = class extends JSONListener {
       return contents;
     }, contentCollection);
 
-    const arrayValues = contentCollection.reverse().join('');
+    const arrayValues = contentCollection.reverse().join('<span class="json__comma">,</span>');
     const template = `<json-array${hasChildrenAttr}>${arrayValues}</json-array>`;
     this.scopes.array[this.scopes.array.length - 1].appendContent(template);
   }
@@ -151,7 +151,7 @@ const JSONDrawer = class extends JSONListener {
 
       if (ctx.children[0] instanceof JSONParser.ArrayContext) {
         value = this.scopes.array[this.scopes.array.length - 1].content;
-        content = `<json-value>${value}</json-value>`;
+        content = `<json-value is-array-item>${value}</json-value>`;
         this.scopes.value[this.scopes.value.length - 1].appendContent(content);
         this.scopes.array.pop();
       }

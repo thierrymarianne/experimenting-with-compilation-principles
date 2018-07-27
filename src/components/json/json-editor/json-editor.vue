@@ -57,13 +57,26 @@ export default {
     setJsonTemplate: function (template) {
       this.sharedState.template = template;
     },
-    registerNode: function ({ component, uuidAttribute }) {
+    unregisterNode: function (uuidAttribute) {
+      const editableElementUuid = this.dynamicToEditable[uuidAttribute];
+      delete this.editableToDynamic[editableElementUuid];
+      delete this.dynamicToEditable[uuidAttribute];
+    },
+    registerNode: function ({ component, uuidAttribute, hook }) {
+      if (typeof hook === 'beforeDestroy') {
+        this.sharedState.log({ action: 'unregistration', element: component.$el });
+        this.unregisterNode(uuidAttribute);
+        return;
+      }
+
       this.$refs[uuidAttribute] = component;
       this.$nextTick(function () {
         const element = component.$el;
-        if (typeof element === 'undefined') {
+        if (typeof element === 'undefined' || !document.body.contains(element)) {
           return;
         }
+
+        this.sharedState.log({ action: 'registration', element }, 'json-editor.registerNode');
 
         const { twinVNode } = this.locateTwinOf(element, uuidAttribute);
         const node = {
@@ -78,36 +91,52 @@ export default {
         }
       });
     },
-    locateTwinOf(element, uuid) {
+    getTwinsFor(element) {
       let path;
       let twin;
+
+      try {
+        path = XPathPosition.fromNode(element, this.$el.querySelector('.editable-json'));
+        twin = XPathPosition.toNode(path, this.$el.querySelector('.dynamic-json'));
+      } catch (error) {
+        try {
+          path = XPathPosition.fromNode(element, this.$el.querySelector('.dynamic-json'));
+          const editableElement = XPathPosition.toNode(path, this.$el.querySelector('.editable-json'));
+          twin = element;
+          element = editableElement;
+        } catch (error) {
+          this.sharedState.error(error, 'json-editor.getTwinsFor');
+          return {
+            elementVNode: this.$refs[element.getAttribute('data-uuid')],
+            twinVNode: undefined,
+          }
+        }
+      }
+
+      return {
+        elementVNode: this.$refs[element.getAttribute('data-uuid')],
+        twinVNode: this.$refs[twin.getAttribute('data-uuid')],
+      };
+    },
+    locateTwinOf(element, uuid) {
+      let twins;
 
       if (!element.hasAttribute('data-uuid')) {
         element = element.querySelector('[data-uuid]');
       }
 
       if (element.getAttribute('data-uuid') in this.editableToDynamic) {
-        return {
+        twins = {
           elementVNode: this.$refs[element.getAttribute('data-uuid')],
           twinVNode: this.$refs[this.editableToDynamic[element.getAttribute('data-uuid')]],
-        }
-      }
-
-      try {
-        path = XPathPosition.fromNode(element, this.$el.querySelector('.editable-json'));
-        twin = XPathPosition.toNode(path, this.$el.querySelector('.dynamic-json'));
-      } catch (error) {
-        this.sharedState.error(error, 'json-editor');
-        return {
-          elementVNode: null,
-          twinMode: null,
         };
+        this.ensureTwinsAreConsistent(twins);
+
+        return twins;
       }
 
-      const twins = {
-        elementVNode: this.$refs[element.getAttribute('data-uuid')],
-        twinVNode: this.$refs[twin.getAttribute('data-uuid')],
-      };
+      twins = this.getTwinsFor(element);
+      this.ensureTwinsAreConsistent(twins);
 
       if (twins.elementVNode.isVisible
       && !(twins.elementVNode.uuid in this.editableToDynamic)) {
@@ -118,15 +147,45 @@ export default {
 
       return twins;
     },
+    ensureTwinsAreConsistent(twins) {
+      if (typeof twins.elementVNode === 'undefined'
+      || typeof twins.twinVNode === 'undefined') {
+        return;
+      }
+
+      // Ensure dynamic and editable JSON components are consistent
+      if (twins.elementVNode.text !== twins.twinVNode.text) {
+        this.syncNodes(twins.twinVNode, twins.elementVNode)
+      }
+
+      return twins;
+    },
+    syncNodes(source, destination) {
+      let text = source;
+      if (typeof source !== 'string') {
+        let text = source.text;
+      }
+      destination.text = text;
+      destination.$el.innerHtml = text;
+      destination.$el.innerText = text;
+      destination.$slots.default[0] = text;
+    },
     componentWithUuid: function (nodeUuid) {
       return this.$refs[nodeUuid];
     },
     toggleNodeVisibility: function ({ element, uuid }) {
       const { twinVNode, elementVNode } = this.locateTwinOf(element, uuid);
+
+      if (typeof elementVNode === 'undefined'
+      || typeof twinVNode === 'undefined') {
+        sharedState.error(new Error('Could not toggle node visibility'));
+        return;
+      }
+
       elementVNode.isEditable = true;
       elementVNode.isVisible = !elementVNode.isVisible;
       twinVNode.isVisible = !twinVNode.isVisible;
-      EventHub.$emit('node.altered');
+      EventHub.$emit('node.altered', { component: twinVNode });
     },
     toggleNodeEdition: function ({ nodeUuid }) {
       const nodeComponent = this.componentWithUuid(nodeUuid);
@@ -140,28 +199,25 @@ export default {
         if (nodeComponent.$el.innerText.trim().length === 0) {
           nodeComponent.$el.innerText = 'null';
         }
-        const plainTextEnclosedInAppostrophes = `${nodeComponent.$el.innerText.trim()}`;
+        const plainTextWithoutLinefeeds = nodeComponent.$el.innerText.replace(/\n/g, '');
+        const plainTextEnclosedInAppostrophes = `${plainTextWithoutLinefeeds.trim()}`;
 
         nodeComponent.isEdited = false;
-        nodeComponent.text = plainTextEnclosedInAppostrophes;
 
         nodeComponent.$el.removeAttribute('contenteditable');
         nodeComponent.$el.classList.remove('json__value--edited');
-        nodeComponent.$el.innerText = plainTextEnclosedInAppostrophes;
-        nodeComponent.$el.innerHtml = plainTextEnclosedInAppostrophes;
-        nodeComponent.$slots.default[0] = plainTextEnclosedInAppostrophes;
+        this.syncNodes(plainTextEnclosedInAppostrophes, nodeComponent);
 
         this.saveValue({
           uuid: nodeUuid,
           value: plainTextEnclosedInAppostrophes
         });
 
-        const twin = this.$refs[this.editableToDynamic[nodeUuid]];
-        twin.text = plainTextEnclosedInAppostrophes;
-        twin.$slots.default[0] = plainTextEnclosedInAppostrophes;
-        twin.$el.innerHtml = plainTextEnclosedInAppostrophes;
-        twin.$el.innerText = plainTextEnclosedInAppostrophes;
+        const twins = this.getTwinsFor(nodeComponent.$el);
+        this.$refs[this.editableToDynamic[nodeUuid]] = twins.twinVNode;
 
+        const twin = this.$refs[this.editableToDynamic[nodeUuid]];
+        this.syncNodes(plainTextEnclosedInAppostrophes, twin);
         return;
       }
 
@@ -183,6 +239,7 @@ export default {
     EventHub.$on('node.registered', this.registerNode);
     EventHub.$on('node.made_editable', this.toggleNodeEdition);
     EventHub.$on('node.made_non_editable', this.toggleNodeEdition);
+    EventHub.$on('node.destroyed', this.registerNode);
 
     this.$nextTick(function () {
       if (typeof this.$refs['json-editor'] === 'undefined') {

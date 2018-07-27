@@ -1,16 +1,16 @@
 <template>
   <fragment-transition 
-    v-if='isShown'
+    v-show='isShown'
   >
     <transition 
-      v-if='isShown'
+      v-show='isShown'
       name="custom-classes-transition" 
       mode='in-out'
       enter-active-class="animated fadeInLeftBig" 
       leave-active-class="animated hinge"
     >
       <span 
-        v-if='isShown'
+        v-show='isShown'
         :class="classes"
         :ref='uuid'
         :data-uuid='uuid'
@@ -21,7 +21,7 @@
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>
-        <span class="json__comma">,</span>
+        <span v-if='!isLastChild' class="json__comma">,</span>
       </span>
     </transition>
     <button
@@ -58,11 +58,16 @@ export default {
       type: Boolean,
       default: false,
     },
+    isLastItem: {
+      type: Boolean,
+      default: false,
+    }
   },
   data: function () {
     return {
       text: '',
       nodeType: this.getNodeTypes().value,
+      isLastChild: false,
     }
   },
   computed: {

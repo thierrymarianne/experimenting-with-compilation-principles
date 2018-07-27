@@ -40,13 +40,40 @@ const JsonEditor = {
   },
   getters: {
     nodeWithUuid: function (state) {
-      return uuid => (state.nodes[uuid]);
+      return (uuid) => {
+        if (typeof state.nodes[uuid] === 'undefined') {
+          console.error({
+            message: `Could not find node with UUID #${uuid}`,
+            file: 'json-editor-store.nodeWithUuid',
+          });
+          return undefined;
+        }
+        return state.nodes[uuid];
+      };
     },
     isNodeWithUuidBeingEdited: function (state) {
-      return uuid => state.nodes[uuid].edited;
+      return (uuid) => {
+        if (typeof state.nodes[uuid] === 'undefined') {
+          console.error({
+            message: `Could not find node with UUID #${uuid}`,
+            file: 'json-editor-store.isNodeWithUuidBeingEdited',
+          });
+          return undefined;
+        }
+        return state.nodes[uuid].edited;
+      };
     },
     valueOfNodeWithUuid: function (state) {
-      return nodeUuid => state.nodes[nodeUuid].value;
+      return (uuid) => {
+        if (typeof state.nodes[uuid] === 'undefined') {
+          console.error({
+            message: `Could not find node with UUID #${uuid}`,
+            file: 'json-editor-store.valueOfNodeWithUuid',
+          });
+          return undefined;
+        }
+        return state.nodes[uuid].value;
+      };
     },
   },
 };

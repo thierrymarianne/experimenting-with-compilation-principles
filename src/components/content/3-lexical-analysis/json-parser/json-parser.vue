@@ -12,9 +12,16 @@
         class='json-parser__button'
       >
         <font-awesome-icon
-          class='json-parser__icon-copy'
+          :class='classes'
           icon='copy' />
-        Copy JSON
+          <span 
+            v-if='!sharedState.invalidJSON'
+            class='json-parser__button-label'
+          >Copy JSON</span>
+          <span 
+            v-else='sharedState.invalidJSON'
+            class='json-parser__button-label'
+          >Invalid JSON</span>
       </button>
     </section>
     <multimedia-content>
@@ -24,8 +31,7 @@
     <dictionary
       :literal-object="defaultExample"
       activeParser
-      ref='dictionary'
-      v-show='!showError'>
+      ref='dictionary'>
     </dictionary>
     <source-code 
       v-show='showError'
@@ -41,10 +47,22 @@ import EventHub from '../../../../modules/event-hub';
 import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
 import MultimediaContent from '../../../multimedia-content.vue';
-import PackageJson from '../../../../../package.json';
+import LearningCompilers from '../../../../../package.json';
+import Pair from '../../../../json/pair.json';
+import Leftpad from '../../../../json/leftpad.json';
+import Symfony from '../../../../json/symfony.json';
 import SharedState from '../../../../modules/shared-state';
 import SourceCode from '../../../source-code.vue';
 import Raven from 'raven-js';
+
+const jsonExamples = {
+  learningCompilers: LearningCompilers,
+  pair: Pair,
+  symfony: Symfony,
+  leftpad: Leftpad,
+};
+
+const PackageJson = jsonExamples.learningCompilers;
 
 export default {
   name: 'lexical-analyzer',
@@ -58,6 +76,8 @@ export default {
   mounted: function () {
     EventHub.$on('parsing.antlr.failed', this.handleFailedParsing);
     EventHub.$on('parsing.antlr.succeeded', this.hideErrorMessageContainer);
+    EventHub.$on('parsing.edition.failed', this.handleFailedParsing);
+    EventHub.$on('parsing.edition.succeeded', this.hideErrorMessageContainer);
     EventHub.$on('node.altered', this.updateClipboardReadyJSON);
 
     this.$nextTick(function () {
@@ -71,6 +91,19 @@ export default {
   },
   methods: {
     copyToClipboard: function () {
+      if (this.sharedState.invalidJSON) {
+        this.$notify({
+          group: 'actions',
+          type: 'error',
+          title: 'Something went horribly wrong...',
+          text: `This edited version of your JSON could not be parsed. It might not be valid`,
+          position: 'top left',
+          duration: 10000,
+        });
+
+        return;
+      }
+
       this.$notify({
         group: 'actions',
         title: 'What could possibly go wrong?',
@@ -96,6 +129,10 @@ export default {
       this.showError = false;
     },
     updateClipboardReadyJSON: function () {
+      if (this.sharedState.invalidJSON) {
+        return;
+      }
+
       this.clipboardReadyJSON = this.getClipboardReadyJson();
     },
     getClipboardReadyJson: function () {
@@ -140,20 +177,37 @@ export default {
           null,
           '\t'
         );
+        this.sharedState.invalidJSON = false;
+        EventHub.$emit('parsing.edition.succeeded');
       } catch (error) {
         this.sharedState.error(error, 'json-parser');
+        this.sharedState.invalidJSON = true;
+        EventHub.$emit('parsing.edition.failed', { errorMessage: error.message });
         prettifiedJSON = '{}';
       }
       
       // Restore node into the DOM to copy inner text
       this.sharedState.noPendingCopy = true;
 
-      dynamicJSONPlaceholder.classList.remove('with-punctuation');
+      if (!this.sharedState.debug.punctuation) {
+        dynamicJSONPlaceholder.classList.remove('with-punctuation');
+      }
 
       return prettifiedJSON;
     }
   },
   computed: {
+    classes: function () {
+      const classes = { 
+        'json-parser__icon-copy': true,
+        'json-parser__icon-copy': false, 
+      };
+      if (this.sharedState.invalidJSON) {
+        classes['json-parser__icon-copy--disabled'] = true;
+      }
+
+      return classes;
+    },
     prettyPrintedExample: function () {
       return JSON.stringify(this.defaultExample, null, '\t');
     },
@@ -162,7 +216,7 @@ export default {
     return {
       clipboardReadyJSON: '',
       defaultExample: PackageJson,
-      errorMessage: '',
+      errorMessage: SharedState.state.errorMessage,
       sharedState: SharedState.state,
       showError: false,
     };

@@ -2,14 +2,19 @@
   <fragment-transition v-if='isArrayItem'>
     <span class='json__value--array-item'>
       <span :class='classes'><slot></slot></span>
-      <span class='json__comma'>,</span>
+      <span 
+        v-if='hasText && isLastChild'
+        class='json__comma'
+      >,</span>
     </span>
   </fragment-transition>
   <span 
     v-else
     :class='classes'
+    v-click-outside="makeContentNonEditable"
     @click='makeContentEditable'
     @keyup.esc='makeContentNonEditable'
+    @keyup.exact.enter='makeContentNonEditable'
     @key='makeContentNonEditable'
     :data-edited='isEdited'
     :data-uuid='uuid'
@@ -18,6 +23,8 @@
 </template>
 
 <script>
+import ClickOutside from 'vue-click-outside'
+
 import FragmentTransition from './fragment-transition.vue';
 import EventHub from '../../modules/event-hub';
 import MutationTypes from './json-editor/json-editor-mutation-types';
@@ -30,6 +37,9 @@ export default {
   name: 'json-value',
   components: {
     FragmentTransition,
+  },
+  directives: {
+    ClickOutside
   },
   mixins: [Object.assign({}, Editable.Editable)],
   props: {
@@ -48,6 +58,12 @@ export default {
       this.$el.innerText = this.text
       this.$el.innerHtml = this.text;
     });
+  },
+  beforeDestroy: function () {
+    EventHub.$emit(
+      'node.destroyed',
+      { component: this, uuidAttribute: this.uuid, hook: 'beforeDestroy' }
+    );
   },
   methods: {
     ...mapMutations([
@@ -85,6 +101,7 @@ export default {
     return {
       text: text,
       nodeType: this.getNodeTypes().value,
+      isLastChild: false,
     }
   },
   computed: {

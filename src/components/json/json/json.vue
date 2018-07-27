@@ -61,6 +61,13 @@ export default {
         { class: 'content', },
         [SharedState.template]
       );
+
+      let classes = 'dynamic-json';
+      let attributes = [];
+      if (this.sharedState.debug.punctuation) {
+        classes = `${classes} with-punctuation`;
+        attributes = { 'contenteditable': true };
+      }
       const jsonPanelsElement = createElement(
         'div',
         { class: 'json__panels' },
@@ -76,7 +83,8 @@ export default {
           createElement(
             'div',
             {
-              class: 'dynamic-json',
+              attrs: attributes,
+              class: classes,
               ref: 'dynamic-json',              
             }, 
             [dynamicJson]

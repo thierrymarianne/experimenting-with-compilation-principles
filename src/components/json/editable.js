@@ -7,8 +7,8 @@ import namespaces from '../../modules/namespace';
 
 const NODE_TYPES = {
   undeclared: null,
-  value: 'json-value',
-  pair: 'json-pair',
+  value: 'value',
+  pair: 'pair',
 };
 
 const Editable = {
@@ -65,7 +65,7 @@ const Editable = {
       || !this.sharedState.noPendingCopy;
     },
     uuid: function () {
-      const namespace = namespaces.pair;
+      const namespace = namespaces[this.getNodeType()];
       const uuidAttribute = uuidv5(`${this._uid}`, namespace);
       EventHub.$emit('node.registered', { component: this, uuidAttribute });
       return uuidAttribute;

@@ -1,0 +1,163 @@
+.json {
+  &__container {
+    .dynamic-json.with-punctuation {
+      .json__comma {
+        display: inline-flex;
+      }
+
+      .json__object {
+        > div {
+          &:last-child {
+            > .json__pair > .json__comma {
+              display: none;
+            }
+          }
+        }
+
+        > .json__comma:nth-child(2n) {
+          display: none;
+        }
+      }
+
+      .json__array > [is-visible] {
+        &:nth-last-child(1) {
+          > .json__value--array-item > .json__comma {
+            display: none;
+          }
+        }
+      }
+
+      .json__parentheses,
+      .json__square-bracket {
+        &--left {
+          display: inline-flex;
+        }
+
+        &--right {
+          &:after {
+            content: ',';
+          }
+        }
+      }
+
+      .json { 
+        > .json__object-container {
+          > .json__parentheses--right {
+            &:after {
+              content: none;
+            }
+          }
+
+          > .json__object > div {
+            &:last-child {  
+                > .json__pair > .json__value > .json__object-container > .json__parentheses--right {
+                &:after {
+                  content: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .json__pair {
+        .json__colon {
+          &:after {
+            content: none;
+          }
+        }
+
+        &--object {
+          > .json__comma {
+            display: inline-flex;
+          }
+        }
+
+        &--no-children {
+          .json__value {
+            &:after {
+              content: none;
+            }
+          }
+        }
+      }
+      
+      .json__pair {
+        display: inline-flex;
+    
+        &---button {
+          color: $color-text-clickable;
+        }
+         
+        .json__colon {
+          color: $color-punctuation;
+    
+          &:after {
+            content: '';
+          }
+        }
+    
+        &--no-children {
+          .json__value {
+            &:after {
+              content: none;
+            }
+          }
+        }
+    
+        &--object,
+        &--array {
+          > .json__key-value > .json__colon {
+            &:after {
+              content: none;
+            }
+          }
+        }
+    
+        &--array {
+          > .json__key-value > .json__colon {
+            &:after {
+              content: none;
+            }
+          }
+        }
+      }
+
+      .json__comma:last-of-type {
+        display: inline-flex;
+      }
+
+      .json__array {
+        > div {
+          &:last-child {
+            > .json__value--array-item > .json__comma {
+              display: none;
+            }
+          }
+        }
+
+        > .json__value > .json__object-container { 
+          > .json__object {
+            > .json__comma {
+              display: inline-flex;
+            }
+
+            > div {
+              .json__pair--no-children {
+                .json__comma {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .json__pair--no-children {
+        .json__comma {
+          display: inline-flex;
+        }
+      }
+    }
+  }
+}

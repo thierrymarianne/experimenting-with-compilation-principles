@@ -61,6 +61,14 @@
           text-align: right;
         }
       }
+
+      &.error {
+        .notification-title {
+          color: $color-text-error;
+        }
+
+        height: 7rem;
+      }
     }
   }
 }
