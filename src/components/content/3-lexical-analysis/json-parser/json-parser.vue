@@ -129,10 +129,6 @@ export default {
       this.showError = false;
     },
     updateClipboardReadyJSON: function () {
-      if (this.sharedState.invalidJSON) {
-        return;
-      }
-
       this.clipboardReadyJSON = this.getClipboardReadyJson();
     },
     getClipboardReadyJson: function () {
