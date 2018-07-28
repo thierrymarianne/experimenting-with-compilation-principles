@@ -183,28 +183,32 @@ export default {
       this.clipboardReadyJSON = this.getClipboardReadyJson();
     },
     getClipboardReadyJson: function () {
-      let clibpardReadyJSON = '';
+      let clipboardReadyJSON = '';
       if (typeof this.$refs.dictionary === 'undefined') {
-        return clibpardReadyJSON;
+        return clipboardReadyJSON;
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor === 'undefined') {
-        return clibpardReadyJSON;
+        return clipboardReadyJSON;
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor === 'undefined') {
-        return clibpardReadyJSON;
+        return clipboardReadyJSON;
+      }
+
+      if (!this.$refs.dictionary.$refs.jsonEditor.isReady) {
+        return clipboardReadyJSON;
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor
       .$refs['json-editor'] === 'undefined') {
-        return clibpardReadyJSON;
+        return clipboardReadyJSON;
       }
 
       if (typeof this.$refs.dictionary.$refs.jsonEditor
       .$refs['json-editor']
       .$refs['dynamic-json'] === 'undefined') {
-        return clibpardReadyJSON;
+        return clipboardReadyJSON;
       }
       
       const dynamicJSONPlaceholder = this.$refs.dictionary

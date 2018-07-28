@@ -10,10 +10,15 @@ const parseJSON = (inputText, dictionary) => {
     const lexer = new JSONLexer.JSONLexer(chars);
     const tokens = new antlr4.CommonTokenStream(lexer);
     const parser = new JSONParser.JSONParser(tokens);
+
     parser.buildParseTrees = true;
+
     const tree = parser.json();
     const drawer = new JSONDrawer(dictionary);
-    dictionary.$refs.jsonEditor.setJson(inputText);
+
+    if (typeof dictionary.$refs.jsonEditor.setJson === 'function') {
+      dictionary.$refs.jsonEditor.setJson(inputText);
+    }
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(drawer, tree);
   } catch (error) {
     const antlrError = new AntlrError(

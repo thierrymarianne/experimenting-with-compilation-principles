@@ -27,6 +27,8 @@ import _ from 'lodash'
 import EventHub from '../modules/event-hub'
 import JsonEditor from './json/json-editor/json-editor.vue'
 import antlr from '../modules/antlr'
+// import JsonParser from 'worker-loader!./json/worker/parsing-json-worker.js';
+import work from 'webworkify-webpack';
 
 export default {
     name: 'dictionary',
@@ -69,21 +71,40 @@ export default {
             }
 
             component.$data.json = '';
-            try {
-                antlr.parseJSON(text, component);
-            } catch (error) {
-                if (error instanceof antlr.AntlrError) {
-                    EventHub.$emit(
-                        'parsing.antlr.failed',
-                        { errorMessage: error.message }
-                    );
-                    return;
+            const jsonParser = work(require.resolve('./json/worker/json-parser.js'));
+            this.$refs.jsonEditor.isReady = false;
+
+            let json;
+            let input;
+            const componentClone = {
+                $data: {
+                    json: component.json,
+                },
+                $refs: {
+                    jsonEditor: {
+                        setJsonTemplate: null,
+                        setJson: null,
+                    }
+                },
+            };
+            jsonParser.postMessage({
+                text,
+                component: componentClone,
+            });
+            jsonParser.addEventListener('message', event => {
+                if (event.data.eventType === 'parsing.antlr.succeeded') {
+                    component.$refs.jsonEditor.setJsonTemplate(event.data.template);
+                    EventHub.$emit('parsing.antlr.succeeded');
+                    this.$refs.jsonEditor.isReady = true;
+                    return
                 }
 
-                throw error;
-            }
-
-            EventHub.$emit('parsing.antlr.succeeded');
+                this.$refs.jsonEditor.isReady = true;   
+                EventHub.$emit(
+                    'parsing.antlr.failed',
+                    { errorMessage: event.data.errorMessage }
+                );
+            });
         },
         pasteSource: function (event) {
             const text = event.code;

@@ -301,6 +301,7 @@ export default {
       sharedState: SharedState.state,
       dynamicToEditable: {},
       editableToDynamic: {},
+      isReady: false,
     }
   }
 };
