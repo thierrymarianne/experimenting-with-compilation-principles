@@ -34,12 +34,21 @@ library.add(faEyeSlash);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
+Vue.config.errorHandler = function (error, component, info) {
+  SharedState.state.error(
+    error,
+    `json-editor.${component.$options.name}`,
+    {
+      info,
+    },
+  );
+};
 
 Vue.use(VueRouter);
 Vue.use(Notifications);
 Vue.use(VueClipboards);
 
-if (SharedState.productionMode) {
+if (SharedState.state.productionMode) {
   Raven.config('https://ef89d78c721a44f9ae1585ac0fb6b7e7@sentry.io/1250682')
   .addPlugin(RavenVue, Vue)
   .install();

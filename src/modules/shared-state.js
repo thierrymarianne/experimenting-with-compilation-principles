@@ -2,8 +2,11 @@ import Raven from 'raven-js';
 
 const developmentMode = true;
 
+const activeLoggers = {
+  'json-editor.registerNode': false,
+};
 const productionMode = !developmentMode;
-const punctuationDebug = developmentMode;
+const punctuationDebug = false;
 const state = {
   debug: {
     punctuation: punctuationDebug,
@@ -16,6 +19,10 @@ const state = {
   errorMessage: '',
   noPendingCopy: true,
   log(message, file, extra) {
+    if (typeof activeLoggers[file] === 'undefined' || !activeLoggers[file]) {
+      return;
+    }
+
     if (productionMode) {
       Raven.captureMessage(
         message,
@@ -30,18 +37,19 @@ const state = {
 
     console.info({ message, file, extra });
   },
-  error(error, file) {
+  error(error, file, extra) {
     if (productionMode) {
       Raven.captureException(
         error,
         {
           logger: file,
+          extra,
         },
       );
       return;
     }
 
-    console.error({ error, file });
+    console.error({ error, file, extra });
   },
 };
 

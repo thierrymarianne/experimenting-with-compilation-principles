@@ -31,6 +31,9 @@ export default {
       return Vue.compile(template);
     },
   },
+  destroyed: function () {
+    debugger;
+  },
   render: function (createElement) {
     if (this.dynamic) {
       const dynamicChildCompilation = this.compileJsonTemplate(this.sharedState.template);

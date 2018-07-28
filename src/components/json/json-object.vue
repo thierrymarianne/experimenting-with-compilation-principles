@@ -25,22 +25,25 @@ export default {
   },
   methods: {
     selfUpdate: function ({ component }) {
-      if (this.$refs.container.contains(component.$el)) {
-        if (this.$children.length === 1) {
-          return;
-        }
-
-        const visibleChildren = this.$children.filter(
-          (child) => (child.isShown)
-        );
-        
-        if (visibleChildren.length === 0) {
-          return;
-        } 
-
-        this.$children.map((child) => (child.isLastChild = false))
-        visibleChildren[visibleChildren.length - 1].isLastChild = true;
+      if (typeof this.$refs.container === 'undefined' ||
+      !this.$refs.container.contains(component.$el)) {
+        return;
       }
+
+      if (this.$children.length === 1) {
+        return;
+      }
+
+      const visibleChildren = this.$children.filter(
+        (child) => (child.isShown)
+      );
+      
+      if (visibleChildren.length === 0) {
+        return;
+      } 
+
+      this.$children.map((child) => (child.isLastChild = false))
+      visibleChildren[visibleChildren.length - 1].isLastChild = true;
     },
   },
 };

@@ -1,7 +1,12 @@
 <template>
   <div class='json-parser content content--no-first-letter'>
+    <multimedia-content>
+      Suggestions and issues can be provided at
+      <browsable-link href='http://bit.ly/new-issue-json-editor'>http://bit.ly/new-issue-json-editor</browsable-link>
+    </multimedia-content>
     <section class='json-parser__input'>
       <input-area
+        ref='input'
         :text-at-first="prettyPrintedExample"
       ></input-area>
       <button 
@@ -25,11 +30,35 @@
       </button>
     </section>
     <multimedia-content>
-      Suggestions and issues can be provided at
-      <browsable-link href='http://bit.ly/new-issue-json-editor'>http://bit.ly/new-issue-json-editor</browsable-link>
+      <source-code
+        wrap
+        color='clickable'
+        v-on:click.native='copyToInputArea("array", $event)'>Array
+      </source-code>
+      <source-code 
+        wrap
+        v-on:click.native='copyToInputArea("pair", $event)'
+        color='clickable'
+      >Pair
+      </source-code>
+      <source-code 
+        wrap
+        color='clickable'
+        v-on:click.native='copyToInputArea("symfony", $event)'>Symfony
+      </source-code>
+      <source-code 
+        wrap
+        color='clickable'
+        v-on:click.native='copyToInputArea("leftpad", $event)'>Leftpad
+      </source-code>
+      <source-code 
+        wrap
+        color='clickable'
+        v-on:click.native='copyToInputArea("learningCompilers", $event)'>Learning Compilers
+      </source-code>
     </multimedia-content>
     <dictionary
-      :literal-object="defaultExample"
+      :literal-object="parsedJSON"
       activeParser
       ref='dictionary'>
     </dictionary>
@@ -48,6 +77,7 @@ import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
 import MultimediaContent from '../../../multimedia-content.vue';
 import LearningCompilers from '../../../../../package.json';
+import Array from '../../../../json/array.json';
 import Pair from '../../../../json/pair.json';
 import Leftpad from '../../../../json/leftpad.json';
 import Symfony from '../../../../json/symfony.json';
@@ -56,13 +86,14 @@ import SourceCode from '../../../source-code.vue';
 import Raven from 'raven-js';
 
 const jsonExamples = {
+  array: Array,
   learningCompilers: LearningCompilers,
+  leftpad: Leftpad,
   pair: Pair,
   symfony: Symfony,
-  leftpad: Leftpad,
 };
 
-const PackageJson = jsonExamples.leftpad;
+const PackageJson = jsonExamples.array;
 
 export default {
   name: 'lexical-analyzer',
@@ -112,6 +143,11 @@ export default {
         position: 'top left',
         duration: 10000,
       });
+    },
+    copyToInputArea: function (exampleName) {
+      const json = this.prettifyJSON(jsonExamples[exampleName]);
+      this.$refs.input.text = json;
+      EventHub.$emit('source.changed', { text: json });
     },
     failedToCopy: function () {
       this.sharedState.error(
@@ -190,6 +226,9 @@ export default {
       }
 
       return prettifiedJSON;
+    },
+    prettifyJSON(json) {
+      return JSON.stringify(json, null, '\t');
     }
   },
   computed: {
@@ -205,13 +244,13 @@ export default {
       return classes;
     },
     prettyPrintedExample: function () {
-      return JSON.stringify(this.defaultExample, null, '\t');
+      return this.prettifyJSON(this.parsedJSON);
     },
   },
   data: function () {
     return {
       clipboardReadyJSON: '',
-      defaultExample: PackageJson,
+      parsedJSON: PackageJson,
       errorMessage: SharedState.state.errorMessage,
       sharedState: SharedState.state,
       showError: false,

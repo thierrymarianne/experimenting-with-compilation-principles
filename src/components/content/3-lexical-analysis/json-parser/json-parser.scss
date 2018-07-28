@@ -31,7 +31,13 @@
   .source-code {
     color: $color-text-error;
     top: 23em;
-    white-space: normal
+    white-space: normal;
+
+    &--color-clickable {
+      border: 1px solid $color-text-clickable;
+      color: $color-text-clickable;
+      width: auto;
+    } 
   }
 
   .json__container,
