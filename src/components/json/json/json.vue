@@ -28,11 +28,13 @@ export default {
   },
   methods: {
     compileJsonTemplate: function (template) {
-      return Vue.compile(template);
+      try {
+        return Vue.compile(template);
+      } catch (error) {
+        this.sharedState.error(error, 'json.compileJsonTemplate');
+        return Vue.compile('<json-value>compilation error</json-value>');
+      }
     },
-  },
-  destroyed: function () {
-    debugger;
   },
   render: function (createElement) {
     if (this.dynamic) {

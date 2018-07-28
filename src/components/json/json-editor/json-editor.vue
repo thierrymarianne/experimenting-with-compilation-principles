@@ -16,6 +16,8 @@
 
 <script>
 import Vue from 'vue';
+import sanitizeHtml from 'sanitize-html';
+
 import EventHub from '../../../modules/event-hub';
 import SharedState from '../../../modules/shared-state';
 import Json from '../json/json.vue';
@@ -173,6 +175,14 @@ export default {
     componentWithUuid: function (nodeUuid) {
       return this.$refs[nodeUuid];
     },
+    isEnclosedInQuotes: function(subject) {
+      let enclosedInQuotes = false;
+      if (subject.match(/^\s*".*"\s*$/)) {
+        enclosedInQuotes = true;
+      }
+
+      return enclosedInQuotes;
+    },
     toggleNodeVisibility: function ({ element, uuid }) {
       const { twinVNode, elementVNode } = this.locateTwinOf(element, uuid);
 
@@ -192,32 +202,58 @@ export default {
       if (typeof nodeComponent === 'undefined' || nodeComponent.edited) {
         return;
       }
-
       let plainText;
 
       if (this.isNodeWithUuidBeingEdited()(nodeUuid)) {
-        if (nodeComponent.$el.innerText.trim().length === 0) {
-          nodeComponent.$el.innerText = 'null';
+        const subject = nodeComponent.$el.innerText;
+
+        if (subject.trim().length === 0) {
+          subject.innerText = 'null';
         }
-        const plainTextWithoutLinefeeds = nodeComponent.$el.innerText.replace(/\n/g, '');
-        const plainTextEnclosedInAppostrophes = `${plainTextWithoutLinefeeds.trim()}`;
+
+        let sanitizedText = subject
+        .replace(/\n/g, '')
+        .replace(/\\"/g, '<quote />')
+        .trim()
+
+        const enclosedInQuotes = this.isEnclosedInQuotes(sanitizedText);
+
+        if (enclosedInQuotes) {
+          sanitizedText = sanitizedText        
+          .replace(/^(")/g, '')
+          .replace(/(")$/g, '');
+        }
+
+        sanitizedText = sanitizeHtml(
+          sanitizedText,
+          {
+            allowedTags: [ 'json-array', 'quote' ],
+            selfClosing: [ 'quote' ] 
+          }
+        );
+
+        sanitizedText = sanitizedText.replace('<quote />', '\\"');
+
+        if (enclosedInQuotes) {
+          sanitizedText = `"${sanitizedText}"`;
+        }
 
         nodeComponent.isEdited = false;
 
         nodeComponent.$el.removeAttribute('contenteditable');
         nodeComponent.$el.classList.remove('json__value--edited');
-        this.syncNodes(plainTextEnclosedInAppostrophes, nodeComponent);
+        this.syncNodes(sanitizedText, nodeComponent);
 
         this.saveValue({
           uuid: nodeUuid,
-          value: plainTextEnclosedInAppostrophes
+          value: sanitizedText
         });
 
         const twins = this.getTwinsFor(nodeComponent.$el);
         this.$refs[this.editableToDynamic[nodeUuid]] = twins.twinVNode;
 
         const twin = this.$refs[this.editableToDynamic[nodeUuid]];
-        this.syncNodes(plainTextEnclosedInAppostrophes, twin);
+        this.syncNodes(sanitizedText, twin);
         return;
       }
 

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import ClickOutside from 'vue-click-outside'
+import ClickOutside from 'vue-click-outside';
 
 import FragmentTransition from './fragment-transition.vue';
 import EventHub from '../../modules/event-hub';
@@ -47,6 +47,33 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  mounted: function () {
+    this.$nextTick(function () {
+      if (!this.hasText) { 
+        return;
+      }
+      
+      if (this.isArrayItem) {
+        return;
+      }
+
+      const acceptedSlots = this.$slots.default.filter(
+        (VNode) => (typeof VNode.tag === 'undefined')
+      );
+      this.$slots.default = acceptedSlots; 
+      this.$forceUpdate();
+
+      let slotsText = '';
+      const text = this.$slots.default.reduce(
+        (text, VNode) => {
+          let concatenatedText = `${text}${VNode.text}`;
+          return concatenatedText;
+        },
+        slotsText
+      );
+      this.text = text;
+    });
   },
   updated: function () {
     this.$nextTick(function () {

@@ -22,7 +22,7 @@
           <span 
             v-if='!sharedState.invalidJSON'
             class='json-parser__button-label'
-          >Copy JSON</span>
+          >Validate and Copy JSON</span>
           <span 
             v-else='sharedState.invalidJSON'
             class='json-parser__button-label'
@@ -30,6 +30,11 @@
       </button>
     </section>
     <multimedia-content>
+      <source-code
+        wrap
+        color='clickable'
+        v-on:click.native='copyToInputArea("codeInjection", $event)'>Injected code
+      </source-code>
       <source-code
         wrap
         color='clickable'
@@ -76,24 +81,27 @@ import EventHub from '../../../../modules/event-hub';
 import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
 import MultimediaContent from '../../../multimedia-content.vue';
-import LearningCompilers from '../../../../../package.json';
-import Array from '../../../../json/array.json';
-import Pair from '../../../../json/pair.json';
-import Leftpad from '../../../../json/leftpad.json';
-import Symfony from '../../../../json/symfony.json';
 import SharedState from '../../../../modules/shared-state';
 import SourceCode from '../../../source-code.vue';
 import Raven from 'raven-js';
 
+import Array from '../../../../json/array.json';
+import CodeInjection from '../../../../json/code-injection.json';
+import LearningCompilers from '../../../../../package.json';
+import Leftpad from '../../../../json/leftpad.json';
+import Pair from '../../../../json/pair.json';
+import Symfony from '../../../../json/symfony.json';
+
 const jsonExamples = {
   array: Array,
+  codeInjection: CodeInjection,
   learningCompilers: LearningCompilers,
   leftpad: Leftpad,
   pair: Pair,
   symfony: Symfony,
 };
 
-const PackageJson = jsonExamples.array;
+const PackageJson = jsonExamples.codeInjection;
 
 export default {
   name: 'lexical-analyzer',
@@ -119,6 +127,13 @@ export default {
     this.$nextTick(function () {
       this.clipboardReadyJSON = this.getClipboardReadyJson();
     })
+  },
+  mounted: function () {
+    const exampleName = this.$route.query.json;
+    if (typeof exampleName !== 'undefined'
+    && typeof jsonExamples[exampleName] !== 'undefined') {
+      this.copyToInputArea(exampleName);
+    }
   },
   methods: {
     copyToClipboard: function () {
@@ -210,11 +225,11 @@ export default {
           '\t'
         );
         this.sharedState.invalidJSON = false;
-        EventHub.$emit('parsing.edition.succeeded');
+        this.hideErrorMessageContainer();
       } catch (error) {
         this.sharedState.error(error, 'json-parser');
         this.sharedState.invalidJSON = true;
-        EventHub.$emit('parsing.edition.failed', { errorMessage: error.message });
+        this.handleFailedParsing({ errorMessage: error.message });
         prettifiedJSON = '{}';
       }
       
