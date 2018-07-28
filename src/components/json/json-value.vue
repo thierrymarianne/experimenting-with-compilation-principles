@@ -73,6 +73,8 @@ export default {
         slotsText
       );
       this.text = text;
+      this.$slots.default = this.$slots.default.slice(0, 1);
+      this.$slots.default[0] = this.text;
     });
   },
   updated: function () {
