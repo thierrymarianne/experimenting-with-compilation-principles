@@ -24,6 +24,7 @@ import Json from '../json/json.vue';
 import ActionTypes from './json-editor-action-types';
 import MutationTypes from './json-editor-mutation-types';
 import Editable from '../editable';
+import JsonEvents from '../events/json-events';
 
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions, mapGetters, mapMutations } = createNamespacedHelpers('json-editor')
@@ -64,6 +65,9 @@ export default {
       delete this.editableToDynamic[editableElementUuid];
       delete this.dynamicToEditable[uuidAttribute];
     },
+    trackComponentByUuid: function ({ component, uuid }) {
+      this.$refs[uuid] = component;
+    },
     registerNode: function ({ component, uuidAttribute, hook }) {
       if (typeof hook === 'beforeDestroy') {
         this.sharedState.log({ action: 'unregistration', element: component.$el });
@@ -71,7 +75,7 @@ export default {
         return;
       }
 
-      this.$refs[uuidAttribute] = component;
+      this.trackComponentByUuid({ component, uuid: uuidAttribute });
       this.$nextTick(function () {
         const element = component.$el;
         if (typeof element === 'undefined' || !document.body.contains(element)) {
@@ -96,6 +100,13 @@ export default {
     getTwinsFor(element) {
       let path;
       let twin;
+
+      if (!document.body.contains(element)) {
+        return {
+          elementVNode: this.$refs[element.getAttribute('data-uuid')],
+          twinVNode: undefined,
+        };
+      }
 
       try {
         path = XPathPosition.fromNode(element, this.$el.querySelector('.editable-json'));
@@ -249,11 +260,12 @@ export default {
           value: sanitizedText
         });
 
-        const twins = this.getTwinsFor(nodeComponent.$el);
-        this.$refs[this.editableToDynamic[nodeUuid]] = twins.twinVNode;
+        this.applyChangesToTwin({
+          component: nodeComponent,
+          uuid: nodeUuid,
+          text: sanitizedText,
+        });
 
-        const twin = this.$refs[this.editableToDynamic[nodeUuid]];
-        this.syncNodes(sanitizedText, twin);
         return;
       }
 
@@ -268,14 +280,25 @@ export default {
       nodeComponent.$el.innerText = plainText;
       nodeComponent.$el.focus();
     },
+    applyChangesToTwin: function ({ component, uuid, text }) {
+      const twins = this.getTwinsFor(component.$el);
+      if (typeof twins.twinVNode === 'undefined') {
+        return;
+      }
+
+      this.$refs[this.editableToDynamic[uuid]] = twins.twinVNode;
+
+      const twin = this.$refs[this.editableToDynamic[uuid]];
+      this.syncNodes(text, twin);
+    },
   },
   mounted: function () {
-    EventHub.$on('node.shown', this.toggleNodeVisibility);
-    EventHub.$on('node.hidden', this.toggleNodeVisibility);
-    EventHub.$on('node.registered', this.registerNode);
-    EventHub.$on('node.made_editable', this.toggleNodeEdition);
-    EventHub.$on('node.made_non_editable', this.toggleNodeEdition);
-    EventHub.$on('node.destroyed', this.registerNode);
+    EventHub.$on(JsonEvents.node.destroyed, this.registerNode);
+    EventHub.$on(JsonEvents.node.hidden, this.toggleNodeVisibility);
+    EventHub.$on(JsonEvents.node.registered, this.registerNode);
+    EventHub.$on(JsonEvents.node.madeEditable, this.toggleNodeEdition);
+    EventHub.$on(JsonEvents.node.madeNonEditable, this.toggleNodeEdition);
+    EventHub.$on(JsonEvents.node.shown, this.toggleNodeVisibility);
 
     this.$nextTick(function () {
       if (typeof this.$refs['json-editor'] === 'undefined') {

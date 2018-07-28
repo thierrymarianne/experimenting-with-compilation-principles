@@ -4,6 +4,7 @@ import uuidv5 from 'uuid/v5';
 import EventHub from '../../modules/event-hub';
 import SharedState from '../../modules/shared-state';
 import namespaces from '../../modules/namespace';
+import JsonEvents from './events/json-events';
 
 const NODE_TYPES = {
   undeclared: null,
@@ -35,12 +36,12 @@ const Editable = {
         };
 
         if (!this.isVisible) {
-          EventHub.$emit('node.hidden', togglingEvent);
+          EventHub.$emit(JsonEvents.node.hidden, togglingEvent);
           return;
         }
 
         if (this.isVisible) {
-          EventHub.$emit('node.shown', togglingEvent);
+          EventHub.$emit(JsonEvents.node.shown, togglingEvent);
         }
       },
       500,
@@ -67,7 +68,7 @@ const Editable = {
     uuid: function () {
       const namespace = namespaces[this.getNodeType()];
       const uuidAttribute = uuidv5(`${this._uid}`, namespace);
-      EventHub.$emit('node.registered', { component: this, uuidAttribute });
+      EventHub.$emit(JsonEvents.node.registered, { component: this, uuidAttribute });
       return uuidAttribute;
     },
     getIconName: function () {

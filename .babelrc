@@ -13,5 +13,10 @@
     ["@babel/preset-stage-2", {
       "decoratorsLegacy": true
     }]
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": ["istanbul"]
+    }    
+  }
 }

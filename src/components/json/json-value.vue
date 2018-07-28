@@ -8,7 +8,7 @@
       >,</span>
     </span>
   </fragment-transition>
-  <span 
+  <span
     v-else
     :class='classes'
     v-click-outside="makeContentNonEditable"
@@ -29,6 +29,7 @@ import FragmentTransition from './fragment-transition.vue';
 import EventHub from '../../modules/event-hub';
 import MutationTypes from './json-editor/json-editor-mutation-types';
 import Editable from './editable';
+import JsonEvents from './events/json-events';
 
 import { createNamespacedHelpers } from 'vuex'
 const { mapGetters, mapActions, mapMutations } = createNamespacedHelpers('json-editor')
@@ -90,7 +91,7 @@ export default {
   },
   beforeDestroy: function () {
     EventHub.$emit(
-      'node.destroyed',
+      JsonEvents.node.destroyed,
       { component: this, uuidAttribute: this.uuid, hook: 'beforeDestroy' }
     );
   },
@@ -105,7 +106,7 @@ export default {
       }
 
       EventHub.$emit(
-        'node.made_editable',
+        JsonEvents.node.madeEditable,
         { nodeUuid: this.uuid }
       );
     },
@@ -115,7 +116,7 @@ export default {
       }
 
       EventHub.$emit(
-        'node.made_non_editable',
+        JsonEvents.node.madeNonEditable,
         { nodeUuid: this.uuid }
       );
     },

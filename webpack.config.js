@@ -3,6 +3,12 @@ const path = require('path');
 const environment = process.env.NODE_ENV || 'development';
 const developmentMode = environment !== 'production';
 const productionMode = environment === 'production';
+const testMode = environment === 'test';
+
+let mode = environment;
+if (testMode) {
+  mode = 'development';
+}
 
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
@@ -23,9 +29,16 @@ if (developmentMode) {
   sourceMap = 'eval-source-map';
 }
 
+if (testMode) {
+  sourceMap = 'inline-cheap-module-source-map';
+}
+
 let eslintConfig = '.eslintrc-production.json';
 if (developmentMode) {
   eslintConfig = '.eslintrc.json';
+}
+if (testMode) {
+  eslintConfig = '.eslintrc-test.json';
 }
 
 let outputDirectory = 'docs'
@@ -67,13 +80,55 @@ if (productionMode) {
   ]);
 }
 
-module.exports = {
+let optimization = {
+  minimizer: [
+    new UglifyJsPlugin({
+      cache: true,
+      parallel: true,
+      sourceMap: true,
+      uglifyOptions: {
+        output: {
+          ascii_only: true
+        }
+      }
+    }),
+    new OptimizeCSSAssetsPlugin({})
+  ],
+  splitChunks: {
+    chunks: 'all',
+    cacheGroups: {
+      vendor: {
+        test: /[\\/]node_modules[\\/]/,
+        name: 'vendors',
+        chunks: 'all'
+      },
+      styles: {
+        name: 'styles',
+        test: /\.css$/,
+        chunks: 'all',
+        enforce: true
+      },
+    },
+  },
+  runtimeChunk: {
+    name: "manifest",
+  }
+};
+if (testMode) {
+  optimization = {
+    splitChunks: {
+      chunks: "async"
+    }
+  };
+}
+
+let webpackConfig = {
   node: {
     module: 'empty',
     net: 'empty', 
     fs: 'empty',
   },
-  mode: developmentMode ? 'development' : 'production',
+  mode: mode,
   entry: './src/index.js',
   resolve: {
     modules: ['node_modules'],
@@ -82,40 +137,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js'
     }
   },
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true,
-        uglifyOptions: {
-          output: {
-            ascii_only: true
-          }
-        }
-      }),
-      new OptimizeCSSAssetsPlugin({})
-    ],
-    splitChunks: {
-      chunks: 'all',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        },
-        styles: {
-          name: 'styles',
-          test: /\.css$/,
-          chunks: 'all',
-          enforce: true
-        },
-      },
-    },
-    runtimeChunk: {
-      name: "manifest",
-    },
-  },
+  optimization: optimization,
   module: {
     rules: [
       {
@@ -191,7 +213,11 @@ module.exports = {
     path: path.resolve(__dirname, outputDirectory),
     filename: '[name].[hash].js',
     chunkFilename: '[name].[chunkHash].bundle.js',
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
   },
   plugins: plugins,
-  devtool: sourceMap, 
+  devtool: sourceMap
 };
+
+module.exports = webpackConfig;
