@@ -1,24 +1,7 @@
-import antlr from '../../../modules/antlr';
+import parseJson from './parse-json';
 
 const JsonParser = function (self) {
-  self.addEventListener(
-    'message',
-    (event) => {
-      const { text, component } = event.data;
-      try {
-        antlr.parseJSON(text, component);
-        self.postMessage({
-          eventType: 'parsing.antlr.succeeded',
-          template: component.$refs.jsonEditor.template,
-        });
-      } catch (error) {
-        self.postMessage({
-          eventType: 'parsing.antlr.failed',
-          errorMessage: error.message,
-        });
-      }
-    },
-  );
+  self.addEventListener('message', event => (parseJson(event, self)));
 };
 
 export default JsonParser;

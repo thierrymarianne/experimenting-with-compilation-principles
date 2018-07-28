@@ -27,7 +27,7 @@ import _ from 'lodash'
 import EventHub from '../modules/event-hub'
 import JsonEditor from './json/json-editor/json-editor.vue'
 import antlr from '../modules/antlr'
-// import JsonParser from 'worker-loader!./json/worker/parsing-json-worker.js';
+import parseJson from './json/worker/parse-json';
 import work from 'webworkify-webpack';
 
 export default {
@@ -71,27 +71,13 @@ export default {
             }
 
             component.$data.json = '';
-            const jsonParser = work(require.resolve('./json/worker/json-parser.js'));
             this.$refs.jsonEditor.isReady = false;
 
-            let json;
-            let input;
-            const componentClone = {
-                $data: {
-                    json: component.json,
-                },
-                $refs: {
-                    jsonEditor: {
-                        setJsonTemplate: null,
-                        setJson: null,
-                    }
-                },
-            };
-            jsonParser.postMessage({
-                text,
-                component: componentClone,
-            });
-            jsonParser.addEventListener('message', event => {
+            const parsedJsonHandler = event => {
+                if (typeof event.data == 'undefined') {
+                    event = { data: event };
+                }
+
                 if (event.data.eventType === 'parsing.antlr.succeeded') {
                     component.$refs.jsonEditor.setJsonTemplate(event.data.template);
                     EventHub.$emit('parsing.antlr.succeeded');
@@ -104,7 +90,40 @@ export default {
                     'parsing.antlr.failed',
                     { errorMessage: event.data.errorMessage }
                 );
+            };
+            const componentClone = {
+                $data: {
+                    json: component.json,
+                },
+                $refs: {
+                    jsonEditor: {
+                        setJsonTemplate: null,
+                        setJson: null,
+                    }
+                },
+            };
+
+            const delegateToWebWorker = ('worker' in this.$route.query);
+            if (!delegateToWebWorker) {
+                parseJson(
+                    {
+                        data: {
+                            text,
+                            component: componentClone
+                        }
+                    },
+                    { postMessage: parsedJsonHandler },
+                );
+                this.$refs.jsonEditor.isReady = true;
+                return;
+            }
+
+            const jsonParser = work(require.resolve('./json/worker/json-parser.js'));
+            jsonParser.postMessage({
+                text,
+                component: componentClone,
             });
+            jsonParser.addEventListener('message', parsedJsonHandler);
         },
         pasteSource: function (event) {
             const text = event.code;
