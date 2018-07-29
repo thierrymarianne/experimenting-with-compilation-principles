@@ -54,6 +54,29 @@ export default {
       MutationTypes.START_EDITING_CONTENT,
       MutationTypes.TRACK_NODE,
     ]),
+    addPair: function ({ indexInSlot, nodeUuid }) {
+      const pairTwin = this.editableToDynamic[nodeUuid];
+      const element = this.$refs[nodeUuid];
+      const twin = this.$refs[pairTwin];
+
+      if (typeof element === 'undefined' || typeof twin === 'undefined') {
+        return;
+      }
+
+      element.isEditable = false;
+      twin.isEditable = true;
+      twin.addPairAfter(element);
+      twin.isEditable = false;
+      element.isEditable = true;
+
+      this.$nextTick(function () {
+        twin.updateKey({ parentComponent: twin.$parent, indexInSlot });
+        element.updateKey({ parentComponent: element.$parent, indexInSlot });
+      });
+
+      twin.$parent.$forceUpdate();
+      element.$parent.$forceUpdate();
+    },
     setJson: function (json) {
       this.sharedState.json = json;
     },
@@ -126,9 +149,14 @@ export default {
         }
       }
 
+      const elementVNode = this.$refs[element.getAttribute('data-uuid')];
+      elementVNode.isEditable = true;
+      elementVNode.isClonable = true;
+      const twinVNode = this.$refs[twin.getAttribute('data-uuid')];
+
       return {
-        elementVNode: this.$refs[element.getAttribute('data-uuid')],
-        twinVNode: this.$refs[twin.getAttribute('data-uuid')],
+        elementVNode,
+        twinVNode,
       };
     },
     locateTwinOf(element, uuid) {
@@ -299,6 +327,7 @@ export default {
     EventHub.$on(JsonEvents.node.madeEditable, this.toggleNodeEdition);
     EventHub.$on(JsonEvents.node.madeNonEditable, this.toggleNodeEdition);
     EventHub.$on(JsonEvents.node.shown, this.toggleNodeVisibility);
+    EventHub.$on(JsonEvents.pair.added, this.addPair);
 
     this.$nextTick(function () {
       if (typeof this.$refs['json-editor'] === 'undefined') {

@@ -15,6 +15,7 @@ const NODE_TYPES = {
 const Editable = {
   data: function () {
     return {
+      isClonable: false,
       isEditable: false,
       isEdited: false,
       isVisible: true,
@@ -58,6 +59,9 @@ const Editable = {
     isPairNode: function () {
       return this.nodeType === NODE_TYPES.pair;
     },
+    generateUuid: function (name, namespace) {
+      return uuidv5(`${name}`, namespace);
+    },
   },
   computed: {
     isShown: function () {
@@ -67,16 +71,16 @@ const Editable = {
     },
     uuid: function () {
       const namespace = namespaces[this.getNodeType()];
-      const uuidAttribute = uuidv5(`${this._uid}`, namespace);
+      const uuidAttribute = this.generateUuid(this._uid, namespace);
       EventHub.$emit(JsonEvents.node.registered, { component: this, uuidAttribute });
       return uuidAttribute;
     },
     getIconName: function () {
       if (this.isVisible) {
-        return 'eye-slash';
+        return 'trash';
       }
 
-      return 'eye';
+      return 'undo';
     },
   },
 };

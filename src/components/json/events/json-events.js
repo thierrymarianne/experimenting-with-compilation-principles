@@ -7,6 +7,9 @@ const events = {
     registered: 'node.registered',
     shown: 'node.shown',
   },
+  pair: {
+    added: 'pair.added',
+  },
 };
 
 export default events;

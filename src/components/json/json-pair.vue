@@ -32,18 +32,31 @@
         class='json__pair---button-icon'
         :icon='getIconName' />
     </button>
+    <button
+      class='json__pair---button'
+      v-if='!isArrayOrObject && isVisible'
+      v-on:click='addPairAfter'
+    >
+      <font-awesome-icon
+        class='json__pair---button-icon'
+        icon='plus' />
+    </button>
   </fragment-transition>
 </template>
 
 <script>
 import FragmentTransition from './fragment-transition.vue';
+import JsonValue from './json-value.vue';
+import JsonEvents from './events/json-events';
 import Editable from './editable';
+import EventHub from '../../modules/event-hub';
 
 export default {
   name: 'json-pair',
   mixins: [Object.assign({}, Editable.Editable)],
   components: {
     FragmentTransition,
+    JsonValue,
   },
   props: {
     isFirstChildArray: {
@@ -92,5 +105,55 @@ export default {
       return `json__pair${objectClass}${arrayClass}${noChildrenClass}${hideClass}`;
     },
   },
+  methods: {
+    addPairAfter: function() {
+      if (!this.isEditable) {
+        return;
+      }
+
+      const jsonValue = this.$createElement(
+        'json-value',
+        {
+          scopedSlots: {
+            default: props => '"value"',
+          },
+        },
+      );
+      const jsonPair = this.$createElement(
+        'json-pair',
+        {
+          scopedSlots: {
+            key: props => '"key"',
+            colon: props => ':',
+            value: props => jsonValue,
+          },
+        },
+      );
+
+      const target = this.$vnode;
+      let indexInSlot = null; 
+      this.$parent.$slots.default.map((VNode, index) => {
+        if (VNode === target) {
+          indexInSlot = index;
+        }
+      });
+      this.$parent.$slots.default.splice(indexInSlot + 1, 0, jsonPair);
+
+      if (this.isClonable) {
+        EventHub.$emit(
+          JsonEvents.pair.added,
+          { nodeUuid: this.uuid, indexInSlot },
+        );
+      }
+    },
+    updateKey({ parentComponent, indexInSlot }) {
+      const slot = parentComponent.$slots
+      .default[indexInSlot + 1];
+
+      parentComponent.$slots
+      .default[indexInSlot + 1].key = parentComponent.$slots
+      .default[indexInSlot + 1].componentInstance.uuid;      
+    }
+  }
 };
 </script>

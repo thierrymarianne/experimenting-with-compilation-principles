@@ -8,6 +8,9 @@ import {
   faCopy,
   faEyeSlash,
   faEye,
+  faTrash,
+  faUndo,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Notifications from 'vue-notification';
@@ -16,6 +19,7 @@ import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 
 import App from './components/app.vue';
+import JsonPair from './components/json/json-pair.vue';
 import routes from './modules/routes';
 import SharedState from './modules/shared-state';
 import store from './store';
@@ -30,7 +34,9 @@ library.add(faArrowAltCircleDown);
 library.add(faCopy);
 library.add(faEye);
 library.add(faEyeSlash);
-
+library.add(faTrash);
+library.add(faUndo);
+library.add(faPlus);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
@@ -89,7 +95,8 @@ const app = new Vue({
   store,
   styles,
   components: {
-    app: App,
+    App,
+    JsonPair,
   },
 });
 

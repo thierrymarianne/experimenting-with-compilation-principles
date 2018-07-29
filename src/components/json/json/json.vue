@@ -28,12 +28,7 @@ export default {
   },
   methods: {
     compileJsonTemplate: function (template) {
-      try {
-        return Vue.compile(template);
-      } catch (error) {
-        this.sharedState.error(error, 'json.compileJsonTemplate');
-        return Vue.compile('<json-value>compilation error</json-value>');
-      }
+      return Vue.compile(template);
     },
   },
   render: function (createElement) {
