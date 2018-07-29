@@ -33,17 +33,33 @@ export default {
       if (this.$children.length === 1) {
         return;
       }
-
-      const visibleChildren = this.$children.filter(
+      
+      let visibleChildren = this.$children.filter(
         (child) => (child.isShown)
       );
-      
+
       if (visibleChildren.length === 0) {
         return;
-      } 
+      }
 
-      this.$children.map((child) => (child.isLastChild = false))
-      visibleChildren[visibleChildren.length - 1].isLastChild = true;
+      const filteredChildren = this.$slots.default.map((VNode, index) => {
+        if (typeof VNode.tag !== 'undefined' 
+        && VNode.tag.indexOf('json-pair') !== -1) {
+          return {
+            isShown: VNode.componentInstance.isShown,
+            index: index,
+            VNode: VNode,
+            component: VNode.componentInstance,
+          };
+        }
+
+        return { 
+          isShown: false
+        };
+      }).filter(child => (child.isShown));
+      
+      filteredChildren.map((child) => (child.component.isLastChild = false));
+      filteredChildren[filteredChildren.length - 1].component.isLastChild = true;
     },
   },
 };

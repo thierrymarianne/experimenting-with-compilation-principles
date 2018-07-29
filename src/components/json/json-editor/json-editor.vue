@@ -69,18 +69,24 @@ export default {
       twin.isEditable = false;
       element.isEditable = true;
 
+      let uuids = {
+        editable: null,
+        dynamic: null,
+      };
       const trackNode = ({ component }) => {
+        let twins = this.getTwinsFor(component.$el, uuids);
         const pairNode = {
           uuid: component.uuid,
           value: null,
           nodeType: component.getNodeType(),
-          twinUuid: twin.uuid,
+          twinUuid: twins.twinVNode.uuid,
         };
         this.trackNode(pairNode);
+        EventHub.$emit('node.altered', { component: twin });
 
         const valueComponent = component.$children[0].$children[0];
         valueComponent.text = value;
-        const twins = this.getTwinsFor(valueComponent.$el);
+        twins = this.getTwinsFor(valueComponent.$el);
         twins.twinVNode.text = value;
         const valueNode = {
           uuid: valueComponent.uuid,
@@ -91,11 +97,17 @@ export default {
 
         this.trackNode(valueNode);
       };
+
       this.$nextTick(function () {
-        twin.updateKey({ parentComponent: twin.$parent, indexInSlot });
+        twin.updateKey({ 
+          parentComponent: twin.$parent,
+          indexInSlot,
+          uuids: uuids,
+        });
         element.updateKey({
           parentComponent: element.$parent,
           indexInSlot,
+          uuids: uuids,
           callback: trackNode,
         });
       });
@@ -146,7 +158,7 @@ export default {
         }
       });
     },
-    getTwinsFor(element) {
+    getTwinsFor(element, uuids) {
       let path;
       let twin;
 
@@ -175,10 +187,16 @@ export default {
         }
       }
 
-      const elementVNode = this.$refs[element.getAttribute('data-uuid')];
+      let elementVNode = this.$refs[element.getAttribute('data-uuid')];
+      let twinVNode = this.$refs[twin.getAttribute('data-uuid')];
+
+      if (typeof uuids !== 'undefined') {
+         elementVNode = this.$refs[uuids.editable];
+         twinVNode = this.$refs[uuids.dynamic];
+      }
+
       elementVNode.isEditable = true;
       elementVNode.isClonable = true;
-      const twinVNode = this.$refs[twin.getAttribute('data-uuid')];
 
       return {
         elementVNode,

@@ -29,10 +29,11 @@ import FragmentTransition from './fragment-transition.vue';
 import EventHub from '../../modules/event-hub';
 import MutationTypes from './json-editor/json-editor-mutation-types';
 import Editable from './editable';
+import WithEditableContent from './with-editable-content';
 import JsonEvents from './events/json-events';
 
-import { createNamespacedHelpers } from 'vuex'
-const { mapGetters, mapActions, mapMutations } = createNamespacedHelpers('json-editor')
+import { createNamespacedHelpers } from 'vuex';
+const { mapActions, mapMutations } = createNamespacedHelpers('json-editor');
 
 export default {
   name: 'json-value',
@@ -42,7 +43,10 @@ export default {
   directives: {
     ClickOutside
   },
-  mixins: [Object.assign({}, Editable.Editable)],
+  mixins: [
+    Object.assign({}, Editable.Editable),
+    WithEditableContent,
+  ],
   props: {
     isArrayItem: {
       type: Boolean,
@@ -106,26 +110,6 @@ export default {
       MutationTypes.SET_PREVIOUS_VALUE,
       MutationTypes.SET_NEXT_VALUE,
     ]),
-    makeContentEditable: function () {
-      if (this.hasNoText || this.isNodeWithUuidBeingEdited(this.uuid)) {
-        return;
-      }
-
-      EventHub.$emit(
-        JsonEvents.node.madeEditable,
-        { nodeUuid: this.uuid }
-      );
-    },
-    makeContentNonEditable: function () {
-      if (!this.isNodeWithUuidBeingEdited(this.uuid)) {
-        return;
-      }
-
-      EventHub.$emit(
-        JsonEvents.node.madeNonEditable,
-        { nodeUuid: this.uuid }
-      );
-    },
   },
   data: function () {
     let text;
@@ -141,9 +125,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'isNodeWithUuidBeingEdited',
-    ]),
     hasText: function () {
       if (typeof this.text === 'undefined') {
         return false;

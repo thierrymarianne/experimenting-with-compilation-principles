@@ -163,7 +163,7 @@ export default {
         );
       }
     },
-    updateKey({ parentComponent, indexInSlot, callback }) {
+    updateKey({ parentComponent, indexInSlot, callback, uuids }) {
       const slot = parentComponent.$slots
       .default[indexInSlot];
       const component = parentComponent.$slots
@@ -172,9 +172,15 @@ export default {
       parentComponent.$slots
       .default[indexInSlot].key = component.uuid;
 
-      if (typeof callback === 'function') {
+      const isEditableComponent = typeof callback === 'function';
+
+      if (isEditableComponent) {
+        uuids.editable = component.uuid;
         callback({ component });
+        return;
       }
+
+      uuids.dynamic = component.uuid;
     }
   }
 };

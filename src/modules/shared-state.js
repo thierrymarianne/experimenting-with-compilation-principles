@@ -1,12 +1,12 @@
 import Raven from 'raven-js';
 
-const developmentMode = false;
+const developmentMode = true;
 
 const activeLoggers = {
   'json-editor.registerNode': false,
 };
 const productionMode = !developmentMode;
-const punctuationDebug = false;
+const punctuationDebug = true;
 const state = {
   debug: {
     punctuation: punctuationDebug,
