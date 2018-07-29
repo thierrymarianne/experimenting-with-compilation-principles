@@ -48,7 +48,7 @@ const state = {
       );
       return;
     }
-    debugger;
+
     console.error({ error, file, extra });
   },
 };

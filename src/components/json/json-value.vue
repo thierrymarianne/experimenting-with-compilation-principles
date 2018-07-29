@@ -59,6 +59,11 @@ export default {
         return;
       }
 
+      if (typeof this.$slots.default === 'undefined') {
+        this.$slots.default = [this.text];
+        return;
+      }
+
       const acceptedSlots = this.$slots.default.filter(
         (VNode) => (typeof VNode.tag === 'undefined')
       );
@@ -73,6 +78,7 @@ export default {
         },
         slotsText
       );
+
       this.text = text;
       this.$slots.default = this.$slots.default.slice(0, 1);
       this.$slots.default[0] = this.text;
@@ -124,7 +130,7 @@ export default {
   data: function () {
     let text;
     if (typeof this.$slots.default !== 'undefined'
-    && this.$slots.default[0] !== 'undefined') {
+    && typeof this.$slots.default[0] !== 'undefined') {
       text = this.$slots.default[0].text;
     }
 

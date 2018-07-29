@@ -54,7 +54,7 @@ export default {
       MutationTypes.START_EDITING_CONTENT,
       MutationTypes.TRACK_NODE,
     ]),
-    addPair: function ({ indexInSlot, nodeUuid }) {
+    addPair: function ({ indexInSlot, nodeUuid, value }) {
       const pairTwin = this.editableToDynamic[nodeUuid];
       const element = this.$refs[nodeUuid];
       const twin = this.$refs[pairTwin];
@@ -69,9 +69,35 @@ export default {
       twin.isEditable = false;
       element.isEditable = true;
 
+      const trackNode = ({ component }) => {
+        const pairNode = {
+          uuid: component.uuid,
+          value: null,
+          nodeType: component.getNodeType(),
+          twinUuid: twin.uuid,
+        };
+        this.trackNode(pairNode);
+
+        const valueComponent = component.$children[0].$children[0];
+        valueComponent.text = value;
+        const twins = this.getTwinsFor(valueComponent.$el);
+        twins.twinVNode.text = value;
+        const valueNode = {
+          uuid: valueComponent.uuid,
+          value: valueComponent.text,
+          nodeType: valueComponent.getNodeType(),
+          twinUuid: twins.twinVNode.uuid,
+        };
+
+        this.trackNode(valueNode);
+      };
       this.$nextTick(function () {
         twin.updateKey({ parentComponent: twin.$parent, indexInSlot });
-        element.updateKey({ parentComponent: element.$parent, indexInSlot });
+        element.updateKey({
+          parentComponent: element.$parent,
+          indexInSlot,
+          callback: trackNode,
+        });
       });
 
       twin.$parent.$forceUpdate();
@@ -112,7 +138,7 @@ export default {
           uuid: uuidAttribute,
           value: component.text,
           nodeType: component.getNodeType(),
-          twinUuid: twinVNode,
+          twinUuid: twinVNode.uuid,
         };
         
         if (node.nodeType === Editable.NODE_TYPES.value) {
@@ -196,7 +222,7 @@ export default {
 
       // Ensure dynamic and editable JSON components are consistent
       if (twins.elementVNode.text !== twins.twinVNode.text) {
-        this.syncNodes(twins.twinVNode, twins.elementVNode)
+        this.syncNodes(twins.elementVNode, twins.twinVNode)
       }
 
       return twins;
@@ -204,11 +230,20 @@ export default {
     syncNodes(source, destination) {
       let text = source;
       if (typeof source !== 'string') {
-        let text = source.text;
+        text = source.text;
       }
       destination.text = text;
       destination.$el.innerHtml = text;
       destination.$el.innerText = text;
+
+      if (typeof destination.$slots.default === 'undefined') {
+        if (typeof text === 'undefined') {
+          return;
+        }
+
+        destination.$slots.default = [];
+      }
+
       destination.$slots.default[0] = text;
     },
     componentWithUuid: function (nodeUuid) {

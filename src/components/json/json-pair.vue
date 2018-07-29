@@ -111,11 +111,15 @@ export default {
         return;
       }
 
+      const value = '"value"';
       const jsonValue = this.$createElement(
         'json-value',
         {
+          props: {
+            text: value,
+          },
           scopedSlots: {
-            default: props => '"value"',
+            default: props => [value],
           },
         },
       );
@@ -123,36 +127,54 @@ export default {
         'json-pair',
         {
           scopedSlots: {
-            key: props => '"key"',
-            colon: props => ':',
-            value: props => jsonValue,
+            key: props => ['"key"'],
+            colon: props => [':'],
+            value: props => [jsonValue],
+          },
+        },
+      );
+      const comma = this.$createElement(
+        'span',
+        {
+          class: 'json__comma',
+          domProps: {
+            innerHtml: ','
           },
         },
       );
 
       const target = this.$vnode;
-      let indexInSlot = null; 
-      this.$parent.$slots.default.map((VNode, index) => {
+      const slots = this.$parent.$slots.default;
+
+      let indexInSlot = null;
+      slots.map((VNode, index) => {
         if (VNode === target) {
-          indexInSlot = index;
+          indexInSlot = index + 1;
         }
       });
-      this.$parent.$slots.default.splice(indexInSlot + 1, 0, jsonPair);
+      this.$parent.$slots.default.splice(indexInSlot, 0, comma);
+      indexInSlot = indexInSlot + 1;
+      this.$parent.$slots.default.splice(indexInSlot, 0, jsonPair);
 
       if (this.isClonable) {
         EventHub.$emit(
           JsonEvents.pair.added,
-          { nodeUuid: this.uuid, indexInSlot },
+          { nodeUuid: this.uuid, indexInSlot, value },
         );
       }
     },
-    updateKey({ parentComponent, indexInSlot }) {
+    updateKey({ parentComponent, indexInSlot, callback }) {
       const slot = parentComponent.$slots
-      .default[indexInSlot + 1];
+      .default[indexInSlot];
+      const component = parentComponent.$slots
+      .default[indexInSlot].componentInstance;
 
       parentComponent.$slots
-      .default[indexInSlot + 1].key = parentComponent.$slots
-      .default[indexInSlot + 1].componentInstance.uuid;      
+      .default[indexInSlot].key = component.uuid;
+
+      if (typeof callback === 'function') {
+        callback({ component });
+      }
     }
   }
 };
