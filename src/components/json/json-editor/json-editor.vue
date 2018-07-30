@@ -104,9 +104,6 @@ export default {
         this.trackNode(valueNode);
       };
 
-      twin.$parent.$forceUpdate();
-      element.$parent.$forceUpdate();
-
       this.$nextTick(function () {
         const twinClone = twin.updateKey({
           indexInSlot,
@@ -126,14 +123,19 @@ export default {
             component: elementClone,
             uuid: elementClone.uuid,
           });
+          this.editableToDynamic[elementClone.uuid] = twinClone.uuid;
           element.updateKey({
             callback: trackPairNode,
             indexInSlot,
             parentComponent: element.$parent,
             uuids: uuids,
           });
+          this.dynamicToEditable[uuids.dynamic] = elementClone.uuid;
         })
       });
+
+      twin.$parent.$forceUpdate();
+      element.$parent.$forceUpdate();
     },
     setJson: function (json) {
       this.sharedState.json = json;
