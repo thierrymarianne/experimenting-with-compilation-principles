@@ -101,7 +101,7 @@ const jsonExamples = {
   symfony: Symfony,
 };
 
-const PackageJson = jsonExamples.codeInjection;
+const PackageJson = jsonExamples.learningCompilers;
 
 export default {
   name: 'lexical-analyzer',
