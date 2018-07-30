@@ -2,7 +2,6 @@
   <fragment-transition v-if='isArrayItem'>
     <span class='json__value--array-item'>
       <span :class='classes'><slot></slot></span>
-      <comma v-show='hasText && !isLastChild' /> 
     </span>
   </fragment-transition>
   <span
