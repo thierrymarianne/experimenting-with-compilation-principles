@@ -14,7 +14,10 @@ const WithEditableContent = {
   },
   methods: {
     makeContentEditable: function () {
-      if (this.hasNoText || this.isNodeWithUuidBeingEdited(this.uuid)) {
+      if (this.hasNoText
+      || this.isNodeWithUuidBeingEdited(this.uuid)
+      || this.isDynamic
+      ) {
         return;
       }
 
@@ -24,9 +27,15 @@ const WithEditableContent = {
       );
     },
     makeContentNonEditable: function () {
-      if (this.$parent.$parent.$parent
-      .$vnode.componentOptions.tag !== 'json-object') {
-        return;
+      if (typeof this.$parent !== 'undefined'
+      && typeof this.$parent.$parent !== 'undefined'
+      && typeof this.$parent.$parent.$parent !== 'undefined'
+      ) {
+        if (this.$parent.$parent.$parent
+        .$vnode.componentOptions.tag !== 'json-object'
+        && this.$parent.$vnode.componentOptions.tag !== 'pair-key') {
+          return;
+        }
       }
 
       if (!this.isNodeWithUuidBeingEdited(this.uuid)) {

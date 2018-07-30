@@ -8,6 +8,7 @@ import WithUuid from '../../mixins/with-uuid';
 
 const NODE_TYPES = {
   undeclared: null,
+  key: 'key',
   value: 'value',
   pair: 'pair',
   comma: 'comma',
@@ -18,6 +19,7 @@ const Editable = {
   data: function () {
     return {
       isClonable: false,
+      isDynamic: false,
       isEditable: false,
       isEdited: false,
       isVisible: true,

@@ -101,7 +101,7 @@ describe('JsonValue', () => {
     const { jsonValueWrapper } = mountSubjectUnderTest();
 
     EventHub.$on(
-      JsonEvents.node.madeEditable,
+      JsonEvents.node.afterBeingMadeEditable,
       (event) => {
         expect(event.nodeUuid.length).to.equals(36);
         done();
@@ -110,13 +110,12 @@ describe('JsonValue', () => {
     jsonValueWrapper.vm.makeContentEditable();
   });
 
-  it('should make an content being edited, non-editable', (done) => {
-    const { jsonEditorWrapper, jsonValueWrapper } = mountSubjectUnderTest();
+  it('should make a content being edited, non-editable', (done) => {
+    const { jsonValueWrapper } = mountSubjectUnderTest();
 
     EventHub.$on(
-      JsonEvents.node.madeNonEditable,
-      (event) => {
-        jsonEditorWrapper.vm.toggleNodeEdition({ nodeUuid: event.nodeUuid });
+      JsonEvents.node.afterBeingMadeNonEditable,
+      () => {
         expect(jsonValueWrapper.vm.isEdited).to.be.false;
         expect('contenteditable' in jsonValueWrapper.attributes()).to.be.false;
         done();
@@ -124,10 +123,8 @@ describe('JsonValue', () => {
     );
 
     EventHub.$on(
-      JsonEvents.node.madeEditable,
-      (event) => {
-        expect(jsonValueWrapper.vm.isEdited).to.be.false;
-        jsonEditorWrapper.vm.toggleNodeEdition({ nodeUuid: event.nodeUuid });
+      JsonEvents.node.afterBeingMadeEditable,
+      () => {
         expect(jsonValueWrapper.vm.isEdited).to.be.true;
         expect(jsonValueWrapper.attributes().contenteditable).to.equal('true');
         jsonValueWrapper.vm.makeContentNonEditable();

@@ -89,7 +89,9 @@ export default {
         EventHub.$emit('node.altered', { component: pair.$parent });
         EventHub.$emit('node.altered', { component: clonedPairTwin.$parent });
 
-        const valueComponent = pair.$children[0].$children[0];
+        const valueComponent = pair.$children[0].$children
+        .filter((component) => (component.$vnode.componentOptions.tag === 'json-value'))
+        .pop();
         valueComponent.text = value;
         twins = this.getTwinsFor(valueComponent.$el);
         twins.twinVNode.text = value;
@@ -190,6 +192,10 @@ export default {
           this.trackNode(node);
         }
 
+        if (node.nodeType === Editable.NODE_TYPES.key) {
+          this.trackNode(node);
+        }
+
         component.isRegistered = true;
       });
     },
@@ -232,6 +238,7 @@ export default {
 
       elementVNode.isEditable = true;
       elementVNode.isClonable = true;
+      twinVNode.isDynamic = true;
 
       return {
         elementVNode,
@@ -414,13 +421,15 @@ export default {
 
       if (this.isNodeWithUuidBeingEdited()(nodeUuid)) {
         const subject = nodeComponent.$el.innerText;
-
-        if (subject.trim().length === 0) {
-          subject.innerText = 'null';
-        }
-
+        
         let sanitizedText = subject
-        .replace(/\n/g, '')
+        .replace(/\n/g, '');
+
+        if (sanitizedText.trim().length === 0) {
+          sanitizedText = 'null';
+        }
+;
+        sanitizedText = sanitizedText
         .replace(/\\"/g, '<quote />')
         .trim()
 
@@ -463,6 +472,7 @@ export default {
           text: sanitizedText,
         });
 
+        EventHub.$emit(JsonEvents.node.afterBeingMadeNonEditable);
         return;
       }
 
@@ -477,6 +487,11 @@ export default {
       plainText = nodeComponent.$el.innerText;
       nodeComponent.$el.innerText = plainText;
       nodeComponent.$el.focus();
+
+      EventHub.$emit(
+        JsonEvents.node.afterBeingMadeEditable,
+        { nodeUuid: nodeUuid },
+      );
     },
     applyChangesToTwin: function ({ component, uuid, text }) {
       const twins = this.getTwinsFor(component.$el);

@@ -65,6 +65,10 @@ $color-punctuation: $color-beige;
         display: inline-flex;
       }
     }
+
+    &--key.json__value {
+      @extend .json__key;
+    }
   }
 
   &__comma {
@@ -259,6 +263,10 @@ $color-punctuation: $color-beige;
       .json__value {
         &:after {
           content: ',';
+        }
+      
+        &.json__key:after {
+          content: none;
         }
       }
     }

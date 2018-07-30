@@ -190,15 +190,9 @@ const JSONDrawer = class extends JSONListener {
       this.scopes.value.pop();
       jsonPairTemplate = `
         <json-pair>
-          <template slot='key'>
-            ${key.symbol.text}
-          </template>
-          <template slot='colon'>
-            ${colon.symbol.text}
-          </template>
-          <template slot='value'>
-            ${content}
-          </template>
+          <template slot='key'>${key.symbol.text}</template>
+          <template slot='colon'>${colon.symbol.text}</template>
+          <template slot='value'>${content}</template>
         </json-pair>
       `;
 

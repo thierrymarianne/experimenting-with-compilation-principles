@@ -18,7 +18,8 @@
         :data-editable='isEditable'
       >
         <span class="json__key-value">
-          <span class="json__key"><slot name='key'></slot></span>
+          <pair-key><slot name='key'></slot></pair-key>
+          <!-- <span class="json__key"><slot name='key'></slot></span> -->
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>
@@ -64,6 +65,7 @@
 import FragmentTransition from './fragment-transition.vue';
 import Comma from './comma.vue';
 import JsonValue from './json-value.vue';
+import PairKey from './pair-key.vue';
 import JsonEvents from './events/json-events';
 import Editable from './editable';
 import EventHub from '../../modules/event-hub';
@@ -72,9 +74,10 @@ export default {
   name: 'json-pair',
   mixins: [Object.assign({}, Editable.Editable)],
   components: {
+    Comma,
     FragmentTransition,
     JsonValue,
-    Comma,
+    PairKey,
   },
   props: {
     isFirstChildArray: {
@@ -125,6 +128,14 @@ export default {
   },
   methods: {
     afterRegistration() {
+      const pairKeyIsReady = typeof this.$slots.key !== 'undefined';
+      if (pairKeyIsReady) {
+        const pairKey = this.$children[0].$children[0];
+        if (pairKey.hasText) {
+          pairKey.register();
+        }
+      }
+
       const valueIsReady = typeof this.$slots.value !== 'undefined';
       if (valueIsReady
       && !this.$slots.value[0].componentInstance.hasText) {
@@ -153,10 +164,18 @@ export default {
         'json-value',
         {
           props: {
-            text: value,
+            textAtFirst: value,
           },
           scopedSlots: {
             default: props => [value],
+          },
+        },
+      );
+      const pairKey = this.$createElement(
+        'pair-key',
+        {
+          scopedSlots: {
+            default: props => ['"key"'],
           },
         },
       );
@@ -164,7 +183,7 @@ export default {
         'json-pair',
         {
           scopedSlots: {
-            key: props => ['"key"'],
+            key: props => [pairKey],
             colon: props => [':'],
             value: props => [jsonValue],
           },
