@@ -173,7 +173,11 @@ export default {
 
         this.sharedState.log({ action: 'registration', element }, 'json-editor.registerNode');
 
-        const { twinVNode } = this.locateTwinOf(element, uuidAttribute);
+        const { twinVNode } = this.locateTwinOf({
+          element,
+          uuid: uuidAttribute,
+          nodeType: component.getNodeType()
+        });
         const node = {
           uuid: uuidAttribute,
           value: component.text,
@@ -233,27 +237,32 @@ export default {
         twinVNode,
       };
     },
-    locateTwinOf(element, uuid) {
+    locateTwinOf({ element, uuid, nodeType }) {
       let twins;
+      let editableElement = element;
 
-      if (!element.hasAttribute('data-uuid')) {
-        element = element.querySelector('[data-uuid]');
-        if (element.classList.contains('json__comma')) {
+      if (!editableElement.hasAttribute('data-uuid')) {
+        editableElement = element.querySelector('[data-uuid]');
+        if (editableElement.classList.contains('json__comma')) {
+          return;
+        }
+
+        if (editableElement === null) {
           return;
         }
       }
 
-      if (element.getAttribute('data-uuid') in this.editableToDynamic) {
+      if (editableElement.getAttribute('data-uuid') in this.editableToDynamic) {
         twins = {
-          elementVNode: this.$refs[element.getAttribute('data-uuid')],
-          twinVNode: this.$refs[this.editableToDynamic[element.getAttribute('data-uuid')]],
+          elementVNode: this.$refs[editableElement.getAttribute('data-uuid')],
+          twinVNode: this.$refs[this.editableToDynamic[editableElement.getAttribute('data-uuid')]],
         };
         this.ensureTwinsAreConsistent(twins);
 
         return twins;
       }
 
-      twins = this.getTwinsFor(element);
+      twins = this.getTwinsFor(editableElement);
       this.ensureTwinsAreConsistent(twins);
 
       if (twins.elementVNode.isVisible
@@ -309,7 +318,11 @@ export default {
       return enclosedInQuotes;
     },
     toggleNodeVisibility: function ({ element, uuid }) {
-      const { twinVNode, elementVNode } = this.locateTwinOf(element, uuid);
+      const { twinVNode, elementVNode } = this.locateTwinOf({
+        element,
+        uuid,
+        nodeType: Editable.NODE_TYPES.pair,
+      });
       twinVNode.$parent.$forceUpdate();
       this.$nextTick(function () {
         const editableComponent = elementVNode;
