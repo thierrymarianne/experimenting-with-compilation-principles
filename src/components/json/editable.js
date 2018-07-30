@@ -62,6 +62,24 @@ const Editable = {
     isPairNode: function () {
       return this.nodeType === NODE_TYPES.pair;
     },
+    registerChildren: function () {
+      if (this.$vnode.componentOptions.tag === 'json-object') {
+        this.$children.forEach((child) => {
+          if (child.$vnode.componentOptions.tag === 'json-pair') {
+            child.register();
+          }
+        });
+        return;
+      }
+
+      if (this.$vnode.componentOptions.tag === 'json-array') {
+        this.$children.forEach((child) => {
+          if (child.$vnode.componentOptions.tag === 'json-value') {
+            child.register();
+          }
+        });
+      }
+    },
     register: function (hook) {
       const event = {
         component: this,

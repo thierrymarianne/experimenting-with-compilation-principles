@@ -23,17 +23,14 @@ export default {
     },
   },
   mounted: function () {
-    this.checkIntegrity();
+    this.removedInconsistentVNodes();
+    this.registerChildren();
+
     EventHub.$on('node.altered', this.selfUpdate);
   },
   methods: {
-    checkIntegrity() {
+    removedInconsistentVNodes: function () {
       this.$slots.default = this.$slots.default.filter(VNode => (typeof VNode.tag !== 'undefined'));
-      this.$children.map((component) => {
-        if (component.$vnode.componentOptions.tag === 'json-pair') {
-          component.register();
-        }
-      })
     },
     selfUpdate: function ({ component }) {
       if (typeof this.$refs.container === 'undefined'

@@ -65,7 +65,7 @@ export default {
 
       element.isEditable = false;
       twin.isEditable = true;
-      twin.addPairAfter(element);
+      twin.addAfterPair();
       twin.isEditable = false;
       element.isEditable = true;
 
@@ -77,7 +77,7 @@ export default {
         const pair = component;
         const clonedPairTwin = twin;
 
-        pair.$parent.checkIntegrity();
+        pair.$parent.removedInconsistentVNodes();
         let twins = this.getTwinsFor(pair.$refs[uuids.editable], uuids);
         const pairNode = {
           uuid: pair.uuid,
@@ -104,28 +104,36 @@ export default {
         this.trackNode(valueNode);
       };
 
+      twin.$parent.$forceUpdate();
+      element.$parent.$forceUpdate();
+
       this.$nextTick(function () {
         const twinClone = twin.updateKey({
-          parentComponent: twin.$parent,
           indexInSlot,
+          parentComponent: twin.$parent,
           uuids: uuids,
         });
         this.trackComponentByUuid({
           component: twinClone,
-          uuid: uuids.dynamic
+          uuid: uuids.dynamic,
         });
         this.$nextTick(function () {
-          element.updateKey({
+          const elementClone = element.getSlotByIndex({
+            index: indexInSlot,
             parentComponent: element.$parent,
-            indexInSlot,
-            uuids: uuids,
-            callback: trackPairNode,
           });
-        });
+          this.trackComponentByUuid({
+            component: elementClone,
+            uuid: elementClone.uuid,
+          });
+          element.updateKey({
+            callback: trackPairNode,
+            indexInSlot,
+            parentComponent: element.$parent,
+            uuids: uuids,
+          });
+        })
       });
-
-      twin.$parent.$forceUpdate();
-      element.$parent.$forceUpdate();
     },
     setJson: function (json) {
       this.sharedState.json = json;
@@ -151,7 +159,15 @@ export default {
       this.trackComponentByUuid({ component, uuid: uuidAttribute });
       this.$nextTick(function () {
         const element = component.$el;
-        if (typeof element === 'undefined' || !document.body.contains(element)) {
+        if (typeof element === 'undefined' 
+        || !document.body.contains(element)
+        || (
+          component.$vnode.componentOptions.tag === 'json-value'
+          && (
+            !component.hasText
+            || component.$parent.$vnode.componentOptions.tag === 'json-array'
+          )
+        )) {
           return;
         }
 
@@ -222,6 +238,9 @@ export default {
 
       if (!element.hasAttribute('data-uuid')) {
         element = element.querySelector('[data-uuid]');
+        if (element.classList.contains('json__comma')) {
+          return;
+        }
       }
 
       if (element.getAttribute('data-uuid') in this.editableToDynamic) {

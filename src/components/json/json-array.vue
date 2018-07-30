@@ -11,8 +11,14 @@
   </div>
 </template>
 <script>
+import Editable from './editable';
+
 export default {
   name: 'json-array',
+  mixins: [Editable.Editable],
+  mounted: function () {
+    this.registerChildren();
+  },
   props: {
     hasChildren: {
       type: Boolean,

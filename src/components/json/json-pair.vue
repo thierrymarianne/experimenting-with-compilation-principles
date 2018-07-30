@@ -21,7 +21,7 @@
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>
-        <comma v-if='!isLastChild' />
+        <comma v-show='!isLastChild' />
       </span>
     </transition>
     <button
@@ -35,7 +35,7 @@
     <button
       class='json__pair---button'
       v-if='!isArrayOrObject && isVisible'
-      v-on:click='addPairAfter'
+      v-on:click='addAfterPair'
     >
       <font-awesome-icon
         class='json__pair---button-icon'
@@ -127,7 +127,7 @@ export default {
         .register();
       }
     },
-    addPairAfter: function() {
+    addAfterPair: function () {
       if (!this.isEditable) {
         return;
       }
@@ -176,11 +176,17 @@ export default {
         );
       }
     },
+    getSlotByIndex({ index, parentComponent }) {
+      return parentComponent.$slots
+      .default[index].componentInstance;      
+    },
     updateKey({ parentComponent, indexInSlot, callback, uuids }) {
       const slot = parentComponent.$slots
       .default[indexInSlot];
-      const component = parentComponent.$slots
-      .default[indexInSlot].componentInstance;
+      const component = this.getSlotByIndex({
+        parentComponent,
+        index: indexInSlot,
+      });
 
       parentComponent.$slots
       .default[indexInSlot].key = component.uuid;
