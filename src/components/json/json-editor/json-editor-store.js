@@ -54,11 +54,7 @@ const JsonEditor = {
     isNodeWithUuidBeingEdited: function (state) {
       return (uuid) => {
         if (typeof state.nodes[uuid] === 'undefined') {
-          console.error({
-            message: `Could not find node with UUID #${uuid}`,
-            file: 'json-editor-store.isNodeWithUuidBeingEdited',
-          });
-          return undefined;
+          return false;
         }
         return state.nodes[uuid].edited;
       };

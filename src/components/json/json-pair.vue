@@ -21,7 +21,7 @@
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>
-        <span v-if='!isLastChild' class="json__comma">,</span>
+        <comma v-if='!isLastChild' />
       </span>
     </transition>
     <button
@@ -46,6 +46,7 @@
 
 <script>
 import FragmentTransition from './fragment-transition.vue';
+import Comma from './comma.vue';
 import JsonValue from './json-value.vue';
 import JsonEvents from './events/json-events';
 import Editable from './editable';
@@ -57,6 +58,7 @@ export default {
   components: {
     FragmentTransition,
     JsonValue,
+    Comma,
   },
   props: {
     isFirstChildArray: {
@@ -79,7 +81,7 @@ export default {
   data: function () {
     return {
       text: '',
-      nodeType: this.getNodeTypes().value,
+      nodeType: this.getNodeTypes().pair,
       isLastChild: false,
     }
   },
@@ -106,6 +108,25 @@ export default {
     },
   },
   methods: {
+    afterRegistration() {
+      const valueIsReady = typeof this.$slots.value !== 'undefined';
+      if (valueIsReady
+      && !this.$slots.value[0].componentInstance.hasText) {
+        return;
+      }
+
+      if (valueIsReady
+      && this.$slots.value[0].componentInstance.hasText) {
+        this.$slots.value[0].componentInstance.register();
+        return;
+      }
+
+      // Case when transition is being applied
+      if (typeof this.$children[0].$children[0].hasText) {
+        this.$children[0].$children[0]
+        .register();
+      }
+    },
     addPairAfter: function() {
       if (!this.isEditable) {
         return;
@@ -133,15 +154,7 @@ export default {
           },
         },
       );
-      const comma = this.$createElement(
-        'span',
-        {
-          class: 'json__comma',
-          domProps: {
-            innerHtml: ','
-          },
-        },
-      );
+      const comma = this.$createElement('comma');
 
       const target = this.$vnode;
       const slots = this.$parent.$slots.default;
@@ -177,10 +190,12 @@ export default {
       if (isEditableComponent) {
         uuids.editable = component.uuid;
         callback({ component });
-        return;
+        return component;
       }
 
       uuids.dynamic = component.uuid;
+
+      return component;
     }
   }
 };

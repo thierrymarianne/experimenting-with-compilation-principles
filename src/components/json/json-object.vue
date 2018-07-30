@@ -11,9 +11,11 @@
 </template>
 <script>
 import EventHub from '../../modules/event-hub';
+import Editable from './editable';
 
 export default {
   name: 'json-object',
+  mixins: [Editable.Editable],
   props: {
     hasChildren: {
       type: Boolean,
@@ -21,12 +23,21 @@ export default {
     },
   },
   mounted: function () {
+    this.checkIntegrity();
     EventHub.$on('node.altered', this.selfUpdate);
   },
   methods: {
+    checkIntegrity() {
+      this.$slots.default = this.$slots.default.filter(VNode => (typeof VNode.tag !== 'undefined'));
+      this.$children.map((component) => {
+        if (component.$vnode.componentOptions.tag === 'json-pair') {
+          component.register();
+        }
+      })
+    },
     selfUpdate: function ({ component }) {
-      if (typeof this.$refs.container === 'undefined' ||
-      !this.$refs.container.contains(component.$el)) {
+      if (typeof this.$refs.container === 'undefined'
+    || component.$parent !== this) {
         return;
       }
 
@@ -57,7 +68,7 @@ export default {
           isShown: false
         };
       }).filter(child => (child.isShown));
-      
+
       filteredChildren.map((child) => (child.component.isLastChild = false));
       filteredChildren[filteredChildren.length - 1].component.isLastChild = true;
     },

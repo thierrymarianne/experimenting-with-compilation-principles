@@ -1,5 +1,6 @@
 <script>
 import Vue from 'vue';
+import Comma from '../comma.vue';
 import JsonValue from '../json-value.vue';
 import JsonPair from '../json-pair.vue';
 import JsonArray from '../json-array.vue';
@@ -37,6 +38,7 @@ export default {
       let JSONObjectData = {
         name: 'editableJson',
         components: {
+          Comma,
           JsonValue,
           JsonPair,
           JsonArray,

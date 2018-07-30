@@ -76,7 +76,7 @@ const JSONDrawer = class extends JSONListener {
       return contents;
     }, contentCollection);
 
-    const objectPairs = contentCollection.reverse().join('<span class="json__comma">,</span>');
+    const objectPairs = contentCollection.reverse().join('<comma />');
     const template = `<json-object${hasChildrenAttr}>${objectPairs}</json-object>`;
     this.scopes.object[this.scopes.object.length - 1].appendContent(template);
   }
@@ -107,7 +107,7 @@ const JSONDrawer = class extends JSONListener {
       return contents;
     }, contentCollection);
 
-    const arrayValues = contentCollection.reverse().join('<span class="json__comma">,</span>');
+    const arrayValues = contentCollection.reverse().join('<comma />');
     const template = `<json-array${hasChildrenAttr}>${arrayValues}</json-array>`;
     this.scopes.array[this.scopes.array.length - 1].appendContent(template);
   }

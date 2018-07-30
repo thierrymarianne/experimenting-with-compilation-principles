@@ -73,18 +73,24 @@ export default {
         editable: null,
         dynamic: null,
       };
-      const trackNode = ({ component }) => {
-        let twins = this.getTwinsFor(component.$el, uuids);
+      const trackPairNode = ({ component }) => {
+        const pair = component;
+        const clonedPairTwin = twin;
+
+        pair.$parent.checkIntegrity();
+        let twins = this.getTwinsFor(pair.$refs[uuids.editable], uuids);
         const pairNode = {
-          uuid: component.uuid,
+          uuid: pair.uuid,
           value: null,
-          nodeType: component.getNodeType(),
+          nodeType: pair.getNodeType(),
           twinUuid: twins.twinVNode.uuid,
         };
         this.trackNode(pairNode);
-        EventHub.$emit('node.altered', { component: twin });
 
-        const valueComponent = component.$children[0].$children[0];
+        EventHub.$emit('node.altered', { component: pair.$parent });
+        EventHub.$emit('node.altered', { component: clonedPairTwin.$parent });
+
+        const valueComponent = pair.$children[0].$children[0];
         valueComponent.text = value;
         twins = this.getTwinsFor(valueComponent.$el);
         twins.twinVNode.text = value;
@@ -99,16 +105,22 @@ export default {
       };
 
       this.$nextTick(function () {
-        twin.updateKey({ 
+        const twinClone = twin.updateKey({
           parentComponent: twin.$parent,
           indexInSlot,
           uuids: uuids,
         });
-        element.updateKey({
-          parentComponent: element.$parent,
-          indexInSlot,
-          uuids: uuids,
-          callback: trackNode,
+        this.trackComponentByUuid({
+          component: twinClone,
+          uuid: uuids.dynamic
+        });
+        this.$nextTick(function () {
+          element.updateKey({
+            parentComponent: element.$parent,
+            indexInSlot,
+            uuids: uuids,
+            callback: trackPairNode,
+          });
         });
       });
 
@@ -156,6 +168,8 @@ export default {
         if (node.nodeType === Editable.NODE_TYPES.value) {
           this.trackNode(node);
         }
+
+        component.isRegistered = true;
       });
     },
     getTwinsFor(element, uuids) {
@@ -277,20 +291,37 @@ export default {
     },
     toggleNodeVisibility: function ({ element, uuid }) {
       const { twinVNode, elementVNode } = this.locateTwinOf(element, uuid);
+      twinVNode.$parent.$forceUpdate();
+      this.$nextTick(function () {
+        const editableComponent = elementVNode;
+        const dynamicComponent = twinVNode;
 
-      if (typeof elementVNode === 'undefined'
-      || typeof twinVNode === 'undefined') {
-        sharedState.error(new Error('Could not toggle node visibility'));
-        return;
-      }
+        if (typeof elementVNode === 'undefined'
+        || typeof twinVNode === 'undefined') {
+          sharedState.error(new Error('Could not toggle node visibility'));
+          return;
+        }
 
-      elementVNode.isEditable = true;
-      elementVNode.isVisible = !elementVNode.isVisible;
-      twinVNode.isVisible = !twinVNode.isVisible;
-      EventHub.$emit('node.altered', { component: twinVNode });
+        elementVNode.isEditable = true;
+        elementVNode.isVisible = !elementVNode.isVisible;
+        twinVNode.isVisible = !twinVNode.isVisible;
+
+        let indexOfElement;
+        dynamicComponent.$parent.$slots.default.map((VNode, index) => {
+          if (VNode == dynamicComponent.$vnode) {
+            indexOfElement = index;
+          }
+        });
+        const precedingVNode = dynamicComponent.$parent.$slots.default[indexOfElement - 1];
+        if (precedingVNode) {
+          precedingVNode.componentInstance.isVisible = false;
+        }
+        EventHub.$emit('node.altered', { component: twinVNode });
+      });
     },
     toggleNodeEdition: function ({ nodeUuid }) {
       const nodeComponent = this.componentWithUuid(nodeUuid);
+
       if (typeof nodeComponent === 'undefined' || nodeComponent.edited) {
         return;
       }
@@ -331,7 +362,7 @@ export default {
         }
 
         nodeComponent.isEdited = false;
-
+        nodeComponent.text = sanitizedText;
         nodeComponent.$el.removeAttribute('contenteditable');
         nodeComponent.$el.classList.remove('json__value--edited');
         this.syncNodes(sanitizedText, nodeComponent);
@@ -357,6 +388,7 @@ export default {
       nodeComponent.isEdited = true;
       nodeComponent.$el.setAttribute('contenteditable', true);
       nodeComponent.$el.classList.add('json__value--edited');
+
       plainText = nodeComponent.$el.innerText;
       nodeComponent.$el.innerText = plainText;
       nodeComponent.$el.focus();

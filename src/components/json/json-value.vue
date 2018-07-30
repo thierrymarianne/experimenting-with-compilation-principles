@@ -2,10 +2,7 @@
   <fragment-transition v-if='isArrayItem'>
     <span class='json__value--array-item'>
       <span :class='classes'><slot></slot></span>
-      <span 
-        v-if='hasText && isLastChild'
-        class='json__comma'
-      >,</span>
+      <comma v-if='hasText && !isLastChild' /> 
     </span>
   </fragment-transition>
   <span
@@ -25,6 +22,7 @@
 <script>
 import ClickOutside from 'vue-click-outside';
 
+import Comma from './comma.vue';
 import FragmentTransition from './fragment-transition.vue';
 import EventHub from '../../modules/event-hub';
 import MutationTypes from './json-editor/json-editor-mutation-types';
@@ -38,6 +36,7 @@ const { mapActions, mapMutations } = createNamespacedHelpers('json-editor');
 export default {
   name: 'json-value',
   components: {
+    Comma,
     FragmentTransition,
   },
   directives: {
@@ -52,6 +51,15 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  created: function () {
+    if (!this.isRegistered 
+    && typeof this.$slots.default !== 'undefined'
+    && typeof this.$slots.default[0] !== 'undefined') {
+      this.text = this.$slots.default[0].text;
+    }
+
+    this.register('created');
   },
   mounted: function () {
     this.$nextTick(function () {
@@ -90,8 +98,13 @@ export default {
   },
   updated: function () {
     this.$nextTick(function () {
-      if (!this.hasText || this.isEditable) { 
+      if (!this.hasText
+      || this.isEditable) { 
         return;
+      }
+      
+      if (typeof this.$slots.default === 'undefined') {
+        this.$slots.default = [];
       }
 
       this.$slots.default[0] = this.text;
@@ -112,14 +125,8 @@ export default {
     ]),
   },
   data: function () {
-    let text;
-    if (typeof this.$slots.default !== 'undefined'
-    && typeof this.$slots.default[0] !== 'undefined') {
-      text = this.$slots.default[0].text;
-    }
-
     return {
-      text: text,
+      text: '',
       nodeType: this.getNodeTypes().value,
       isLastChild: false,
     }

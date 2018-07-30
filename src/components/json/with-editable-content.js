@@ -1,10 +1,12 @@
 import { createNamespacedHelpers } from 'vuex';
+import Editable from './editable';
 import EventHub from '../../modules/event-hub';
 import JsonEvents from './events/json-events';
 
 const { mapGetters } = createNamespacedHelpers('json-editor');
 
 const WithEditableContent = {
+  mixins: [Editable.Editable],
   computed: {
     ...mapGetters([
       'isNodeWithUuidBeingEdited',
@@ -22,6 +24,11 @@ const WithEditableContent = {
       );
     },
     makeContentNonEditable: function () {
+      if (this.$parent.$parent.$parent
+      .$vnode.componentOptions.tag !== 'json-object') {
+        return;
+      }
+
       if (!this.isNodeWithUuidBeingEdited(this.uuid)) {
         return;
       }

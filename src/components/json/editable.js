@@ -1,24 +1,27 @@
 import _ from 'lodash';
 
-import uuidv5 from 'uuid/v5';
 import EventHub from '../../modules/event-hub';
 import SharedState from '../../modules/shared-state';
 import namespaces from '../../modules/namespace';
 import JsonEvents from './events/json-events';
+import WithUuid from '../../mixins/with-uuid';
 
 const NODE_TYPES = {
   undeclared: null,
   value: 'value',
   pair: 'pair',
+  comma: 'comma',
 };
 
 const Editable = {
+  mixins: [WithUuid],
   data: function () {
     return {
       isClonable: false,
       isEditable: false,
       isEdited: false,
       isVisible: true,
+      isRegistered: false,
       noPendingCopy: SharedState.state.noPendingCopy,
       sharedState: SharedState.state,
       nodeType: NODE_TYPES.undeclared,
@@ -59,8 +62,21 @@ const Editable = {
     isPairNode: function () {
       return this.nodeType === NODE_TYPES.pair;
     },
-    generateUuid: function (name, namespace) {
-      return uuidv5(`${name}`, namespace);
+    register: function (hook) {
+      const event = {
+        component: this,
+        uuidAttribute: this.uuid,
+      };
+
+      if (hook) {
+        event.hook = hook;
+      }
+
+      EventHub.$emit(JsonEvents.node.registered, event);
+
+      if (typeof this.afterRegistration === 'function') {
+        this.afterRegistration();
+      }
     },
   },
   computed: {
@@ -72,7 +88,6 @@ const Editable = {
     uuid: function () {
       const namespace = namespaces[this.getNodeType()];
       const uuidAttribute = this.generateUuid(this._uid, namespace);
-      EventHub.$emit(JsonEvents.node.registered, { component: this, uuidAttribute });
       return uuidAttribute;
     },
     getIconName: function () {

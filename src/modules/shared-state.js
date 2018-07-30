@@ -50,6 +50,7 @@ const state = {
     }
 
     console.error({ error, file, extra });
+    throw error;
   },
 };
 
