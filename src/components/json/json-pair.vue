@@ -1,8 +1,9 @@
 <template>
-  <fragment-transition 
+  <fragment-transition
     v-show='isShown'
   >
     <transition 
+      v-if='!isArrayOrObject'
       v-show='isShown'
       name="custom-classes-transition" 
       mode='in-out'
@@ -24,6 +25,21 @@
         <comma v-show='!isLastChild' />
       </span>
     </transition>
+    <span 
+      v-else
+      v-show='isShown'
+      :class="classes"
+      :ref='uuid'
+      :data-uuid='uuid'
+      :data-editable='isEditable'
+    >
+      <span class="json__key-value">
+        <span class="json__key"><slot name='key'></slot></span>
+        <span class="json__colon"><slot name='colon'></slot></span>
+      </span>
+      <slot name='value'></slot>
+      <comma v-show='!isLastChild' />
+    </span>
     <button
       v-if='!isArrayOrObject && isShown'
       class='json__pair---button'

@@ -2,8 +2,8 @@
   <transition
     mode='in-out'
     name="custom-classes-transition"
-    enter-active-class="transition animated fadeInLeftBig"
-    leave-active-class="transition animated hinge"
+    :enter-active-class="enterActiveClass"
+    :leave-active-class="leaveActiveClass"
   >
     <div v-if='dataVisible'>
       <slot></slot>
@@ -18,6 +18,26 @@ export default {
     isVisibleAtFirst: { 
       type: Boolean,
       default: true
+    },
+    idle: { 
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    enterActiveClass: function () {
+      if (this.idle) {
+        return '';
+      }
+
+      return 'transition animated fadeInLeftBig';
+    },
+    leaveActiveClass: function () {
+      if (this.idle) {
+        return '';
+      }
+
+      return 'transition animated hinge';
     }
   },
   data: function () {

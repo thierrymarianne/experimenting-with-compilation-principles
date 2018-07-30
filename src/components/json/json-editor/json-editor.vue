@@ -77,7 +77,6 @@ export default {
         const pair = component;
         const clonedPairTwin = twin;
 
-        pair.$parent.removedInconsistentVNodes();
         let twins = this.getTwinsFor(pair.$refs[uuids.editable], uuids);
         const pairNode = {
           uuid: pair.uuid,
@@ -319,6 +318,67 @@ export default {
 
       return enclosedInQuotes;
     },
+    toggleVisibilityOfPreviousComma: function ({ dynamicComponent, isVisible, indexOfElement }) {
+      let precedingVNode = dynamicComponent.$parent.$slots.default[indexOfElement - 1];
+      if (typeof precedingVNode !== 'undefined') {
+        const defaultSlot = dynamicComponent.$parent.$slots.default;
+        let precedingCommaCandidateIndex = indexOfElement - 2;
+        let precedingCommaCandidate;
+        while (typeof defaultSlot[precedingCommaCandidateIndex] !== 'undefined') {
+          precedingCommaCandidate = defaultSlot[precedingCommaCandidateIndex].componentInstance;
+          if (typeof precedingCommaCandidate !== 'undefined') {
+            if (precedingCommaCandidate.$vnode.componentOptions.tag == 'comma') {
+              precedingVNode = precedingCommaCandidate.$vnode; 
+              break;
+            }
+          }
+
+          precedingCommaCandidateIndex = precedingCommaCandidateIndex - 1; 
+        }
+      }
+
+      if (precedingVNode) {
+        precedingVNode.componentInstance.isVisible = isVisible;
+      }      
+    },
+    toggleVisibilityOfNextComma: function ({ dynamicComponent, isVisible, indexOfElement }) {
+      let nextVNode = dynamicComponent.$parent.$slots.default[indexOfElement + 1];
+      if (typeof nextVNode !== 'undefined') {
+        const defaultSlot = dynamicComponent.$parent.$slots.default;
+        let nextCommaCandidateIndex = indexOfElement + 2;
+        let nextCommaCandidate;
+        while (typeof defaultSlot[nextCommaCandidateIndex] !== 'undefined') {
+          nextCommaCandidate = defaultSlot[nextCommaCandidateIndex].componentInstance;
+          if (typeof nextCommaCandidate !== 'undefined') {
+            if (nextCommaCandidate.$vnode.componentOptions.tag == 'comma') {
+              nextVNode = nextCommaCandidate.$vnode; 
+              break;
+            }
+          }
+
+          nextCommaCandidateIndex = nextCommaCandidateIndex + 1; 
+        }
+      }
+
+      if (nextVNode) {
+        nextVNode.componentInstance.isVisible = isVisible;
+      }      
+    },
+    toggleVisibilityOfCommas({ dynamicComponent, isVisible }) {
+      let indexOfElement;
+      dynamicComponent.$parent.$slots.default.map((VNode, index) => {
+        if (VNode == dynamicComponent.$vnode) {
+          indexOfElement = index;
+        }
+      });
+
+      if (indexOfElement === 0) {
+        this.toggleVisibilityOfNextComma({ dynamicComponent, isVisible, indexOfElement });
+        return;
+      }
+
+      this.toggleVisibilityOfPreviousComma({ dynamicComponent, isVisible, indexOfElement });
+    },
     toggleNodeVisibility: function ({ element, uuid }) {
       const { twinVNode, elementVNode } = this.locateTwinOf({
         element,
@@ -339,17 +399,8 @@ export default {
         elementVNode.isEditable = true;
         elementVNode.isVisible = !elementVNode.isVisible;
         twinVNode.isVisible = !twinVNode.isVisible;
+        this.toggleVisibilityOfCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
 
-        let indexOfElement;
-        dynamicComponent.$parent.$slots.default.map((VNode, index) => {
-          if (VNode == dynamicComponent.$vnode) {
-            indexOfElement = index;
-          }
-        });
-        const precedingVNode = dynamicComponent.$parent.$slots.default[indexOfElement - 1];
-        if (precedingVNode) {
-          precedingVNode.componentInstance.isVisible = false;
-        }
         EventHub.$emit('node.altered', { component: twinVNode });
       });
     },

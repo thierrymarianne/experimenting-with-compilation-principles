@@ -1,3 +1,5 @@
 {
+  "key": "value",
+  "key2": "value",
   "array": [true, null]
 }

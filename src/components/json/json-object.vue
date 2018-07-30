@@ -23,18 +23,14 @@ export default {
     },
   },
   mounted: function () {
-    this.removedInconsistentVNodes();
     this.registerChildren();
 
     EventHub.$on('node.altered', this.selfUpdate);
   },
   methods: {
-    removedInconsistentVNodes: function () {
-      this.$slots.default = this.$slots.default.filter(VNode => (typeof VNode.tag !== 'undefined'));
-    },
     selfUpdate: function ({ component }) {
       if (typeof this.$refs.container === 'undefined'
-    || component.$parent !== this) {
+      || component.$parent !== this) {
         return;
       }
 
