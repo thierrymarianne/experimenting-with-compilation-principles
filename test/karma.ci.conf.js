@@ -20,6 +20,7 @@ module.exports = function (config) {
     webpack: webpackConfig,
     reporters: ['spec', 'coverage'],
     coverageReporter: coverageReporter,
-    browsers: ['PhantomJS']
+    browsers: ['PhantomJS'],
+    browserNoActivityTimeout: 60000
   })
 };
