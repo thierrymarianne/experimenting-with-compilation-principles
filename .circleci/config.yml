@@ -15,7 +15,7 @@ jobs:
             - json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - json-editor-{{ .Branch }}-
             - json-editor-
-      - run: npm install && npm rebuild node-sass
+      - run: npm install && npm rebuild node-sass && npm -g codecov
       - save_cache:
           key: json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
@@ -30,7 +30,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run: npm run coverage
+      - run: npm run coverage && codecov
 
 workflows:
   version: 2
