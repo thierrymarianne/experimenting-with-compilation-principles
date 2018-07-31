@@ -15,7 +15,7 @@ jobs:
             - json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - json-editor-{{ .Branch }}-
             - json-editor-
-      - run: npm install
+      - run: npm install && npm rebuild node-sass
       - save_cache:
           key: json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
