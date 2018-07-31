@@ -86,8 +86,8 @@ export default {
         };
         this.trackNode(pairNode);
 
-        EventHub.$emit('node.altered', { component: pair.$parent });
-        EventHub.$emit('node.altered', { component: clonedPairTwin.$parent });
+        EventHub.$emit(JsonEvents.node.altered, { component: pair.$parent });
+        EventHub.$emit(JsonEvents.node.altered, { component: clonedPairTwin.$parent });
 
         const valueComponent = pair.$children[0].$children
         .filter((component) => (component.$vnode.componentOptions.tag === 'json-value'))
@@ -173,14 +173,20 @@ export default {
         )) {
           return;
         }
-
         this.sharedState.log({ action: 'registration', element }, 'json-editor.registerNode');
 
-        const { twinVNode } = this.locateTwinOf({
+        let { twinVNode } = this.locateTwinOf({
           element,
           uuid: uuidAttribute,
           nodeType: component.getNodeType()
         });
+
+        if (typeof twinVNode == 'undefined') {
+          twinVNode = {
+            uuid: null,
+          };
+        }
+
         const node = {
           uuid: uuidAttribute,
           value: component.text,
@@ -197,6 +203,10 @@ export default {
         }
 
         component.isRegistered = true;
+        EventHub.$emit(
+          JsonEvents.node.afterRegistration,
+          { component, node }
+        );
       });
     },
     getTwinsFor(element, uuids) {
@@ -276,8 +286,10 @@ export default {
       if (twins.elementVNode.isVisible
       && !(twins.elementVNode.uuid in this.editableToDynamic)) {
         twins.elementVNode.isEditable = true;
-        this.editableToDynamic[twins.elementVNode.uuid] = twins.twinVNode.uuid;
-        this.dynamicToEditable[twins.twinVNode.uuid] = twins.elementVNode.uuid;
+        if (typeof twins.twinVNode !== 'undefined') {
+          this.editableToDynamic[twins.elementVNode.uuid] = twins.twinVNode.uuid;
+          this.dynamicToEditable[twins.twinVNode.uuid] = twins.elementVNode.uuid;
+        }
       }
 
       return twins;
@@ -408,7 +420,7 @@ export default {
         twinVNode.isVisible = !twinVNode.isVisible;
         this.toggleVisibilityOfCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
 
-        EventHub.$emit('node.altered', { component: twinVNode });
+        EventHub.$emit(JsonEvents.node.altered, { component: twinVNode });
       });
     },
     toggleNodeEdition: function ({ nodeUuid }) {
@@ -472,7 +484,7 @@ export default {
           text: sanitizedText,
         });
 
-        EventHub.$emit(JsonEvents.node.afterBeingMadeNonEditable);
+        EventHub.$emit(JsonEvents.node.afterEdition);
         return;
       }
 

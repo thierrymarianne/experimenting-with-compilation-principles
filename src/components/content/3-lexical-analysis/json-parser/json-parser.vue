@@ -80,6 +80,7 @@ import BrowsableLink from '../../../browsable-link.vue';
 import EventHub from '../../../../modules/event-hub';
 import InputArea from '../../../input-area.vue';
 import Dictionary from '../../../dictionary.vue';
+import JsonEvents from '../../../json/events/json-events';
 import MultimediaContent from '../../../multimedia-content.vue';
 import SharedState from '../../../../modules/shared-state';
 import SourceCode from '../../../source-code.vue';
@@ -117,7 +118,7 @@ export default {
     EventHub.$on('parsing.antlr.succeeded', this.hideErrorMessageContainer);
     EventHub.$on('parsing.edition.failed', this.handleFailedParsing);
     EventHub.$on('parsing.edition.succeeded', this.hideErrorMessageContainer);
-    EventHub.$on('node.altered', this.updateClipboardReadyJSON);
+    EventHub.$on(JsonEvents.node.altered, this.updateClipboardReadyJSON);
 
     this.$nextTick(function () {
       this.clipboardReadyJSON = this.getClipboardReadyJson();

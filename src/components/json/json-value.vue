@@ -100,9 +100,14 @@ export default {
       let slotsText = '';
       const text = this.$slots.default.reduce(
         (text, VNode) => {
+          if (typeof VNode === 'undefined') {
+            return text;
+          }
+
           if (typeof VNode === 'string') {
             return `${text}${VNode}`;
           }
+
           return `${text}${VNode.text}`;
         },
         slotsText

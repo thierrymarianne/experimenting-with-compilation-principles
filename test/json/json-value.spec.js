@@ -12,12 +12,12 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe('JsonValue', () => {
-  it('should render a JSON value', () => {
+  it('should render a value', () => {
     const wrapper = mount(
       JsonValue,
       {
         slots: {
-          defaults: ['"My Value"'],
+          default: ['"My Value"'],
         },
       },
     );
@@ -67,7 +67,7 @@ describe('JsonValue', () => {
       JsonValue,
       {
         slots: {
-          defaults: ['"value"'],
+          default: ['"value"'],
         },
         store,
         localVue,
@@ -114,7 +114,7 @@ describe('JsonValue', () => {
     const { jsonValueWrapper } = mountSubjectUnderTest();
 
     EventHub.$on(
-      JsonEvents.node.afterBeingMadeNonEditable,
+      JsonEvents.node.afterEdition,
       () => {
         expect(jsonValueWrapper.vm.isEdited).to.be.false;
         expect('contenteditable' in jsonValueWrapper.attributes()).to.be.false;

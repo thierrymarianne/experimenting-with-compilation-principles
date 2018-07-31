@@ -19,7 +19,6 @@
       >
         <span class="json__key-value">
           <pair-key><slot name='key'></slot></pair-key>
-          <!-- <span class="json__key"><slot name='key'></slot></span> -->
           <span class="json__colon"><slot name='colon'></slot></span>
         </span>
         <slot name='value'></slot>

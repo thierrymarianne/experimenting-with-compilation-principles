@@ -12,6 +12,7 @@
 <script>
 import EventHub from '../../modules/event-hub';
 import Editable from './editable';
+import JsonEvents from './events/json-events';
 
 export default {
   name: 'json-object',
@@ -24,8 +25,7 @@ export default {
   },
   mounted: function () {
     this.registerChildren();
-
-    EventHub.$on('node.altered', this.selfUpdate);
+    EventHub.$on(JsonEvents.node.altered, this.selfUpdate);
   },
   methods: {
     selfUpdate: function ({ component }) {
@@ -64,6 +64,8 @@ export default {
 
       filteredChildren.map((child) => (child.component.isLastChild = false));
       filteredChildren[filteredChildren.length - 1].component.isLastChild = true;
+
+      EventHub.$emit(JsonEvents.node.afterAlteration);
     },
   },
 };
