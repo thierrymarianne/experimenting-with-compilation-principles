@@ -663,12 +663,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "7.0.0-beta.54"
 
-"@babel/plugin-syntax-jsx@7.0.0-beta.54":
-  version "7.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-jsx/-/plugin-syntax-jsx-7.0.0-beta.54.tgz#71171aee902b94ccf2e22a810d1426b5165b8d84"
-  dependencies:
-    "@babel/helper-plugin-utils" "7.0.0-beta.54"
-
 "@babel/plugin-syntax-numeric-separator@7.0.0-beta.53":
   version "7.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-numeric-separator/-/plugin-syntax-numeric-separator-7.0.0-beta.53.tgz#3152faec6a99d9d1226872c0d0a07ffd148d7678"
