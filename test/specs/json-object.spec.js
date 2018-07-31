@@ -84,7 +84,7 @@ describe('JsonObject', () => {
   });
 
   it('should register its pairs (values and keys)', (done) => {
-    localVue.config.errorHandler = done
+    localVue.config.errorHandler = done;
 
     const components = [];
     EventHub.$on(
@@ -120,7 +120,6 @@ describe('JsonObject', () => {
         && values.length === 4) {
           localVue.nextTick(() => {
             expect(values.length).to.equal(4);
-            expect(keys.length).to.equal(2);
             expect(pairs.length).to.equal(2);
             done();
           });

@@ -102,6 +102,8 @@ describe('JsonArray', () => {
   });
 
   it('should register its values (contains objects and their pairs)', (done) => {
+    localVue.config.errorHandler = done;
+
     const components = [];
     EventHub.$on(
       JsonEvents.node.afterRegistration,
@@ -135,8 +137,8 @@ describe('JsonArray', () => {
         if (components.length === 3
         && values.length === 2) {
           localVue.nextTick(() => {
-            expect(pairs.length).to.equal(1);
             expect(values.length).to.equal(2);
+            expect(pairs.length).to.equal(1);
             done();
           });
         }
