@@ -179,16 +179,17 @@ export default {
         }
         this.sharedState.log({ action: 'registration', element }, 'json-editor.registerNode');
 
-        let { twinVNode } = this.locateTwinOf({
-          element,
-          uuid: uuidAttribute,
-          nodeType: component.getNodeType()
-        });
-
-        if (typeof twinVNode == 'undefined') {
-          twinVNode = {
-            uuid: null,
-          };
+        let twinVNode = {
+          uuid: null,
+        };
+        
+        if (this.$refs['json-editor'].$refs['editable-json']
+        .contains(element)) {
+          ({ twinVNode } = this.locateTwinOf({
+            element,
+            uuid: uuidAttribute,
+            nodeType: component.getNodeType()
+          }));
         }
 
         const node = {

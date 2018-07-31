@@ -54,6 +54,7 @@ describe('JsonArray', () => {
     const jsonEditorWrapper = mount(
       JsonEditor,
       {
+        attachToDocument: true,
         store,
         localVue,
       },
@@ -107,7 +108,6 @@ describe('JsonArray', () => {
       ({ component }) => {
         components.push(component);
         expect(component.isRegistered).to.be.true;
-
         if (components.length === 4) {
           localVue.nextTick(() => {
             const pairs = components.filter(

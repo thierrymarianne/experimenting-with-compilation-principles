@@ -84,19 +84,17 @@ describe('JsonObject', () => {
   });
 
   it('should register its pairs (values and keys)', (done) => {
-    localVue.config.errorHandler = done;
-
     const components = [];
     EventHub.$on(
       JsonEvents.node.afterRegistration,
       ({ component }) => {
         components.push(component);
         expect(component.isRegistered).to.be.true;
-        if (components.length === 6) {
+        if (components.length === 8) {
           localVue.nextTick(() => {
             const pairs = components.filter(
               componentCandidate => (componentCandidate.$vnode
-                .componentOptions.Ctor.options.name === 'json-pair'),
+              .componentOptions.Ctor.options.name === 'json-pair'),
             );
             const keys = components.filter(
               componentCandidate => (componentCandidate.$vnode
@@ -107,8 +105,8 @@ describe('JsonObject', () => {
               .componentOptions.Ctor.options.name === 'json-value'),
             );
             expect(values.length).to.equal(4);
-            expect(pairs.length).to.equal(2);
             expect(keys.length).to.equal(2);
+            expect(pairs.length).to.equal(2);
             done();
           });
         }
