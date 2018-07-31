@@ -16,7 +16,6 @@ import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
 
 Vue.config.productionTip = false;
-mocha.setup({ timeout: 10000 });
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -106,11 +105,11 @@ describe('JsonArray', () => {
     EventHub.$on(
       JsonEvents.node.afterRegistration,
       ({ component }) => {
-        localVue.nextTick(() => {
-          components.push(component);
-          expect(component.isRegistered).to.be.true;
+        components.push(component);
+        expect(component.isRegistered).to.be.true;
 
-          if (components.length === 4) {
+        if (components.length === 4) {
+          localVue.nextTick(() => {
             const pairs = components.filter(
               componentCandidate => (componentCandidate.$vnode
               .componentOptions.Ctor.options.name === 'json-pair'),
@@ -125,10 +124,10 @@ describe('JsonArray', () => {
             );
             expect(pairs.length).to.equal(1);
             expect(keys.length).to.equal(1);
-            expect(values.length).to.equal(2);
+            expect(values.length).to.equal(3);
             done();
-          }
-        });
+          });
+        }
       },
     );
 
