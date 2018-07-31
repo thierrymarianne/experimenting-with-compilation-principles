@@ -40,13 +40,19 @@ npm install
 Run a development server with [webpack](https://webpack.js.org/)
 
 ```
-make webpack-server
+npm run webpack-serve
 ```
 
 ## Distribute
 
 ```
-make distribute
+npm run distribute
+```
+
+## Test
+
+```
+npm run test
 ```
 
 ## Possible applications of the underling concepts 
