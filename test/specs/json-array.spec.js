@@ -16,6 +16,8 @@ import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
 
 Vue.config.productionTip = false;
+mocha.setup({ timeout: 10000 });
+
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.component(
