@@ -108,23 +108,35 @@ describe('JsonArray', () => {
       ({ component }) => {
         components.push(component);
         expect(component.isRegistered).to.be.true;
-        if (components.length === 4) {
+
+        const pairs = components.filter(
+          componentCandidate => (componentCandidate.$vnode
+          .componentOptions.Ctor.options.name === 'json-pair'),
+        );
+        const keys = components.filter(
+          componentCandidate => (componentCandidate.$vnode
+          .componentOptions.Ctor.options.name === 'pair-key'),
+        );
+        const values = components.filter(
+          componentCandidate => (componentCandidate.$vnode
+          .componentOptions.Ctor.options.name === 'json-value'),
+        );
+
+        if (components.length === 5
+        && values.length === 3) {
           localVue.nextTick(() => {
-            const pairs = components.filter(
-              componentCandidate => (componentCandidate.$vnode
-              .componentOptions.Ctor.options.name === 'json-pair'),
-            );
-            const keys = components.filter(
-              componentCandidate => (componentCandidate.$vnode
-              .componentOptions.Ctor.options.name === 'pair-key'),
-            );
-            const values = components.filter(
-              componentCandidate => (componentCandidate.$vnode
-              .componentOptions.Ctor.options.name === 'json-value'),
-            );
             expect(pairs.length).to.equal(1);
             expect(keys.length).to.equal(1);
             expect(values.length).to.equal(3);
+            done();
+          });
+        }
+
+        if (components.length === 3
+        && values.length === 2) {
+          localVue.nextTick(() => {
+            expect(pairs.length).to.equal(1);
+            expect(values.length).to.equal(2);
             done();
           });
         }
