@@ -12,12 +12,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - json-editor-{{ .Branch }}-
-            - json-editor-
-      - run: npm install && npm rebuild node-sass && npm -g install codecov
+            - v0.0.1-json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - v0.0.1-json-editor-{{ .Branch }}-
+            - v0.0.1-json-editor-
+      - run: npm install && npm -g install codecov
       - save_cache:
-          key: json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          key: v0.0.1-json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
       - persist_to_workspace:
