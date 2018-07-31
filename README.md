@@ -2,6 +2,7 @@
 
 [![codecov](https://codecov.io/gh/thierrymarianne/project-learning-compilers/branch/master/graph/badge.svg)](https://codecov.io/gh/thierrymarianne/project-learning-compilers)
 [![CircleCI](https://circleci.com/gh/thierrymarianne/project-learning-compilers.svg?style=svg)](https://circleci.com/gh/thierrymarianne/project-learning-compilers)
+[![Build Status](https://travis-ci.org/thierrymarianne/project-learning-compilers.svg?branch=master)](https://travis-ci.org/thierrymarianne/project-learning-compilers)
 
 ## Demo
 
