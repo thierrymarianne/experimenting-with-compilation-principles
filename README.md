@@ -1,5 +1,8 @@
 # Learning how compilers work
 
+[![codecov](https://codecov.io/gh/thierrymarianne/project-learning-compilers/branch/master/graph/badge.svg)](https://codecov.io/gh/thierrymarianne/project-learning-compilers)
+[![CircleCI](https://circleci.com/gh/thierrymarianne/project-learning-compilers.svg?style=svg)](https://circleci.com/gh/thierrymarianne/project-learning-compilers)
+
 ## Demo
 
 ![JSON Editor made with Vue components and ANTLR4](https://thierry.marianne.io/compilers/compilers-principles-techniques-and-tools.gif)
