@@ -1,4 +1,13 @@
 const path = require('path');
+const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
+
+const assetsPluginInstance = new AssetsPlugin({ includeManifest: 'manifest' });
 
 const environment = process.env.NODE_ENV || 'development';
 const developmentMode = environment !== 'production';
@@ -9,15 +18,6 @@ let mode = environment;
 if (testMode) {
   mode = 'development';
 }
-
-const webpack = require('webpack');
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const AssetsPlugin = require('assets-webpack-plugin');
-const assetsPluginInstance = new AssetsPlugin({includeManifest: 'manifest'});
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let styleLoader = MiniCssExtractPlugin.loader;
 if (developmentMode) {
@@ -41,7 +41,7 @@ if (testMode) {
   eslintConfig = '.eslintrc-test.json';
 }
 
-let outputDirectory = 'docs'
+let outputDirectory = 'docs';
 if (developmentMode) {
   outputDirectory = 'dist';
 }
@@ -53,10 +53,10 @@ const sassLoaderOptions = {
     path.join(__dirname, 'src/styles'),
     path.join(__dirname, 'src/styles/content'),
     path.join(__dirname, '/src/styles/structure-of-a-compiler'),
-  ]
+  ],
 };
 
-let plugins = [
+const plugins = [
   new VueLoaderPlugin(),
   new HtmlWebpackPlugin({
     title: 'Compilers: Principles, Techniques, and Tools',
@@ -68,15 +68,15 @@ let plugins = [
 if (productionMode) {
   plugins.concat([
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
-      chunkFilename: "[id].[hash].css"
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css',
     }),
     assetsPluginInstance,
     new webpack.HashedModuleIdsPlugin({
       hashFunction: 'sha256',
       hashDigest: 'hex',
-      hashDigestLength: 20
-    })
+      hashDigestLength: 20,
+    }),
   ]);
 }
 
@@ -88,11 +88,11 @@ let optimization = {
       sourceMap: true,
       uglifyOptions: {
         output: {
-          ascii_only: true
-        }
-      }
+          ascii_only: true,
+        },
+      },
     }),
-    new OptimizeCSSAssetsPlugin({})
+    new OptimizeCSSAssetsPlugin({}),
   ],
   splitChunks: {
     chunks: 'all',
@@ -100,124 +100,137 @@ let optimization = {
       vendor: {
         test: /[\\/]node_modules[\\/]/,
         name: 'vendors',
-        chunks: 'all'
+        chunks: 'all',
       },
       styles: {
         name: 'styles',
         test: /\.css$/,
         chunks: 'all',
-        enforce: true
+        enforce: true,
       },
     },
   },
   runtimeChunk: {
-    name: "manifest",
-  }
+    name: 'manifest',
+  },
 };
+
 if (testMode) {
   optimization = {
     splitChunks: {
-      chunks: "async"
-    }
+      chunks: 'async',
+    },
   };
 }
 
-let webpackConfig = {
+const rules = [
+  {
+    test: /\.vue$/,
+    loader: 'vue-loader',
+  }, {
+    test: /\.(sc|c)ss$/,
+    oneOf: [
+      {
+        resourceQuery: /-module/,
+        use: [
+          styleLoader,
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: true,
+              localIdentName: '[path]_[local]_[hash:base64:5]',
+            },
+          },
+        ],
+      }, {
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              sourceMap: true,
+            },
+          },
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: sassLoaderOptions,
+          },
+        ],
+      },
+    ],
+  }, {
+    test: /\.js$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          [
+            '@babel/preset-env',
+            { modules: false },
+          ],
+          [
+            '@babel/preset-stage-2',
+            { decoratorsLegacy: true },
+          ],
+        ],
+        plugins: [
+          '@babel/plugin-transform-runtime',
+        ],
+      },
+    },
+  }, {
+    enforce: 'pre',
+    test: /\.js$/,
+    exclude: /node_modules/,
+    loader: 'eslint-loader',
+    options: {
+      configFile: path.join(__dirname, eslintConfig),
+    },
+  },
+];
+
+const webpackConfig = {
   node: {
     module: 'empty',
-    net: 'empty', 
+    net: 'empty',
     fs: 'empty',
   },
-  mode: mode,
+  mode,
   entry: './src/index.js',
   resolve: {
     modules: ['node_modules'],
     extensions: ['.vue', '.js', '.css', '.scss'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
-    }
+      vue$: 'vue/dist/vue.esm.js',
+    },
   },
-  optimization: optimization,
+  optimization,
   module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      }, {
-        test: /\.(sc|c)ss$/,
-        oneOf: [
-          {
-            resourceQuery: /-module/,
-            use: [
-              styleLoader,
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: true,
-                  sourceMap: true,
-                  localIdentName: '[path]_[local]_[hash:base64:5]'
-                },              
-              },
-            ]
-          }, {
-            use: [
-              'vue-style-loader',
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 1,
-                  sourceMap: true,
-                }
-              },
-              'postcss-loader',
-              {
-                loader: 'sass-loader',
-                options: sassLoaderOptions,
-              },
-            ]
-          }
-        ]
-      }, {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                { modules: false }
-              ],
-              [
-                '@babel/preset-stage-2', 
-                { decoratorsLegacy: true }
-              ]
-            ],
-            plugins: [
-              '@babel/plugin-transform-runtime'
-            ]
-          }
-        }
-      }, {
-        enforce: "pre",
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          configFile: path.join(__dirname, eslintConfig),
-        }
-      }      
-    ],
+    rules
   },
   output: {
     path: path.resolve(__dirname, outputDirectory),
     filename: '[name].[hash].js',
     chunkFilename: '[name].[chunkHash].bundle.js',
-    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
-    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]'
   },
-  plugins: plugins,
-  devtool: sourceMap
+  plugins,
+  devtool: sourceMap,
 };
+
+if (testMode) {
+  delete webpackConfig.entry;
+  webpackConfig.node.module = false;
+  webpackConfig.resolveLoader = {
+    alias: {
+      // necessary to to make lang="scss" work in test when using vue-loader's ?inject option
+      // see discussion at https://github.com/vuejs/vue-loader/issues/724
+      'scss-loader': 'sass-loader',
+    },
+  };
+}
 
 module.exports = webpackConfig;

@@ -1,9 +1,9 @@
+import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 
 import store from '../../src/store';
-import Comma from '../../src/components/json/comma.vue';
 import JsonEditor from '../../src/components/json/json-editor/json-editor.vue';
 import JsonObject from '../../src/components/json/json-object.vue';
 import JsonPair from '../../src/components/json/json-pair.vue';
@@ -12,16 +12,14 @@ import Styles from '../../src/styles';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
 
+Vue.config.productionTip = false;
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.component(
   'font-awesome-icon',
   Styles.components['font-awesesome-icon'],
 );
-localVue.component(
-  'comma',
-  Comma,
-);
+localVue.use(Vuex);
 localVue.component(
   'json-pair',
   JsonPair,
@@ -32,7 +30,7 @@ localVue.component(
 );
 
 describe('JsonObject', () => {
-  const mountSubjectUnderTest = function (objectData) {
+  const mountSubjectUnderTest = (objectData) => {
     document.body.classList.add('json');
 
     const subjectUnderTestWrapper = mount(JsonObject, objectData);
@@ -91,15 +89,20 @@ describe('JsonObject', () => {
         components.push(component);
         expect(component.isRegistered).to.be.true;
 
-        if (components.length === 4) {
-          const values = components.filter(
+        if (components.length === 6) {
+          const pairs = components.filter(
             componentCandidate => (componentCandidate.$vnode
-            .componentOptions.Ctor.options.name === 'json-pair'),
+              .componentOptions.Ctor.options.name === 'json-pair'),
           );
           const keys = components.filter(
             componentCandidate => (componentCandidate.$vnode
             .componentOptions.Ctor.options.name === 'pair-key'),
           );
+          const values = components.filter(
+            componentCandidate => (componentCandidate.$vnode
+            .componentOptions.Ctor.options.name === 'json-value'),
+          );
+          expect(pairs.length).to.equal(2);
           expect(values.length).to.equal(2);
           expect(keys.length).to.equal(2);
           done();

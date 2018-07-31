@@ -161,6 +161,10 @@ export default {
 
       this.trackComponentByUuid({ component, uuid: uuidAttribute });
       this.$nextTick(function () {
+        if (component.isRegistered) {
+          return;
+        }
+
         const element = component.$el;
         if (typeof element === 'undefined' 
         || !document.body.contains(element)

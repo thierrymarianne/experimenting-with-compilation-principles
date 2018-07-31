@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils';
@@ -8,6 +9,7 @@ import JsonValue from '../../src/components/json/json-value.vue';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
 
+Vue.config.productionTip = false;
 const localVue = createLocalVue();
 localVue.use(Vuex);
 
