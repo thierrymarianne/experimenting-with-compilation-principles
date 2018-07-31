@@ -22,6 +22,12 @@ module.exports = function (config) {
     webpack: webpackConfig,
     reporters: ['spec', 'coverage'],
     coverageReporter: coverageReporter,
-    browsers: ['ChromeHeadless']
+    browsers: ['ChromeHeadlessNoSandbox'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
   })
 };
