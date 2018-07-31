@@ -11,7 +11,7 @@ build: ## Build package
 	@/bin/bash -c 'export NODE_ENV="production" && rm -f dist/*css && rm -f dist/*js && npx webpack --config webpack.config.js --optimize-minimize --mode=production'
 
 coverage: ## Run coverage of components with karma
-	@/bin/bash -c 'export NODE_ENV="test" && npx cross-env BABEL_ENV=test karma start ./test/karma.ci.conf.js --single-run'
+	@/bin/bash -c 'export NODE_ENV="test" BABEL_ENV="test" && ./node_modules/.bin/karma start ./test/karma.ci.conf.js --single-run'
 
 development-server: ## Start development server
 	@/bin/bash -c 'export NODE_ENV="development" && npx webpack-serve --config ./webpack.config.js --port=8888 --open --content="dist"'
