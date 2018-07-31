@@ -140,5 +140,5 @@ describe('JsonObject', () => {
 
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('{"Key":"Value","Key2":"Value2",}');
-  });
+  }).timeout(4000);
 });
