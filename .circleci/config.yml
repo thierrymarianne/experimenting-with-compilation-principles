@@ -15,7 +15,7 @@ jobs:
             - v0.0.1-json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - v0.0.1-json-editor-{{ .Branch }}-
             - v0.0.1-json-editor-
-      - run: npm install && npm -g install codecov
+      - run: npm install
       - save_cache:
           key: v0.0.1-json-editor-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths:
@@ -30,7 +30,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
-      - run: npm run coverage && codecov
+      - run: npm run coverage
+      - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
   version: 2
