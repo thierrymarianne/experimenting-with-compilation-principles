@@ -1,13 +1,5 @@
 const webpackConfig = require('./webpack.config.js');
 
-const coverageReporter = {
-  dir: './test/coverage',
-  reporters: [
-    { type: 'lcov', subdir: '.' },
-    { type: 'text-summary' }
-  ]
-};
-
 module.exports = function (config) {
   config.set({
     frameworks: ['mocha', 'chai'],
@@ -18,8 +10,7 @@ module.exports = function (config) {
       '**/*.spec.js': ['webpack', 'sourcemap'],
     },
     webpack: webpackConfig,
-    reporters: ['spec', 'coverage'],
-    coverageReporter: coverageReporter,
+    reporters: ['spec'],
     browsers: ['Chrome']
   })
 };
