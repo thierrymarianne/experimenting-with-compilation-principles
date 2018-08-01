@@ -41,17 +41,17 @@ jobs:
       - attach_workspace:
           at: ~/project
       - run:
-        name: Run coverage
-        command: |
-          npm run coverage
+          name: Run coverage
+          command: |
+            npm run coverage
       - run:
-        name: Send coverage report to Code Climate
-        command: |
-          ./cc-test-reporter after-build --exit-code $?
+          name: Send coverage report to Code Climate
+          command: |
+            ./cc-test-reporter after-build --exit-code $?
       - run:
-        name: Send coverage report to Codecov
-        command: |
-          bash <(curl -s https://codecov.io/bash)
+          name: Send coverage report to Codecov
+          command: |
+            bash <(curl -s https://codecov.io/bash)
 
 workflows:
   version: 2
