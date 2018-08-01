@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
@@ -13,8 +12,7 @@ import JsonValue from '../../src/components/json/json-value.vue';
 import Styles from '../../src/styles';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
-
-Vue.config.productionTip = false;
+import TestHelpers from './test-helpers';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -46,58 +44,66 @@ localVue.component(
 );
 
 describe('JsonArray', () => {
-  const mountSubjectUnderTest = function (objectData) {
-    document.body.classList.add('json');
+  let jsonEditorWrapper;
+  let subjectUnderTestWrapper;
 
-    const subjectUnderTestWrapper = mount(JsonArray, objectData);
-    const jsonEditorWrapper = mount(
-      JsonEditor,
-      {
-        attachToDocument: true,
-        store,
-        localVue,
-      },
-    );
+  const mountSubjectUnderTest = function ({ objectData, requiresEditor }) {
+    if (requiresEditor) {
+      jsonEditorWrapper = mount(
+        JsonEditor,
+        {
+          attachToDocument: false,
+          store,
+          localVue,
+        },
+      );
+    }
 
-    return {
-      jsonEditorWrapper,
-      subjectUnderTestWrapper,
-    };
+    subjectUnderTestWrapper = mount(JsonArray, objectData);
+
+    return { subjectUnderTestWrapper };
   };
 
+  afterEach(() => {
+    TestHelpers.destroyComponent(subjectUnderTestWrapper);
+    TestHelpers.destroyComponent(jsonEditorWrapper);
+  });
+
   it('should render an empty array', () => {
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest({});
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest({ objectData: {} }));
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text();
     expect(text).to.equal('[  ]');
   });
 
   it('should render an array containing an oject', () => {
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest(
       {
-        attachToDocument: false,
-        propsData: {
-          hasChildren: true,
+        objectData: {
+          attachToDocument: false,
+          propsData: {
+            hasChildren: true,
+          },
+          slots: {
+            default: [
+              '<json-object has-children>'
+              + '<json-pair>'
+              + '<template slot=\'key\'>"Key"</template>'
+              + '<template slot=\'colon\'>:</template>'
+              + '<template slot=\'value\'><json-value>"Value"</json-value></template>'
+              + '</json-pair>'
+              + '</json-object>',
+            ],
+          },
+          store,
+          localVue,
         },
-        slots: {
-          default: [
-            '<json-object has-children>'
-            + '<json-pair>'
-            + '<template slot=\'key\'>"Key"</template>'
-            + '<template slot=\'colon\'>:</template>'
-            + '<template slot=\'value\'><json-value>"Value"</json-value></template>'
-            + '</json-pair>'
-            + '</json-object>',
-          ],
-        },
-        store,
-        localVue,
       },
-    );
+    ));
+
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('[{"Key":"Value",}]');
-    subjectUnderTestWrapper.vm.$destroy();
   });
 
   it('should register its values (contains objects and their pairs)', (done) => {
@@ -135,29 +141,32 @@ describe('JsonArray', () => {
       },
     );
 
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest(
       {
-        attachToDocument: true,
-        propsData: {
-          hasChildren: true,
+        objectData: {
+          attachToDocument: true,
+          propsData: {
+            hasChildren: true,
+          },
+          slots: {
+            default: [
+              '<json-object has-children>'
+              + '<json-pair>'
+              + '<template slot=\'key\'>"Key"</template>'
+              + '<template slot=\'colon\'>:</template>'
+              + '<template slot=\'value\'><json-value>"Value"</json-value></template>'
+              + '</json-pair>'
+              + '</json-object>',
+              '<comma />',
+              '<json-value>"Value2"</json-value>',
+            ],
+          },
+          store,
+          localVue,
         },
-        slots: {
-          default: [
-            '<json-object has-children>'
-            + '<json-pair>'
-            + '<template slot=\'key\'>"Key"</template>'
-            + '<template slot=\'colon\'>:</template>'
-            + '<template slot=\'value\'><json-value>"Value"</json-value></template>'
-            + '</json-pair>'
-            + '</json-object>',
-            '<comma />',
-            '<json-value>"Value2"</json-value>',
-          ],
-        },
-        store,
-        localVue,
+        requiresEditor: true,
       },
-    );
+    ));
 
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('[{"Key":"Value",},"Value2"]');

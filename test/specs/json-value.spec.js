@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils';
@@ -8,15 +7,22 @@ import JsonEditor from '../../src/components/json/json-editor/json-editor.vue';
 import JsonValue from '../../src/components/json/json-value.vue';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
-
-Vue.config.productionTip = false;
+import TestHelpers from './test-helpers';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe('JsonValue', () => {
+  let subjectUnderTestWrapper;
+  let jsonEditorWrapper;
+
+  afterEach(() => {
+    TestHelpers.destroyComponent(subjectUnderTestWrapper);
+    TestHelpers.destroyComponent(jsonEditorWrapper);
+  });
+
   it('should render a value', () => {
-    const wrapper = mount(
+    subjectUnderTestWrapper = mount(
       JsonValue,
       {
         slots: {
@@ -24,18 +30,18 @@ describe('JsonValue', () => {
         },
       },
     );
-    expect(wrapper.contains('span')).to.be.true;
-    const text = wrapper.text();
+    expect(subjectUnderTestWrapper.contains('span')).to.be.true;
+    const text = subjectUnderTestWrapper.text();
     expect(text).to.equal('"My Value"');
   });
 
   it('should add a uuid attribute', () => {
-    const wrapper = mount(JsonValue);
-    expect(wrapper.attributes()['data-uuid'].length).to.equal(36);
+    subjectUnderTestWrapper = mount(JsonValue);
+    expect(subjectUnderTestWrapper.attributes()['data-uuid'].length).to.equal(36);
   });
 
   it('should prevent tags from being rendered', () => {
-    const wrapper = mount(
+    subjectUnderTestWrapper = mount(
       JsonValue,
       {
         slots: {
@@ -43,13 +49,13 @@ describe('JsonValue', () => {
         },
       },
     );
-    expect(wrapper.contains('span')).to.be.true;
-    const text = wrapper.text();
+    expect(subjectUnderTestWrapper.contains('span')).to.be.true;
+    const text = subjectUnderTestWrapper.text();
     expect(text).to.equal('"BeforeAfter"');
   });
 
   it('should revise slots and text data when a tag is detected', (done) => {
-    const wrapper = mount(
+    subjectUnderTestWrapper = mount(
       JsonValue,
       {
         slots: {
@@ -59,14 +65,14 @@ describe('JsonValue', () => {
     );
 
     localVue.nextTick(() => {
-      expect(wrapper.vm.text).to.equals('"BeforeAfter"');
-      expect(wrapper.vm.$slots.default.length).to.equals(1);
+      expect(subjectUnderTestWrapper.vm.text).to.equals('"BeforeAfter"');
+      expect(subjectUnderTestWrapper.vm.$slots.default.length).to.equals(1);
       done();
     });
   });
 
-  const mountSubjectUnderTest = function () {
-    const jsonValueWrapper = shallowMount(
+  const mountSubjectUnderTestWrapper = function () {
+    (subjectUnderTestWrapper = shallowMount(
       JsonValue,
       {
         slots: {
@@ -75,8 +81,8 @@ describe('JsonValue', () => {
         store,
         localVue,
       },
-    );
-    const jsonEditorWrapper = mount(
+    ));
+    jsonEditorWrapper = mount(
       JsonEditor,
       {
         store,
@@ -84,24 +90,24 @@ describe('JsonValue', () => {
       },
     );
     jsonEditorWrapper.vm.trackNode({
-      uuid: jsonValueWrapper.vm.uuid,
+      uuid: subjectUnderTestWrapper.vm.uuid,
       value: 'value',
       nodeType: 'value',
       twinUuid: {},
     });
     jsonEditorWrapper.vm.trackComponentByUuid({
-      uuid: jsonValueWrapper.vm.uuid,
-      component: jsonValueWrapper.vm,
+      uuid: subjectUnderTestWrapper.vm.uuid,
+      component: subjectUnderTestWrapper.vm,
     });
 
     return {
       jsonEditorWrapper,
-      jsonValueWrapper,
+      subjectUnderTestWrapper,
     };
   };
 
   it('should make a content editable', (done) => {
-    const { jsonValueWrapper } = mountSubjectUnderTest();
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTestWrapper());
 
     EventHub.$on(
       JsonEvents.node.afterBeingMadeEditable,
@@ -110,17 +116,17 @@ describe('JsonValue', () => {
         done();
       },
     );
-    jsonValueWrapper.vm.makeContentEditable();
+    subjectUnderTestWrapper.vm.makeContentEditable();
   });
 
   it('should make a content being edited, non-editable', (done) => {
-    const { jsonValueWrapper } = mountSubjectUnderTest();
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTestWrapper());
 
     EventHub.$on(
       JsonEvents.node.afterEdition,
       () => {
-        expect(jsonValueWrapper.vm.isEdited).to.be.false;
-        expect('contenteditable' in jsonValueWrapper.attributes()).to.be.false;
+        expect(subjectUnderTestWrapper.vm.isEdited).to.be.false;
+        expect('contenteditable' in subjectUnderTestWrapper.attributes()).to.be.false;
         done();
       },
     );
@@ -128,11 +134,11 @@ describe('JsonValue', () => {
     EventHub.$on(
       JsonEvents.node.afterBeingMadeEditable,
       () => {
-        expect(jsonValueWrapper.vm.isEdited).to.be.true;
-        expect(jsonValueWrapper.attributes().contenteditable).to.equal('true');
-        jsonValueWrapper.vm.makeContentNonEditable();
+        expect(subjectUnderTestWrapper.vm.isEdited).to.be.true;
+        expect(subjectUnderTestWrapper.attributes().contenteditable).to.equal('true');
+        subjectUnderTestWrapper.vm.makeContentNonEditable();
       },
     );
-    jsonValueWrapper.vm.makeContentEditable();
+    subjectUnderTestWrapper.vm.makeContentEditable();
   });
 });

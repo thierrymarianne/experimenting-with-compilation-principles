@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
@@ -9,8 +8,7 @@ import JsonEditor from '../../src/components/json/json-editor/json-editor.vue';
 import JsonEvents from '../../src/components/json/events/json-events';
 import SharedState from '../../src/modules/shared-state';
 import Styles from '../../src/styles';
-
-Vue.config.productionTip = false;
+import TestHelpers from './test-helpers';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -21,11 +19,13 @@ localVue.component(
 localVue.use(Vuex);
 
 describe('JsonEditor', () => {
+  let jsonEditorWrapper;
+
   const mountSubjectUnderTest = (objectData, wrapperCreator) => {
     ['json', 'json__container'].forEach(className => (document.body
     .classList.add(className)));
 
-    const jsonEditorWrapper = wrapperCreator.apply(null, [JsonEditor, objectData]);
+    jsonEditorWrapper = wrapperCreator.apply(null, [JsonEditor, objectData]);
 
     jsonEditorWrapper.vm.$refs['json-editor']
     .$refs['editable-json'].classList.add('json');
@@ -38,6 +38,10 @@ describe('JsonEditor', () => {
   const isVisible = function (element) {
     return window.getComputedStyle(element).display !== 'none';
   };
+
+  afterEach(() => {
+    TestHelpers.destroyComponent(jsonEditorWrapper);
+  });
 
   it('should mount a JSON editor with two distinct sections', () => {
     const json = '{}';
@@ -63,8 +67,6 @@ describe('JsonEditor', () => {
       expect(SharedState.state.template).to.equals(template);
       const text = subjectUnderTestWrapper.text();
       expect(text).to.equal('{  }{  }');
-      subjectUnderTestWrapper.vm.$el.classList.add('hide');
-      subjectUnderTestWrapper.vm.$destroy();
     });
   });
 

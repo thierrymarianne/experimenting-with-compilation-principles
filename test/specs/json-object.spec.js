@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
@@ -11,8 +10,7 @@ import JsonValue from '../../src/components/json/json-value.vue';
 import Styles from '../../src/styles';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';
-
-Vue.config.productionTip = false;
+import TestHelpers from './test-helpers';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -31,34 +29,44 @@ localVue.component(
 );
 
 describe('JsonObject', () => {
-  const mountSubjectUnderTest = (objectData) => {
+  let jsonEditorWrapper;
+  let subjectUnderTestWrapper;
+
+  const mountSubjectUnderTest = ({ objectData, requiresEditor }) => {
     document.body.classList.add('json');
 
-    const subjectUnderTestWrapper = mount(JsonObject, objectData);
-    const jsonEditorWrapper = mount(
-      JsonEditor,
-      {
-        store,
-        localVue,
-      },
-    );
+    if (requiresEditor) {
+      // the editor should be mounted before the component under test,
+      // so that all node registration is accounted for.
+      jsonEditorWrapper = mount(
+        JsonEditor,
+        {
+          store,
+          localVue,
+        },
+      );
+    }
 
-    return {
-      jsonEditorWrapper,
-      subjectUnderTestWrapper,
-    };
+    subjectUnderTestWrapper = mount(JsonObject, objectData);
+
+    return { subjectUnderTestWrapper };
   };
 
+  afterEach(() => {
+    TestHelpers.destroyComponent(subjectUnderTestWrapper);
+    TestHelpers.destroyComponent(jsonEditorWrapper);
+  });
+
   it('should render an empty object', () => {
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest({});
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest({ objectData: {} }));
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text();
     expect(text).to.equal('{  }');
   });
 
   it('should render an object containing a pair', () => {
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
-      {
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest({
+      objectData: {
         attachToDocument: false,
         propsData: {
           hasChildren: true,
@@ -75,11 +83,10 @@ describe('JsonObject', () => {
         store,
         localVue,
       },
-    );
+    }));
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('{"Key":"Value",}');
-    subjectUnderTestWrapper.vm.$destroy();
   });
 
   it('should register its pairs (values and keys)', (done) => {
@@ -107,18 +114,16 @@ describe('JsonObject', () => {
 
         if (components.length === 8
         && values.length === 4) {
-          localVue.nextTick(() => {
-            expect(values.length).to.equal(4);
-            expect(keys.length).to.equal(2);
-            expect(pairs.length).to.equal(2);
-            done();
-          });
+          expect(values.length).to.equal(4);
+          expect(keys.length).to.equal(2);
+          expect(pairs.length).to.equal(2);
+          done();
         }
       },
     );
 
-    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
-      {
+    ({ subjectUnderTestWrapper } = mountSubjectUnderTest({
+      objectData: {
         attachToDocument: true,
         propsData: {
           hasChildren: true,
@@ -140,7 +145,8 @@ describe('JsonObject', () => {
         store,
         localVue,
       },
-    );
+      requiresEditor: true,
+    }));
 
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('{"Key":"Value","Key2":"Value2",}');

@@ -290,19 +290,22 @@ const subMenuItems = {
   'lexical-analysis': lexicalAnalysisChildren,
 };
 
+const withoutSubMenu = function (item) {
+  return typeof item.subMenuNames === 'undefined';
+};
+
 const isMenuItem = (routeName) => {
   if (typeof routeName === 'undefined') {
     return false;
   }
 
   const menuItemsHavingSuchSubMenuItem = menuItems.filter((item) => {
-      // menu without submenu are discarded
-      if (typeof item.subMenuNames === 'undefined') {
-        return false;
-      }
+    if (withoutSubMenu(item)) {
+      return false;
+    }
 
-      // matching a submenu item
-      return item.subMenuNames.indexOf(routeName) !== -1;
+    // matching a submenu item
+    return item.subMenuNames.indexOf(routeName) !== -1;
   });
 
   // When no submenu matches, we are deadling with a menu item
@@ -335,8 +338,7 @@ const getParent = (routeName) => {
   }
 
   const menuItemsHavingSuchSubMenuItem = menuItems.filter((item) => {
-    // menu without submenu are discarded
-    if (typeof item.subMenuNames === 'undefined') {
+    if (withoutSubMenu(item)) {
       return false;
     }
 

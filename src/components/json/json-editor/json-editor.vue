@@ -132,7 +132,7 @@ export default {
             uuids: uuids,
           });
           this.dynamicToEditable[uuids.dynamic] = elementClone.uuid;
-        })
+        });
       });
 
       twin.$parent.$forceUpdate();
@@ -169,7 +169,7 @@ export default {
       return this.$refs[this.editableToDynamic[uuid]];
     },
     registerNode: function ({ component, uuidAttribute, hook }) {
-      if (typeof hook === 'beforeDestroy') {
+      if (hook === 'beforeDestroy') {
         this.sharedState.log({ action: 'unregistration', element: component.$el });
         this.unregisterNode({uuid: uuidAttribute});
         return;
