@@ -22,7 +22,7 @@ export default {
   },
   mixins: [WithEditableContent],
   created: function () {
-    if (!this.isRegistered) {
+    if (this.isRegistered) {
       return;
     }
 

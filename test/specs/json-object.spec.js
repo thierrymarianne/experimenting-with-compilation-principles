@@ -115,15 +115,6 @@ describe('JsonObject', () => {
             done();
           });
         }
-
-        if (components.length === 6
-        && values.length === 4) {
-          localVue.nextTick(() => {
-            expect(values.length).to.equal(4);
-            expect(pairs.length).to.equal(2);
-            done();
-          });
-        }
       },
     );
 

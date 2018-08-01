@@ -133,15 +133,6 @@ describe('JsonArray', () => {
             done();
           });
         }
-
-        if (components.length === 3
-        && values.length === 2) {
-          localVue.nextTick(() => {
-            expect(values.length).to.equal(2);
-            expect(pairs.length).to.equal(1);
-            done();
-          });
-        }
       },
     );
 
