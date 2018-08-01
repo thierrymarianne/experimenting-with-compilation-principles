@@ -408,14 +408,16 @@ export default {
     },
     toggleVisibilityOfPreviousComma: function ({ dynamicComponent, isVisible, indexOfElement }) {
       let precedingVNode = dynamicComponent.$parent.$slots.default[indexOfElement - 1];
-      if (typeof precedingVNode !== 'undefined') {
+      if (typeof precedingVNode === 'undefined'
+      || precedingVNode.elm.nodeType === Node.TEXT_NODE) {
         const defaultSlot = dynamicComponent.$parent.$slots.default;
         let precedingCommaCandidateIndex = indexOfElement - 2;
         let precedingCommaCandidate;
         while (typeof defaultSlot[precedingCommaCandidateIndex] !== 'undefined') {
           precedingCommaCandidate = defaultSlot[precedingCommaCandidateIndex].componentInstance;
           if (typeof precedingCommaCandidate !== 'undefined') {
-            if (precedingCommaCandidate.$vnode.componentOptions.tag == 'comma') {
+            if (precedingCommaCandidate.$vnode.componentOptions.tag == 'comma'
+            && precedingCommaCandidate.isVisible !== isVisible) {
               precedingVNode = precedingCommaCandidate.$vnode; 
               break;
             }
@@ -425,20 +427,44 @@ export default {
         }
       }
 
-      if (precedingVNode) {
-        precedingVNode.componentInstance.isVisible = isVisible;
-      }      
+      let firstVisibleComponentAmongNextOnes;
+      const nextVisibleComponents = dynamicComponent.$parent
+      .$slots.default.filter((VNode, index) => {
+        return index > indexOfElement
+        && VNode.elm.nodeType !== Node.TEXT_NODE &&
+        VNode.componentInstance.isVisible;
+      });
+      if (nextVisibleComponents.length > 0) {
+        firstVisibleComponentAmongNextOnes = nextVisibleComponents[0];
+      }
+
+      if ((
+        typeof precedingVNode === 'undefined'
+        || precedingVNode.elm.nodeType === Node.TEXT_NODE
+      ) && typeof firstVisibleComponentAmongNextOnes !== 'undefined'
+      && firstVisibleComponent.componentInstance.tag.name !== 'comma')  {
+        this.toggleVisibilityOfNextComma({ dynamicComponent, isVisible, indexOfElement });
+        return;
+      }
+
+      if (typeof precedingVNode === 'undefined') {
+        return;
+      }
+
+      precedingVNode.componentInstance.isVisible = isVisible;
     },
     toggleVisibilityOfNextComma: function ({ dynamicComponent, isVisible, indexOfElement }) {
       let nextVNode = dynamicComponent.$parent.$slots.default[indexOfElement + 1];
-      if (typeof nextVNode !== 'undefined') {
+      if (typeof nextVNode === 'undefined'
+      || nextVNode.elm.nodeType === Node.TEXT_NODE) {
         const defaultSlot = dynamicComponent.$parent.$slots.default;
         let nextCommaCandidateIndex = indexOfElement + 2;
         let nextCommaCandidate;
         while (typeof defaultSlot[nextCommaCandidateIndex] !== 'undefined') {
           nextCommaCandidate = defaultSlot[nextCommaCandidateIndex].componentInstance;
           if (typeof nextCommaCandidate !== 'undefined') {
-            if (nextCommaCandidate.$vnode.componentOptions.tag == 'comma') {
+            if (nextCommaCandidate.$vnode.componentOptions.tag == 'comma'
+            && nextCommaCandidate.isVisible !== isVisible) {
               nextVNode = nextCommaCandidate.$vnode; 
               break;
             }
@@ -448,9 +474,12 @@ export default {
         }
       }
 
-      if (nextVNode) {
-        nextVNode.componentInstance.isVisible = isVisible;
-      }      
+      if (typeof nextVNode === 'undefined'
+      || nextVNode.elm.nodeType === Node.TEXT_NODE) {
+        return;
+      }
+
+      nextVNode.componentInstance.isVisible = isVisible;
     },
     toggleVisibilityOfCommas({ dynamicComponent, isVisible }) {
       let indexOfElement;
@@ -460,7 +489,27 @@ export default {
         }
       });
 
-      if (indexOfElement === 0) {
+      const isFirstVisibleComponent = dynamicComponent.$parent
+      .$slots.default.filter((VNode, index) => {
+        return index < indexOfElement
+        && VNode.elm.nodeType !== Node.TEXT_NODE &&
+        VNode.componentInstance.isVisible;
+      }).length === 0;
+
+      const isOnlyVisibleComponent = dynamicComponent.$parent
+      .$slots.default.filter((VNode, index) => {
+        return index !== indexOfElement
+        && VNode.elm.nodeType !== Node.TEXT_NODE &&
+        VNode.componentInstance.isVisible;
+      }).length === 0;
+
+      // When showing the first component,
+      // do not toogle the visibility of a comma
+      if (isOnlyVisibleComponent && isVisible) {
+        return;
+      }
+
+      if (isFirstVisibleComponent) {
         this.toggleVisibilityOfNextComma({ dynamicComponent, isVisible, indexOfElement });
         return;
       }
