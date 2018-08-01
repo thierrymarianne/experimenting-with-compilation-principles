@@ -146,31 +146,34 @@ export default {
       MutationTypes.SET_NEXT_VALUE,
     ]),
     getTextFromSlot: function () {
-      let text = '';
-      if (typeof this.$slots.default !== 'undefined') {
-        if (this.$slots.default.length > 0) {
-          const textSlots = this.$slots.default.filter((VNode) => {
-            return typeof VNode !== 'undefined'
-            && (typeof VNode == 'string' || typeof VNode.tag === 'undefined');
-          });
-          let textSnippets = textSlots.map((VNode) => {
-            if (typeof VNode === 'string') {
-              return VNode;
-            }
-            return VNode.text;
-          });
-
-          return textSnippets.join('');
-        }
-
-        text = this.$slots.default[0];
-      } 
-
-      if (!this.isArrayItem && typeof this.$el !== 'undefined') {
-        return this.$el.innerText;
+      if (typeof this.sharedState.values[this.uuid] !== 'undefined') {
+        return this.sharedState.values[this.uuid];
       }
 
-      return text;
+      if (typeof this.$slots.default === 'undefined') {
+        if (!this.isArrayItem && typeof this.$el !== 'undefined') {
+          return this.$el.innerText;
+        }
+
+        return '';
+      }
+
+      if (this.$slots.default.length > 0) {
+        const textSlots = this.$slots.default.filter((VNode) => {
+          return typeof VNode !== 'undefined'
+          && (typeof VNode == 'string' || typeof VNode.tag === 'undefined');
+        });
+        let textSnippets = textSlots.map((VNode) => {
+          if (typeof VNode === 'string') {
+            return VNode;
+          }
+          return VNode.text;
+        });
+
+        return textSnippets.join('');
+      }
+
+      return this.$slots.default[0];
     }
   },
   data: function () {
@@ -195,6 +198,7 @@ export default {
         }
 
         this.$slots.default[0] = text;
+        this.sharedState.values[this.uuid] = text;
       }
     },
     hasText: function () {

@@ -71,7 +71,7 @@ import EventHub from '../../modules/event-hub';
 
 export default {
   name: 'json-pair',
-  mixins: [Object.assign({}, Editable.Editable)],
+  mixins: [Editable.Editable],
   components: {
     Comma,
     FragmentTransition,
@@ -158,6 +158,7 @@ export default {
         return;
       }
 
+      const key = '"key"';
       const value = '"value"';
       const jsonValue = this.$createElement(
         'json-value',
@@ -170,19 +171,11 @@ export default {
           },
         },
       );
-      const pairKey = this.$createElement(
-        'pair-key',
-        {
-          scopedSlots: {
-            default: props => ['"key"'],
-          },
-        },
-      );
       const jsonPair = this.$createElement(
         'json-pair',
         {
           scopedSlots: {
-            key: props => [pairKey],
+            key: props => [key],
             colon: props => [':'],
             value: props => [jsonValue],
           },
@@ -206,7 +199,12 @@ export default {
       if (this.isClonable) {
         EventHub.$emit(
           JsonEvents.pair.added,
-          { nodeUuid: this.uuid, indexInSlot, value },
+          { 
+            nodeUuid: this.uuid,
+            indexInSlot,
+            key, 
+            value
+          },
         );
       }
     },

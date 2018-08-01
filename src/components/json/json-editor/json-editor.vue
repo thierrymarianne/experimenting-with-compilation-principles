@@ -54,7 +54,12 @@ export default {
       MutationTypes.START_EDITING_CONTENT,
       MutationTypes.TRACK_NODE,
     ]),
-    addPair: function ({ indexInSlot, nodeUuid, value }) {
+    addPair: function ({
+      indexInSlot,
+      nodeUuid,
+      key,
+      value
+    }) {
       const pairTwin = this.editableToDynamic[nodeUuid];
       const element = this.$refs[nodeUuid];
       const twin = this.$refs[pairTwin];
@@ -74,6 +79,10 @@ export default {
         dynamic: null,
       };
       const trackPairNode = ({ component }) => {
+        const texts = {
+          key,
+          value,
+        };
         const pair = component;
         const clonedPairTwin = twin;
 
@@ -89,19 +98,53 @@ export default {
         EventHub.$emit(JsonEvents.node.altered, { component: pair.$parent });
         EventHub.$emit(JsonEvents.node.altered, { component: clonedPairTwin.$parent });
 
-        const valueComponent = pair.$children[0].$children
-        .filter((component) => (component.$vnode.componentOptions.tag === 'json-value'))
-        .pop();
-        valueComponent.text = value;
-        twins = this.getTwinsFor(valueComponent.$el);
-        twins.twinVNode.text = value;
+        let valueComponent;
+        let keyComponent;
+        let parent = pair;
+        let values;
+
+        while (typeof valueComponent === 'undefined') {
+          if (parent.$children.length === 0) {
+            break;
+          }
+
+          if (parent.$children.length === 1) {
+            parent = parent.$children[0];
+            continue;
+          }
+
+          parent.$children.forEach((child) => {
+            if (child.$vnode.componentOptions.Ctor.options.name === 'json-value') {
+              valueComponent = child;
+            }
+
+            if (child.$vnode.componentOptions.Ctor.options.name === 'pair-key') {
+              keyComponent = child;
+            }
+          });
+        }
+
+        keyComponent.text = texts.key;
+        const keyTwins = this.getTwinsFor(keyComponent.$el);
+        keyTwins.twinVNode.text = texts.key;
+        const keyNode = {
+          uuid: keyComponent.uuid,
+          value: texts.key,
+          nodeType: keyComponent.getNodeType(),
+          twinUuid: keyTwins.twinVNode.uuid,
+        };
+        this.trackNode(keyNode);
+
+        valueComponent.text = texts.value;
+        const valueTwins = this.getTwinsFor(valueComponent.$el);
+        valueTwins.twinVNode.text = texts.value;
+        
         const valueNode = {
           uuid: valueComponent.uuid,
-          value: valueComponent.text,
+          value: texts.value,
           nodeType: valueComponent.getNodeType(),
-          twinUuid: twins.twinVNode.uuid,
+          twinUuid: valueTwins.twinVNode.uuid,
         };
-
         this.trackNode(valueNode);
       };
 
@@ -169,6 +212,10 @@ export default {
       return this.$refs[this.editableToDynamic[uuid]];
     },
     registerNode: function ({ component, uuidAttribute, hook }) {
+      if (component.isRegistered || this.hasBeenDestroyed) {
+        return;
+      }
+
       if (hook === 'beforeDestroy') {
         this.sharedState.log({ action: 'unregistration', element: component.$el });
         this.unregisterNode({uuid: uuidAttribute});
@@ -176,6 +223,7 @@ export default {
       }
 
       this.trackComponentByUuid({ component, uuid: uuidAttribute });
+
       this.$nextTick(function () {
         if (component.isRegistered || this.hasBeenDestroyed) {
           return;
@@ -556,6 +604,16 @@ export default {
       this.syncNodes(text, twin);
     },
   },
+  beforeDestroy: function () {
+    EventHub.$off(JsonEvents.node.destroyed);
+    EventHub.$off(JsonEvents.node.unregistered);
+    EventHub.$off(JsonEvents.node.hidden);
+    EventHub.$off(JsonEvents.node.registered);
+    EventHub.$off(JsonEvents.node.madeEditable);
+    EventHub.$off(JsonEvents.node.madeNonEditable);
+    EventHub.$off(JsonEvents.node.shown);
+    EventHub.$off(JsonEvents.pair.added);
+  },
   destroyed: function () {
     this.hasBeenDestroyed = true;
   },
@@ -564,7 +622,7 @@ export default {
       return window.getComputedStyle(this.$el).display !== 'none';
     }
   },
-  mounted: function () {
+  created: function () {
     EventHub.$on(JsonEvents.node.destroyed, this.registerNode);
     EventHub.$on(JsonEvents.node.unregistered, this.unregisterNode);
     EventHub.$on(JsonEvents.node.hidden, this.toggleNodeVisibility);
@@ -573,7 +631,8 @@ export default {
     EventHub.$on(JsonEvents.node.madeNonEditable, this.toggleNodeEdition);
     EventHub.$on(JsonEvents.node.shown, this.toggleNodeVisibility);
     EventHub.$on(JsonEvents.pair.added, this.addPair);
-
+  },
+  mounted: function () {
     this.$nextTick(function () {
       if (typeof this.$refs['json-editor'] === 'undefined') {
         return;

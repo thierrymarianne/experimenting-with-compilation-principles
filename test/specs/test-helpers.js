@@ -19,6 +19,14 @@ const destroyComponent = (component) => {
   }
 
   componentCandidate.$destroy();
+
+  if (document.body === null) {
+    return;
+  }
+
+  if (document.body.contains(componentCandidate.$el)) {
+    document.body.removeChild(componentCandidate.$el);
+  }
 };
 
 export default {

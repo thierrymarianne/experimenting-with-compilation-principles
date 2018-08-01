@@ -1,6 +1,18 @@
 import ActionTypes from './json-editor-action-types';
 import MutationTypes from './json-editor-mutation-types';
 
+const guardAgainstNodeNotFound = function ({ state, uuid }) {
+  if (typeof state.nodes[uuid] === 'undefined') {
+    console.error({
+      message: `Could not find node with UUID #${uuid}`,
+      file: 'json-editor-store.nodeWithUuid',
+    });
+    return undefined;
+  }
+
+  return state.nodes[uuid];
+};
+
 const JsonEditor = {
   namespaced: true,
   state: {
@@ -39,18 +51,7 @@ const JsonEditor = {
     },
   },
   getters: {
-    nodeWithUuid: function (state) {
-      return (uuid) => {
-        if (typeof state.nodes[uuid] === 'undefined') {
-          console.error({
-            message: `Could not find node with UUID #${uuid}`,
-            file: 'json-editor-store.nodeWithUuid',
-          });
-          return undefined;
-        }
-        return state.nodes[uuid];
-      };
-    },
+    nodeWithUuid: state => uuid => (guardAgainstNodeNotFound({ state, uuid })),
     isNodeWithUuidBeingEdited: function (state) {
       return (uuid) => {
         if (typeof state.nodes[uuid] === 'undefined') {
@@ -61,14 +62,13 @@ const JsonEditor = {
     },
     valueOfNodeWithUuid: function (state) {
       return (uuid) => {
-        if (typeof state.nodes[uuid] === 'undefined') {
-          console.error({
-            message: `Could not find node with UUID #${uuid}`,
-            file: 'json-editor-store.valueOfNodeWithUuid',
-          });
-          return undefined;
+        const node = guardAgainstNodeNotFound({ state, uuid });
+
+        if (typeof node !== 'undefined') {
+          return state.nodes[uuid].value;
         }
-        return state.nodes[uuid].value;
+
+        return node;
       };
     },
   },

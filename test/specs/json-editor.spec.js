@@ -21,18 +21,37 @@ localVue.use(Vuex);
 describe('JsonEditor', () => {
   let jsonEditorWrapper;
 
-  const mountSubjectUnderTest = (objectData, wrapperCreator) => {
+  const mountSubjectUnderTest = ({
+    destroyAfter,
+    id,
+    objectData,
+    wrapperCreator,
+  }) => {
     ['json', 'json__container'].forEach(className => (document.body
     .classList.add(className)));
 
-    jsonEditorWrapper = wrapperCreator.apply(null, [JsonEditor, objectData]);
-
-    jsonEditorWrapper.vm.$refs['json-editor']
+    const jsonEditorComponentWrapper = wrapperCreator.apply(
+      null,
+      [JsonEditor, objectData],
+    );
+    jsonEditorComponentWrapper.vm.$refs['json-editor']
     .$refs['editable-json'].classList.add('json');
-    jsonEditorWrapper.vm.$refs['json-editor']
+    jsonEditorComponentWrapper.vm.$refs['json-editor']
     .$refs['dynamic-json'].classList.add('json');
 
-    return jsonEditorWrapper;
+    if (typeof destroyAfter === 'undefined' || destroyAfter) {
+      jsonEditorWrapper = jsonEditorComponentWrapper;
+    }
+
+    if (typeof destroyAfter !== 'undefined' && !destroyAfter) {
+      jsonEditorWrapper = undefined;
+    }
+
+    if (typeof id !== 'undefined') {
+      jsonEditorComponentWrapper.vm.$el.setAttribute('id', id);
+    }
+
+    return jsonEditorComponentWrapper;
   };
 
   const isVisible = function (element) {
@@ -47,13 +66,13 @@ describe('JsonEditor', () => {
     const json = '{}';
     SharedState.state.json = json;
 
-    const subjectUnderTestWrapper = mountSubjectUnderTest(
-      {
+    const subjectUnderTestWrapper = mountSubjectUnderTest({
+      objectData: {
         attachToDocument: true,
         store,
       },
-      mount,
-    );
+      wrapperCreator: mount,
+    });
 
     const template = '<json-object></json-object>';
     subjectUnderTestWrapper.vm.setJsonTemplate(template);
@@ -73,78 +92,84 @@ describe('JsonEditor', () => {
   it('should allow to toggle the visibility of pairs in objects', (done) => {
     localVue.config.errorHandler = done;
 
-    const subjectUnderTestWrapper = mountSubjectUnderTest(
-      {
-        attachToDocument: true,
-        store,
-        localVue,
-      },
-      mount,
-    );
+    let subjectUnderTestWrapper;
 
     const template = '<json-object has-children>'
-      + '<json-pair>'
-      + '<template slot="key">"Key"</template>'
-      + '<template slot="colon">:</template>'
-      + '<template slot="value"><json-value>"Value"</json-value></template>'
-      + '</json-pair>'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value"</json-value></template>'
+      + ' </json-pair>'
       + '</json-object>';
 
     let togglePairVisibilityButton;
 
-    EventHub.$on(
-      JsonEvents.node.altered,
-      ({ hook, component }) => {
-        localVue.nextTick().then(() => {
-          let dynamicPairComponent;
+    const ensurePairVisibilityToggling = ({ hook, component }) => {
+      localVue.nextTick().then(() => {
+        let dynamicPairComponent;
 
-          if (hook === JsonEvents.node.afterBeingHidden) {
-            // Ensure pair is hidden after its visibility has been toggled
-            const pair = subjectUnderTestWrapper.vm
-            .$refs['json-editor']
-            .$refs['dynamic-json']
-            .querySelector('.json__pair');
-            expect(isVisible(pair)).to.be.false;
+        if (hook === JsonEvents.node.afterBeingHidden) {
+          // Ensure pair is hidden after its visibility has been toggled
+          const pair = subjectUnderTestWrapper.vm
+          .$refs['json-editor']
+          .$refs['dynamic-json']
+          .querySelector('.json__pair');
+          expect(isVisible(pair)).to.be.false;
 
-            const uuid = pair.getAttribute('data-uuid');
+          const uuid = pair.getAttribute('data-uuid');
 
-            // A dynamic component (oppositely to an editable component)
-            // reflects operations applied to its editable counterpart.
-            dynamicPairComponent = subjectUnderTestWrapper.vm.getComponentByUuid(uuid);
-            expect(dynamicPairComponent.isVisible).to.be.false;
-            expect(dynamicPairComponent.isEditable).to.be.false;
-
-            // The editor tracks editable elements, dynamic elements
-            // and their corrrespondance
-            const editablePairComponent = subjectUnderTestWrapper.vm
-            .getEditableCounterpartFor(dynamicPairComponent.uuid);
-
-            // The editable pair component has been marked as not being visible anymore,
-            // event though we can "see" it in the "editable-json" panel
-            expect(editablePairComponent.isVisible).to.be.false;
-            expect(editablePairComponent.isEditable).to.be.true;
-
-            togglePairVisibilityButton.click();
-            return;
-          }
-
-          dynamicPairComponent = component;
-          expect(dynamicPairComponent.isVisible).to.be.true;
+          // A dynamic component (oppositely to an editable component)
+          // reflects operations applied to its editable counterpart.
+          dynamicPairComponent = subjectUnderTestWrapper.vm.getComponentByUuid(uuid);
+          expect(dynamicPairComponent.isVisible).to.be.false;
           expect(dynamicPairComponent.isEditable).to.be.false;
 
+          // The editor tracks editable elements, dynamic elements
+          // and their corrrespondance
           const editablePairComponent = subjectUnderTestWrapper.vm
           .getEditableCounterpartFor(dynamicPairComponent.uuid);
-          expect(editablePairComponent.isVisible).to.be.true;
+
+          // The editable pair component has been marked as not being visible anymore,
+          // event though we can "see" it in the "editable-json" panel
+          expect(editablePairComponent.isVisible).to.be.false;
           expect(editablePairComponent.isEditable).to.be.true;
 
-          done();
-        });
-      },
+          togglePairVisibilityButton.click();
+          return;
+        }
+
+        dynamicPairComponent = component;
+        expect(dynamicPairComponent.isVisible).to.be.true;
+        expect(dynamicPairComponent.isEditable).to.be.false;
+
+        const editablePairComponent = subjectUnderTestWrapper.vm
+        .getEditableCounterpartFor(dynamicPairComponent.uuid);
+        expect(editablePairComponent.isVisible).to.be.true;
+        expect(editablePairComponent.isEditable).to.be.true;
+
+        EventHub.$off(JsonEvents.node.altered, ensurePairVisibilityToggling);
+        done();
+      });
+    };
+
+    EventHub.$on(
+      JsonEvents.node.altered,
+      ensurePairVisibilityToggling,
     );
+
+    subjectUnderTestWrapper = mountSubjectUnderTest({
+      objectData: {
+        attachToDocument: true,
+        store,
+        localVue,
+      },
+      wrapperCreator: mount,
+    });
 
     subjectUnderTestWrapper.vm.setJsonTemplate(template);
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('{"Key":"Value",}{"Key":"Value",}');
+
     togglePairVisibilityButton = document.querySelector('.editable-json .json__pair---button');
     expect(isVisible(
       subjectUnderTestWrapper.vm
@@ -152,6 +177,46 @@ describe('JsonEditor', () => {
       .$refs['dynamic-json']
       .querySelector('.json__object'),
     )).to.be.true;
+
     togglePairVisibilityButton.click();
   }).timeout(4000);
+
+  it('should allow to add a pair after an existing one', (done) => {
+    localVue.config.errorHandler = done;
+
+    const registeredComponents = [];
+
+    EventHub.$on(
+      JsonEvents.node.afterRegistration,
+      ({ component }) => {
+        registeredComponents.push(component);
+        if (registeredComponents.length === 8) {
+          const buttons = document.querySelectorAll('.editable-json .json__pair---button');
+          const addPairAfterButton = buttons[1];
+          addPairAfterButton.click();
+          done();
+        }
+      },
+    );
+
+    const subjectUnderTestWrapper = mountSubjectUnderTest({
+      objectData: {
+        attachToDocument: true,
+        store,
+        localVue,
+      },
+      wrapperCreator: mount,
+      destroyAfter: false,
+      id: 'pair-maker',
+    });
+
+    const template = '<json-object has-children>'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value"</json-value></template>'
+      + ' </json-pair>'
+      + '</json-object>';
+    subjectUnderTestWrapper.vm.setJsonTemplate(template);
+  });
 });
