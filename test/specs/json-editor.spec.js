@@ -101,7 +101,7 @@ describe('JsonEditor', () => {
             const pair = subjectUnderTestWrapper.vm
             .$refs['json-editor']
             .$refs['dynamic-json']
-            .querySelector('.json__pair')
+            .querySelector('.json__pair');
             expect(isVisible(pair)).to.be.false;
 
             const uuid = pair.getAttribute('data-uuid');
@@ -113,12 +113,12 @@ describe('JsonEditor', () => {
             expect(dynamicPairComponent.isEditable).to.be.false;
 
             // The editor tracks editable elements, dynamic elements
-            // and their corrrespondance 
+            // and their corrrespondance
             const editablePairComponent = subjectUnderTestWrapper.vm
             .getEditableCounterpartFor(dynamicPairComponent.uuid);
 
             // The editable pair component has been marked as not being visible anymore,
-            // event though we can "see" it in the "editable-json" panel   
+            // event though we can "see" it in the "editable-json" panel
             expect(editablePairComponent.isVisible).to.be.false;
             expect(editablePairComponent.isEditable).to.be.true;
 
