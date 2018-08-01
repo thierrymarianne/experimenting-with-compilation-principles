@@ -25,5 +25,10 @@ export default {
       default: false,
     },
   },
+  data: function () {
+    return {
+      nodeType: this.getNodeTypes().array,
+    };
+  },
 };
 </script>

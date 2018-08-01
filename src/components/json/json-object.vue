@@ -17,6 +17,11 @@ import JsonEvents from './events/json-events';
 export default {
   name: 'json-object',
   mixins: [Editable.Editable],
+  data: function () {
+    return {
+      nodeType: this.getNodeTypes().object,
+    };
+  },
   props: {
     hasChildren: {
       type: Boolean,

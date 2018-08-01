@@ -144,24 +144,40 @@ export default {
     setJsonTemplate: function (template) {
       this.sharedState.template = template;
     },
-    unregisterNode: function (uuidAttribute) {
-      const editableElementUuid = this.dynamicToEditable[uuidAttribute];
-      delete this.editableToDynamic[editableElementUuid];
-      delete this.dynamicToEditable[uuidAttribute];
+    unregisterNode: function ({uuid}) {
+      if (uuid in this.dynamicToEditable) {
+        const editableElementUuid = this.dynamicToEditable[uuid];
+        delete this.editableToDynamic[editableElementUuid];
+        delete this.dynamicToEditable[uuid];
+      }
+      if (uuid in this.editableToDynamic) {
+        const dynamicElementUuid = this.editableToDynamic[uuid];
+        delete this.dynamicToEditable[dynamicElementUuid];
+        delete this.editableToDynamic[uuid];
+      }
     },
     trackComponentByUuid: function ({ component, uuid }) {
       this.$refs[uuid] = component;
     },
+    getComponentByUuid: function (uuid) {
+      return this.$refs[uuid];
+    },
+    getEditableCounterpartFor(uuid) {
+      return this.$refs[this.dynamicToEditable[uuid]];
+    },
+    getDynamicCounterpartFor(uuid) {
+      return this.$refs[this.editableToDynamic[uuid]];
+    },
     registerNode: function ({ component, uuidAttribute, hook }) {
       if (typeof hook === 'beforeDestroy') {
         this.sharedState.log({ action: 'unregistration', element: component.$el });
-        this.unregisterNode(uuidAttribute);
+        this.unregisterNode({uuid: uuidAttribute});
         return;
       }
 
       this.trackComponentByUuid({ component, uuid: uuidAttribute });
       this.$nextTick(function () {
-        if (component.isRegistered) {
+        if (component.isRegistered || this.hasBeenDestroyed) {
           return;
         }
 
@@ -183,7 +199,8 @@ export default {
           uuid: null,
         };
         
-        if (this.$refs['json-editor'].$refs['editable-json']
+        if (typeof this.$refs['json-editor'].$refs['editable-json'] !== 'undefined'
+        && this.$refs['json-editor'].$refs['editable-json']
         .contains(element)) {
           ({ twinVNode } = this.locateTwinOf({
             element,
@@ -235,7 +252,6 @@ export default {
           twin = element;
           element = editableElement;
         } catch (error) {
-          this.sharedState.error(error, 'json-editor.getTwinsFor');
           return {
             elementVNode: this.$refs[element.getAttribute('data-uuid')],
             twinVNode: undefined,
@@ -404,6 +420,13 @@ export default {
       this.toggleVisibilityOfPreviousComma({ dynamicComponent, isVisible, indexOfElement });
     },
     toggleNodeVisibility: function ({ element, uuid }) {
+      // The editor should be visible
+      // before considering toggling the visibility 
+      // of its children components
+      if (!this.isVisible) {
+        return;
+      }
+
       const { twinVNode, elementVNode } = this.locateTwinOf({
         element,
         uuid,
@@ -425,7 +448,18 @@ export default {
         twinVNode.isVisible = !twinVNode.isVisible;
         this.toggleVisibilityOfCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
 
-        EventHub.$emit(JsonEvents.node.altered, { component: twinVNode });
+        let hook = JsonEvents.node.afterBeingHidden;
+        if (elementVNode.isVisible) {
+          hook = JsonEvents.node.afterBeingShown;
+        }
+
+        EventHub.$emit(
+          JsonEvents.node.altered,
+          {
+            component: twinVNode,
+            hook: hook,
+          },
+        );
       });
     },
     toggleNodeEdition: function ({ nodeUuid }) {
@@ -522,8 +556,17 @@ export default {
       this.syncNodes(text, twin);
     },
   },
+  destroyed: function () {
+    this.hasBeenDestroyed = true;
+  },
+  computed: {
+    isVisible: function () {
+      return window.getComputedStyle(this.$el).display !== 'none';
+    }
+  },
   mounted: function () {
     EventHub.$on(JsonEvents.node.destroyed, this.registerNode);
+    EventHub.$on(JsonEvents.node.unregistered, this.unregisterNode);
     EventHub.$on(JsonEvents.node.hidden, this.toggleNodeVisibility);
     EventHub.$on(JsonEvents.node.registered, this.registerNode);
     EventHub.$on(JsonEvents.node.madeEditable, this.toggleNodeEdition);
@@ -556,6 +599,7 @@ export default {
       dynamicToEditable: {},
       editableToDynamic: {},
       isReady: false,
+      hasBeenDestroyed: false,
     }
   }
 };

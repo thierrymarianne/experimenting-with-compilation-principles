@@ -8,10 +8,12 @@ import WithUuid from '../../mixins/with-uuid';
 
 const NODE_TYPES = {
   undeclared: null,
+  array: 'array',
   key: 'key',
   value: 'value',
   pair: 'pair',
   comma: 'comma',
+  object: 'object',
 };
 
 const Editable = {
@@ -24,6 +26,7 @@ const Editable = {
       isEdited: false,
       isVisible: true,
       isRegistered: false,
+      hasBeenDestroyed: false,
       noPendingCopy: SharedState.state.noPendingCopy,
       sharedState: SharedState.state,
       nodeType: NODE_TYPES.undeclared,
@@ -105,6 +108,13 @@ const Editable = {
         this.afterRegistration();
       }
     },
+  },
+  destroyed: function () {
+    EventHub.$emit(
+      JsonEvents.node.unregistered,
+      { uuid: this.uuid },
+    );
+    this.hasBeenDestroyed = true;
   },
   computed: {
     isShown: function () {
