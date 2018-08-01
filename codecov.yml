@@ -6,7 +6,7 @@ ignore:
   - src/components/expr
   - src/components/formal-notation
   - src/components/structure-of-a-compiler
-  - src/components/*
+  - src/components/*.js
   - src/modules/antlr/*
   - src/store/modules/*
   - test/**/*.js
