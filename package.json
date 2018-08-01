@@ -90,7 +90,6 @@
     "@fortawesome/vue-fontawesome": "^0.1.1",
     "antlr4": "^4.7.1",
     "automata.js": "^0.2.1",
-    "es6-promise": "^4.2.4",
     "lodash": "^4.17.10",
     "mime": "^2.3.1",
     "node-uuid": "^1.4.8",
