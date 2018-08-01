@@ -97,7 +97,7 @@ describe('JsonEditor', () => {
           let dynamicPairComponent;
 
           if (hook === JsonEvents.node.afterBeingHidden) {
-            // Ensure pair is hidden after which visibility has been toggled
+            // Ensure pair is hidden after its visibility has been toggled
             const pair = subjectUnderTestWrapper.vm
             .$refs['json-editor']
             .$refs['dynamic-json']
