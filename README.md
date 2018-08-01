@@ -1,8 +1,10 @@
 # Learning how compilers work
 
 [![codecov](https://codecov.io/gh/thierrymarianne/project-learning-compilers/branch/master/graph/badge.svg)](https://codecov.io/gh/thierrymarianne/project-learning-compilers)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/test_coverage)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/test_coverage)
 [![CircleCI](https://circleci.com/gh/thierrymarianne/project-learning-compilers.svg?style=svg)](https://circleci.com/gh/thierrymarianne/project-learning-compilers)
 [![Build Status](https://travis-ci.org/thierrymarianne/project-learning-compilers.svg?branch=master)](https://travis-ci.org/thierrymarianne/project-learning-compilers)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/maintainability)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/maintainability)
 
 ## Demo
 

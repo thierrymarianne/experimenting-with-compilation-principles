@@ -2,7 +2,7 @@ process.env.CHROME_BIN = require('puppeteer').executablePath();
 const webpackConfig = require('../webpack.config.js');
 
 const coverageReporter = {
-  dir: './coverage',
+  dir: '../coverage',
   reporters: [
     { type: 'lcov', subdir: '.' },
     { type: 'text-summary' },
