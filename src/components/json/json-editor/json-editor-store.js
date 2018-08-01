@@ -60,6 +60,9 @@ const JsonEditor = {
         return state.nodes[uuid].edited;
       };
     },
+    getNodes: function (state) {
+      return state.nodes;
+    },
     valueOfNodeWithUuid: function (state) {
       return (uuid) => {
         const node = guardAgainstNodeNotFound({ state, uuid });

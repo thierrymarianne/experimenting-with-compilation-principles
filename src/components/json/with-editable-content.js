@@ -10,6 +10,7 @@ const WithEditableContent = {
   computed: {
     ...mapGetters([
       'isNodeWithUuidBeingEdited',
+      'getNodes',
     ]),
   },
   methods: {
@@ -27,15 +28,8 @@ const WithEditableContent = {
       );
     },
     makeContentNonEditable: function () {
-      if (typeof this.$parent !== 'undefined'
-      && typeof this.$parent.$parent !== 'undefined'
-      && typeof this.$parent.$parent.$parent !== 'undefined'
-      ) {
-        if (this.$parent.$parent.$parent
-        .$vnode.componentOptions.tag !== 'json-object'
-        && this.$parent.$vnode.componentOptions.tag !== 'pair-key') {
-          return;
-        }
+      if (this.$children > 0) {
+        return;
       }
 
       if (!this.isNodeWithUuidBeingEdited(this.uuid)) {
