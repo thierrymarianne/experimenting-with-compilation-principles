@@ -33,6 +33,13 @@
       <source-code
         wrap
         color='clickable'
+        v-if='false'
+        v-on:click.native='copyToInputArea("brokenCase", $event)'>Broken case
+      </source-code>
+      <source-code
+        wrap
+        color='clickable'
+        v-if='false'
         v-on:click.native='copyToInputArea("codeInjection", $event)'>Injected code
       </source-code>
       <source-code
@@ -86,7 +93,8 @@ import SharedState from '../../../../modules/shared-state';
 import SourceCode from '../../../source-code.vue';
 import Raven from 'raven-js';
 
-import Array from '../../../../json/array.json';
+import ArrayCase from '../../../../json/array.json';
+import BrokenCase from '../../../../json/broken-case.json';
 import CodeInjection from '../../../../json/code-injection.json';
 import LearningCompilers from '../../../../../package.json';
 import Leftpad from '../../../../json/leftpad.json';
@@ -94,7 +102,8 @@ import Pair from '../../../../json/pair.json';
 import Symfony from '../../../../json/symfony.json';
 
 const jsonExamples = {
-  array: Array,
+  array: ArrayCase,
+  brokenCase: BrokenCase,
   codeInjection: CodeInjection,
   learningCompilers: LearningCompilers,
   leftpad: Leftpad,
@@ -102,7 +111,7 @@ const jsonExamples = {
   symfony: Symfony,
 };
 
-const PackageJson = jsonExamples.learningCompilers;
+const PackageJson = jsonExamples.brokenCase;
 
 export default {
   name: 'lexical-analyzer',
