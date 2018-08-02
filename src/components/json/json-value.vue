@@ -129,9 +129,11 @@ export default {
         this.$slots.default = [];
       }
 
-      this.$slots.default[0] = this.text;
-      this.$el.innerText = this.text
-      this.$el.innerHtml = this.text;
+      const text = this.getTextFromSlot();
+
+      this.$slots.default[0] = text;
+      this.$el.innerText = text;
+      this.$el.innerHtml = text;
     });
   },
   beforeDestroy: function () {
@@ -181,12 +183,13 @@ export default {
       isLastChild: false,
       nodeType: this.getNodeTypes().value,
       sharedState: SharedState.state,
+      temporaryValue: null,
     }
   },
   computed: {
     text: {
       get: function () {
-        return this.getTextFromSlot();
+        return this.temporaryValue;
       },
       set: function (text) {
         if (this.isArrayItem) {
@@ -197,8 +200,9 @@ export default {
           this.$slots.default = [];
         }
 
-        this.$slots.default[0] = text;
-        this.sharedState.values[this.uuid] = text;
+        this.temporaryValue = text;
+        this.$slots.default[0] = this.temporaryValue;
+        this.sharedState.values[this.uuid] = this.temporaryValue;
       }
     },
     hasText: function () {

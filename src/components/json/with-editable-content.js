@@ -28,6 +28,10 @@ const WithEditableContent = {
       );
     },
     makeContentNonEditable: function () {
+      if (!this.isEditable) {
+        return;
+      }
+
       if (this.$children > 0) {
         return;
       }

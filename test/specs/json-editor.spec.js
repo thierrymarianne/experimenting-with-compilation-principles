@@ -82,8 +82,8 @@ describe('JsonEditor', () => {
       expect(subjectUnderTestWrapper.contains('.editable-json.editable-json--ready'))
       .to.be.true;
       expect(subjectUnderTestWrapper.contains('.dynamic-json')).to.be.true;
-      expect(subjectUnderTestWrapper.vm.json).to.equals(json);
-      expect(SharedState.state.template).to.equals(template);
+      expect(subjectUnderTestWrapper.vm.json).to.equal(json);
+      expect(SharedState.state.template).to.equal(template);
       const text = subjectUnderTestWrapper.text();
       expect(text).to.equal('{  }{  }');
     });
@@ -147,7 +147,10 @@ describe('JsonEditor', () => {
         expect(editablePairComponent.isVisible).to.be.true;
         expect(editablePairComponent.isEditable).to.be.true;
 
-        EventHub.$off(JsonEvents.node.altered, ensurePairVisibilityToggling);
+        EventHub.$off(
+          JsonEvents.node.altered,
+          ensurePairVisibilityToggling,
+        );
         done();
       });
     };
@@ -185,18 +188,57 @@ describe('JsonEditor', () => {
     localVue.config.errorHandler = done;
 
     const registeredComponents = [];
+    const afterRegistration = ({ component }) => {
+      registeredComponents.push(component);
+      if (registeredComponents.length === 8) {
+        EventHub.$off(
+          JsonEvents.node.afterRegistration,
+          afterRegistration,
+        );
+        const buttons = document.querySelectorAll('.editable-json .json__pair---button');
+        const addPairAfterButton = buttons[1];
+        addPairAfterButton.click();
+      }
+    };
+
+    const afterPairAddition = ({
+      editableComponentAddition,
+      dynamicComponentAddition,
+      editableComponent,
+      dynamicComponent,
+    }) => {
+      localVue.nextTick(() => {
+        expect(document.querySelectorAll('.editable-json .json__pair')
+        .length).to.equal(2);
+        expect(document.querySelectorAll('.dynamic-json .json__pair')
+        .length).to.equal(2);
+
+        expect(editableComponentAddition.isClonable).to.be.true;
+        expect(editableComponentAddition.isEditable).to.be.true;
+        expect(dynamicComponentAddition.isClonable).to.be.false;
+        expect(dynamicComponentAddition.isEditable).to.be.false;
+
+        expect(editableComponent.isClonable).to.be.true;
+        expect(editableComponent.isEditable).to.be.true;
+        expect(dynamicComponent.isClonable).to.be.false;
+        expect(dynamicComponent.isEditable).to.be.false;
+
+        EventHub.$off(
+          JsonEvents.node.afterPairAddition,
+          afterPairAddition,
+        );
+        done();
+      });
+    };
+
+    EventHub.$on(
+      JsonEvents.node.afterPairAddition,
+      afterPairAddition,
+    );
 
     EventHub.$on(
       JsonEvents.node.afterRegistration,
-      ({ component }) => {
-        registeredComponents.push(component);
-        if (registeredComponents.length === 8) {
-          const buttons = document.querySelectorAll('.editable-json .json__pair---button');
-          const addPairAfterButton = buttons[1];
-          addPairAfterButton.click();
-          done();
-        }
-      },
+      afterRegistration,
     );
 
     const subjectUnderTestWrapper = mountSubjectUnderTest({
@@ -206,8 +248,104 @@ describe('JsonEditor', () => {
         localVue,
       },
       wrapperCreator: mount,
-      destroyAfter: false,
-      id: 'pair-maker',
+    });
+
+    const template = '<json-object has-children>'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value"</json-value></template>'
+      + ' </json-pair>'
+      + '</json-object>';
+    subjectUnderTestWrapper.vm.setJsonTemplate(template);
+  });
+
+  it('should allow to edit a key or a value', (done) => {
+    localVue.config.errorHandler = done;
+
+    const registeredComponents = [];
+    let pairValue;
+    const clickOnPairValue = ({ component }) => {
+      registeredComponents.push(component);
+      if (registeredComponents.length === 8) {
+        const editableValues = document.querySelectorAll('.editable-json .json__value');
+        pairValue = editableValues[1];
+        pairValue.click();
+      }
+    };
+
+    let subjectUnderTestWrapper;
+    let editions = 0;
+
+    const afterBeingMadeEditable = ({ component }) => {
+      localVue.nextTick(() => {
+        editions += 1;
+        EventHub.$off(JsonEvents.node.afterRegistration, clickOnPairValue);
+
+        expect(component.isEdited).to.be.true;
+
+        expect(component.$el.getAttribute('contenteditable'))
+        .to.be.equal('true');
+
+        let newValue;
+        if (editions === 1) {
+          newValue = '"value updated"';
+        }
+
+        if (editions === 2) {
+          newValue = '"value updated again"';
+        }
+
+        component.$el.innerText = newValue;
+
+        // Click outside of the edited component
+        subjectUnderTestWrapper.vm.$refs['json-editor']
+        .$refs['dynamic-json'].click();
+
+        expect(component.$el.hasAttribute('contenteditable'))
+        .to.be.false;
+
+        const editableCompanent = component;
+        expect(editableCompanent.isEdited).to.be.false;
+        expect(editableCompanent.getTextFromSlot()).to.equal(newValue);
+        expect(editableCompanent.text).to.equal(newValue);
+
+        const dynamicComponent = subjectUnderTestWrapper.vm
+        .getDynamicCounterpartFor(component.uuid);
+        expect(dynamicComponent.getTextFromSlot()).to.equal(newValue);
+        expect(dynamicComponent.text).to.equal(newValue);
+
+        if (editions === 2) {
+          EventHub.$off(
+            JsonEvents.node.afterBeingMadeEditable,
+            afterBeingMadeEditable,
+          );
+          done();
+
+          return;
+        }
+
+        pairValue.click();
+      });
+    };
+
+    EventHub.$on(
+      JsonEvents.node.afterBeingMadeEditable,
+      afterBeingMadeEditable,
+    );
+
+    EventHub.$on(
+      JsonEvents.node.afterRegistration,
+      clickOnPairValue,
+    );
+
+    subjectUnderTestWrapper = mountSubjectUnderTest({
+      objectData: {
+        attachToDocument: true,
+        store,
+        localVue,
+      },
+      wrapperCreator: mount,
     });
 
     const template = '<json-object has-children>'

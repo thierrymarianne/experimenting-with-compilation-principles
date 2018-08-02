@@ -58,7 +58,8 @@ export default {
       indexInSlot,
       nodeUuid,
       key,
-      value
+      value,
+      editableComponentVNodes,
     }) {
       const pairTwin = this.editableToDynamic[nodeUuid];
       const element = this.$refs[nodeUuid];
@@ -70,7 +71,7 @@ export default {
 
       element.isEditable = false;
       twin.isEditable = true;
-      twin.addAfterPair();
+      const dynamicComponentVNodes = twin.addAfterPair();
       twin.isEditable = false;
       element.isEditable = true;
 
@@ -102,6 +103,13 @@ export default {
         let keyComponent;
         let parent = pair;
         let values;
+        let vnodes = {
+          editablePair: {
+            pair:  editableComponentVNodes.pair,
+            value: editableComponentVNodes.value,
+          },
+          dynamicPair: dynamicComponentVNodes,
+        } ;
 
         while (typeof valueComponent === 'undefined') {
           if (parent.$children.length === 0) {
@@ -127,6 +135,7 @@ export default {
         keyComponent.text = texts.key;
         const keyTwins = this.getTwinsFor(keyComponent.$el);
         keyTwins.twinVNode.text = texts.key;
+
         const keyNode = {
           uuid: keyComponent.uuid,
           value: texts.key,
@@ -136,6 +145,16 @@ export default {
         this.trackNode(keyNode);
 
         valueComponent.text = texts.value;
+
+        this.trackComponentByUuid({ 
+          component: valueComponent,
+          uuid: valueComponent.uuid
+        });
+        this.trackComponentByUuid({ 
+          component: vnodes.dynamicPair.value.componentInstance,
+          uuid: vnodes.dynamicPair.value.componentInstance.uuid
+        });
+
         const valueTwins = this.getTwinsFor(valueComponent.$el);
         valueTwins.twinVNode.text = texts.value;
         
@@ -158,24 +177,33 @@ export default {
           component: twinClone,
           uuid: uuids.dynamic,
         });
-        this.$nextTick(function () {
-          const elementClone = element.getSlotByIndex({
-            index: indexInSlot,
-            parentComponent: element.$parent,
-          });
-          this.trackComponentByUuid({
-            component: elementClone,
-            uuid: elementClone.uuid,
-          });
-          this.editableToDynamic[elementClone.uuid] = twinClone.uuid;
-          element.updateKey({
-            callback: trackPairNode,
-            indexInSlot,
-            parentComponent: element.$parent,
-            uuids: uuids,
-          });
-          this.dynamicToEditable[uuids.dynamic] = elementClone.uuid;
+
+        const elementClone = element.getSlotByIndex({
+          index: indexInSlot,
+          parentComponent: element.$parent,
         });
+        this.trackComponentByUuid({
+          component: elementClone,
+          uuid: elementClone.uuid,
+        });
+        this.editableToDynamic[elementClone.uuid] = twinClone.uuid;
+        const editableComponentClone = element.updateKey({
+          callback: trackPairNode,
+          indexInSlot,
+          parentComponent: element.$parent,
+          uuids: uuids,
+        });
+        this.dynamicToEditable[uuids.dynamic] = elementClone.uuid;
+
+        EventHub.$emit(
+          JsonEvents.node.afterPairAddition,
+          {
+            editableComponent: element,
+            dynamicComponent: twin,
+            editableComponentAddition: editableComponentClone,
+            dynamicComponentAddition: twinClone,
+          }
+        );
       });
 
       twin.$parent.$forceUpdate();
@@ -382,8 +410,8 @@ export default {
         text = source.text;
       }
       destination.text = text;
-      destination.$el.innerHtml = text;
       destination.$el.innerText = text;
+      destination.$el.innerHtml = text;
 
       if (typeof destination.$slots.default === 'undefined') {
         if (typeof text === 'undefined') {
@@ -394,6 +422,7 @@ export default {
       }
 
       destination.$slots.default[0] = text;
+      this.sharedState.values[destination.uuid] = text;
     },
     componentWithUuid: function (nodeUuid) {
       return this.$refs[nodeUuid];
@@ -565,11 +594,12 @@ export default {
       if (typeof nodeComponent === 'undefined' || nodeComponent.edited) {
         return;
       }
+
       let plainText;
 
       if (this.isNodeWithUuidBeingEdited()(nodeUuid)) {
         const subject = nodeComponent.$el.innerText;
-        
+
         let sanitizedText = subject
         .replace(/\n/g, '');
 
@@ -608,6 +638,7 @@ export default {
         nodeComponent.$el.removeAttribute('contenteditable');
         nodeComponent.$el.classList.remove('json__value--edited');
         this.syncNodes(sanitizedText, nodeComponent);
+        this.sharedState.values[nodeUuid] = sanitizedText;
 
         this.saveValue({
           uuid: nodeUuid,
@@ -638,7 +669,10 @@ export default {
 
       EventHub.$emit(
         JsonEvents.node.afterBeingMadeEditable,
-        { nodeUuid: nodeUuid },
+        { 
+          nodeUuid: nodeUuid,
+          component: nodeComponent, 
+        },
       );
     },
     applyChangesToTwin: function ({ component, uuid, text }) {
@@ -649,7 +683,8 @@ export default {
 
       this.$refs[this.editableToDynamic[uuid]] = twins.twinVNode;
 
-      const twin = this.$refs[this.editableToDynamic[uuid]];
+      const twinUuid = this.editableToDynamic[uuid];
+      const twin = this.$refs[twinUuid];
       this.syncNodes(text, twin);
     },
   },

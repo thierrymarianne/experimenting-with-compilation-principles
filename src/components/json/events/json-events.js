@@ -5,6 +5,7 @@ const events = {
     afterBeingMadeEditable: 'node.after_being_made_editable',
     afterBeingShown: 'node.after_being_shown',
     afterEdition: 'node.after_edition',
+    afterPairAddition: 'node.after_pair_addition',
     afterRegistration: 'node.after_registration',
     altered: 'node.altered',
     destroyed: 'node.destroyed',

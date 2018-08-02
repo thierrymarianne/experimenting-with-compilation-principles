@@ -196,17 +196,25 @@ export default {
       indexInSlot = indexInSlot + 1;
       this.$parent.$slots.default.splice(indexInSlot, 0, jsonPair);
 
+      const vnodes = {
+        pair: jsonPair,
+        value: jsonValue,
+      };
+
       if (this.isClonable) {
         EventHub.$emit(
           JsonEvents.pair.added,
           { 
             nodeUuid: this.uuid,
             indexInSlot,
+            editableComponentVNodes: vnodes,
             key, 
             value
           },
         );
       }
+
+      return vnodes;
     },
     getSlotByIndex({ index, parentComponent }) {
       return parentComponent.$slots

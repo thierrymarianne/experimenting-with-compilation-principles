@@ -56,7 +56,8 @@ export default {
         return;
       }
 
-      if (typeof this.$refs['value'].text === 'undefined') {
+      if (typeof this.$refs['value'].text === 'undefined'
+      || this.$refs['value'].text === null) {
         return false;
       }
 
