@@ -44,12 +44,18 @@ localVue.component(
 );
 
 describe('JsonArray', () => {
-  let jsonEditorWrapper;
-  let subjectUnderTestWrapper;
+  const wrappers = {
+    jsonEditorWrapper: null,
+    subjectUnderTestWrapper: null,
+  };
 
-  const mountSubjectUnderTest = function ({ objectData, requiresEditor }) {
+  const mountSubjectUnderTest = function ({
+    objectData,
+    requiresEditor,
+    destroyAfter,
+  }) {
     if (requiresEditor) {
-      jsonEditorWrapper = mount(
+      const jsonEditorComponentWrapper = mount(
         JsonEditor,
         {
           attachToDocument: false,
@@ -57,30 +63,42 @@ describe('JsonArray', () => {
           localVue,
         },
       );
+
+      TestHelpers.ensureComponentWrapperIsDestroyedAfter({
+        componentWrapper: jsonEditorComponentWrapper,
+        wrappersForDeletion: wrappers,
+        wrapperForDeletionName: 'jsonEditorWrapper',
+        destroyAfter,
+      });
     }
 
-    subjectUnderTestWrapper = mount(JsonArray, objectData);
+    const subjectUnderTestComponentWrapper = mount(JsonArray, objectData);
 
-    return { subjectUnderTestWrapper };
+    return TestHelpers.ensureComponentWrapperIsDestroyedAfter({
+      componentWrapper: subjectUnderTestComponentWrapper,
+      wrappersForDeletion: wrappers,
+      wrapperForDeletionName: 'subjectUnderTestWrapper',
+      destroyAfter,
+    });
   };
 
   afterEach(() => {
-    TestHelpers.destroyComponent(subjectUnderTestWrapper);
-    TestHelpers.destroyComponent(jsonEditorWrapper);
+    TestHelpers.destroyComponent(wrappers.subjectUnderTestWrapper);
+    TestHelpers.destroyComponent(wrappers.jsonEditorWrapper);
   });
 
   it('should render an empty array', () => {
-    ({ subjectUnderTestWrapper } = mountSubjectUnderTest({ objectData: {} }));
+    const { subjectUnderTestWrapper } = mountSubjectUnderTest({ objectData: {} });
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text();
     expect(text).to.equal('[  ]');
   });
 
   it('should render an array containing an oject', () => {
-    ({ subjectUnderTestWrapper } = mountSubjectUnderTest(
+    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
       {
         objectData: {
-          attachToDocument: false,
+          attachToDocument: true,
           propsData: {
             hasChildren: true,
           },
@@ -98,8 +116,9 @@ describe('JsonArray', () => {
           store,
           localVue,
         },
+        destroyAfter: true,
       },
-    ));
+    );
 
     expect(subjectUnderTestWrapper.contains('span')).to.be.true;
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
@@ -141,7 +160,7 @@ describe('JsonArray', () => {
       },
     );
 
-    ({ subjectUnderTestWrapper } = mountSubjectUnderTest(
+    const { subjectUnderTestWrapper } = mountSubjectUnderTest(
       {
         objectData: {
           attachToDocument: true,
@@ -166,7 +185,7 @@ describe('JsonArray', () => {
         },
         requiresEditor: true,
       },
-    ));
+    );
 
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('[{"Key":"Value",},"Value2"]');
