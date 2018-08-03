@@ -510,36 +510,94 @@ export default {
 
       nextVNode.componentInstance.isVisible = isVisible;
     },
-    toggleVisibilityOfCommas({ dynamicComponent, isVisible }) {
+    getComponentIndex: function (component) {
       let indexOfElement;
-      dynamicComponent.$parent.$slots.default.map((VNode, index) => {
-        if (VNode == dynamicComponent.$vnode) {
+      component.$parent.$slots.default.map((VNode, index) => {
+        if (VNode == component.$vnode) {
           indexOfElement = index;
         }
       });
 
-      const isFirstVisibleComponent = dynamicComponent.$parent
+      return indexOfElement;
+    },
+    isBeforeAllVisibleSiblings: function ({ component, indexOfElement }) {
+      return component.$parent
       .$slots.default.filter((VNode, index) => {
         return index < indexOfElement
         && VNode.elm.nodeType !== Node.TEXT_NODE &&
         VNode.componentInstance.isVisible;
       }).length === 0;
-
-      const isOnlyVisibleComponent = dynamicComponent.$parent
+    },
+    areAllSiblingsHidden: function ({ component, indexOfElement }) {
+      return component.$parent
       .$slots.default.filter((VNode, index) => {
         return index !== indexOfElement
         && VNode.elm.nodeType !== Node.TEXT_NODE &&
         VNode.componentInstance.isVisible;
       }).length === 0;
+    },
+    getName: function (component) {
+      return component.componentOptions.Ctor.options.name;
+    },
+    hasName: function ({ component, name }) {
+      return this.getName(component) === name;
+    },
+    getFollowingComponents: function ({ component, indexOfElement, shouldBeVisible }) {
+      return component.$parent
+      .$slots.default.filter((VNode, index) => {
+        return index > indexOfElement
+        && VNode.elm.nodeType !== Node.TEXT_NODE
+        && VNode.componentInstance.isVisible !== shouldBeVisible;
+      });
+    },
+    foundCommaCandidateFollowing: function ({ component, indexOfElement, shouldBeVisible }) {
+      const followingComponents = this.getFollowingComponents({
+        component,
+        indexOfElement,
+        shouldBeVisible
+      });
+
+      return followingComponents.length > 0
+      && this.hasName({ component: followingComponents[0], name: 'comma' });
+    },
+    foundNonCommaCandidateFollowing: function ({ component, indexOfElement, shouldBeVisible }) {
+      return component.$parent
+      .$slots.default.filter((VNode, index) => {
+        return index > indexOfElement
+        && VNode.elm.nodeType !== Node.TEXT_NODE
+        && this.getName(VNode) !== 'comma'
+        && VNode.componentInstance.isVisible === shouldBeVisible;
+      }).length > 0;
+    },
+    shouldToggleNextCommaVisibility: function ({ component, indexOfElement, shouldBeVisible }) {
+      return this.isBeforeAllVisibleSiblings({ component, indexOfElement })
+      || (
+        this.foundCommaCandidateFollowing({ component, indexOfElement, shouldBeVisible })
+        && this.foundNonCommaCandidateFollowing({ component, indexOfElement, shouldBeVisible })
+    );
+    },
+    toggleVisibilityOfSurroundingCommas({ dynamicComponent, isVisible }) {
+      let indexOfElement = this.getComponentIndex(dynamicComponent);
+
+      const targetComponent = {
+        component: dynamicComponent,
+        indexOfElement,
+        shouldBeVisible: isVisible,
+      };
+
+      const areAllSiblingsHidden = this.areAllSiblingsHidden(targetComponent);
 
       // When showing the first component,
       // do not toogle the visibility of a comma
-      if (isOnlyVisibleComponent && isVisible) {
+      if (areAllSiblingsHidden && isVisible) {
         return;
       }
 
-      if (isFirstVisibleComponent) {
+      if (this.shouldToggleNextCommaVisibility(targetComponent)) {
         this.toggleVisibilityOfNextComma({ dynamicComponent, isVisible, indexOfElement });
+      }
+
+      if (this.isBeforeAllVisibleSiblings(targetComponent)) {
         return;
       }
 
@@ -572,7 +630,7 @@ export default {
         elementVNode.isEditable = true;
         elementVNode.isVisible = !elementVNode.isVisible;
         twinVNode.isVisible = !twinVNode.isVisible;
-        this.toggleVisibilityOfCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
+        this.toggleVisibilityOfSurroundingCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
 
         let hook = JsonEvents.node.afterBeingHidden;
         if (elementVNode.isVisible) {

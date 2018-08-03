@@ -19,6 +19,10 @@ localVue.component(
 localVue.use(Vuex);
 
 describe('JsonEditor', () => {
+  // Show punctuation characters as they should be
+  // before copy to clipboard
+  SharedState.state.debug.punctuation = true;
+
   let jsonEditorWrapper;
 
   const mountSubjectUnderTest = ({
@@ -294,6 +298,10 @@ describe('JsonEditor', () => {
 
         if (editions === 2) {
           newValue = '"value updated again"';
+          EventHub.$off(
+            JsonEvents.node.afterBeingMadeEditable,
+            afterBeingMadeEditable,
+          );
         }
 
         component.$el.innerText = newValue;
@@ -307,21 +315,16 @@ describe('JsonEditor', () => {
 
         const editableCompanent = component;
         expect(editableCompanent.isEdited).to.be.false;
-        expect(editableCompanent.getTextFromSlot()).to.equal(newValue);
+        expect(editableCompanent.value).to.equal(newValue);
         expect(editableCompanent.text).to.equal(newValue);
 
         const dynamicComponent = subjectUnderTestWrapper.vm
         .getDynamicCounterpartFor(component.uuid);
-        expect(dynamicComponent.getTextFromSlot()).to.equal(newValue);
+        expect(dynamicComponent.value).to.equal(newValue);
         expect(dynamicComponent.text).to.equal(newValue);
 
         if (editions === 2) {
-          EventHub.$off(
-            JsonEvents.node.afterBeingMadeEditable,
-            afterBeingMadeEditable,
-          );
           done();
-
           return;
         }
 
@@ -345,6 +348,7 @@ describe('JsonEditor', () => {
         store,
         localVue,
       },
+      destroyAfter: false,
       wrapperCreator: mount,
     });
 
@@ -355,6 +359,207 @@ describe('JsonEditor', () => {
       + '   <template slot="value"><json-value>"Value"</json-value></template>'
       + ' </json-pair>'
       + '</json-object>';
+    subjectUnderTestWrapper.vm.setJsonTemplate(template);
+  });
+
+  it('should allow to add/remove a pair without breaking the JSON validity because of remaining or missing commas', (done) => {
+    localVue.config.errorHandler = done;
+
+    // Create an additional pair after the first one
+    const registeredComponents = [];
+    const afterRegistration = ({ component }) => {
+      if (registeredComponents.length === 23) {
+        EventHub.$off(
+          JsonEvents.node.afterRegistration,
+          afterRegistration,
+        );
+      }
+
+      registeredComponents.push(component);
+
+      // There are 12 components to be accounted for in each panel:
+      // - an array (1),
+      // - the only value of this array (an object) (1),
+      // - three pairs (3),
+      // - three corresponding values (3),
+      // - three corresponding keys and their respective values (6) and
+      // Given there are two panels (one for the editable JSON,
+      // and another for the dynamic JSON), it gives us 24 components
+      // but the array, and the object don't register themselves (twice).
+
+      if (registeredComponents.length === 24) {
+        const buttons = document.querySelectorAll('.editable-json .json__pair---button');
+        const addPairAfterButton = buttons[1];
+        addPairAfterButton.click();
+        done();
+      }
+    };
+    EventHub.$on(
+      JsonEvents.node.afterRegistration,
+      afterRegistration,
+    );
+
+    const actions = {};
+
+    // Allow to set up a sequence of arbitrary actions
+    // (which details are given by the "actionTrigger" functions),
+    // without worrying about unregistering event handlers.
+    // It also prevent having to face a pyramid
+    // of nested callback registration
+    const setUpAction = ({
+      event,
+      action,
+      actionTrigger,
+      nextAction,
+      nextEvent,
+    }) => {
+      let jsonEvent = event;
+      if (typeof jsonEvent === 'undefined') {
+        jsonEvent = JsonEvents.node.altered;
+      }
+
+      let nextJsonEvent = nextEvent;
+      if (typeof nextJsonEvent === 'undefined') {
+        nextJsonEvent = JsonEvents.node.altered;
+      }
+
+      actions[action] = () => {
+        EventHub.$off(
+          jsonEvent,
+          actions[action],
+        );
+
+        localVue.nextTick()
+        .then(() => {
+          if (nextAction) {
+            if (typeof actions[nextAction] !== 'function') {
+              throw Error(
+                `The definition of the next action (with name "${nextAction}") `
+                + 'is not valid (a function is required as trigger)',
+              );
+            }
+
+            EventHub.$on(
+              nextJsonEvent,
+              actions[nextAction],
+            );
+          }
+
+          actionTrigger();
+        });
+      };
+
+      return actions[action];
+    };
+
+    const startByHidingFirstPair = setUpAction({
+      event: JsonEvents.node.afterPairAddition,
+      action: 'hide_first_pair',
+      actionTrigger: function () {
+        TestHelpers.selectFirstPairButton().click();
+      },
+      nextAction: 'hide_second_pair',
+    });
+
+    setUpAction({
+      action: 'hide_second_pair',
+      actionTrigger: function () {
+        TestHelpers.selectPairButtonAtIndex(1).click();
+      },
+      nextAction: 'show_first_pair',
+    });
+
+    setUpAction({
+      action: 'show_first_pair',
+      actionTrigger: function () {
+        TestHelpers.selectPairButtonAtIndex(0).click();
+      },
+      nextAction: 'show_second_pair',
+    });
+
+    setUpAction({
+      action: 'show_second_pair',
+      actionTrigger: function () {
+        TestHelpers.selectPairButtonAtIndex(2).click();
+      },
+      nextAction: 'ensure_there_are_three_commas_left_before_hiding_last_pair',
+    });
+
+    setUpAction({
+      action: 'ensure_there_are_three_commas_left_before_hiding_last_pair',
+      actionTrigger: function () {
+        expect(document.querySelector('.dynamic-json')
+        .innerText.match(/,/g).length).to.equal(3);
+        TestHelpers.selectPairButtonAtIndex(6).click();
+      },
+      nextAction: 'hide_pair_before_the_last',
+    });
+
+    setUpAction({
+      action: 'hide_pair_before_the_last',
+      actionTrigger: function () {
+        TestHelpers.selectPairButtonAtIndex(4).click();
+      },
+      nextAction: 'ensure_there_are_one_comma_left_before_showing_pair_before_last',
+    });
+
+    setUpAction({
+      action: 'ensure_there_are_one_comma_left_before_showing_pair_before_last',
+      actionTrigger: function () {
+        expect(document.querySelector('.dynamic-json')
+        .innerText.match(/,/g).length).to.equal(1);
+        TestHelpers.selectPairButtonAtIndex(4).click();
+      },
+      nextAction: 'ensure_there_are_two_commas_left',
+    });
+
+    setUpAction({
+      action: 'ensure_there_are_two_commas_left',
+      actionTrigger: function () {
+        expect(document.querySelector('.dynamic-json')
+        .innerText.match(/,/g).length).to.equal(2);
+        done();
+      },
+    });
+
+    EventHub.$on(
+      JsonEvents.node.afterPairAddition,
+      startByHidingFirstPair,
+    );
+
+    const subjectUnderTestWrapper = mountSubjectUnderTest({
+      objectData: {
+        attachToDocument: true,
+        store,
+        localVue,
+      },
+      wrapperCreator: mount,
+      destroyAfter: false,
+    });
+
+    const template = '<json-array has-children>'
+      + '<json-value>'
+      + ' <json-object has-children>'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value"</json-value></template>'
+      + ' </json-pair>'
+      + ' <comma />'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key2"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value2"</json-value></template>'
+      + ' </json-pair>'
+      + ' <comma />'
+      + ' <json-pair>'
+      + '   <template slot="key">"Key3"</template>'
+      + '   <template slot="colon">:</template>'
+      + '   <template slot="value"><json-value>"Value3"</json-value></template>'
+      + ' </json-pair>'
+      + '</json-object>'
+      + '</json-value>'
+      + '</json-array>';
     subjectUnderTestWrapper.vm.setJsonTemplate(template);
   });
 });
