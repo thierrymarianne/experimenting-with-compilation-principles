@@ -534,7 +534,6 @@ describe('JsonEditor', () => {
         localVue,
       },
       wrapperCreator: mount,
-      destroyAfter: false,
     });
 
     const template = '<json-array has-children>'
