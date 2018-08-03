@@ -13,6 +13,11 @@ const guardAgainstNodeNotFound = function ({ state, uuid }) {
   return state.nodes[uuid];
 };
 
+const isNodeEdited = ({ isEdited, node, state }) => {
+  const { uuid } = node;
+  state.nodes[uuid].edited = isEdited;
+};
+
 const JsonEditor = {
   namespaced: true,
   state: {
@@ -27,12 +32,10 @@ const JsonEditor = {
       state.nodes[twin.uuid].value = value;
     },
     [MutationTypes.MAKE_CONTENT_NON_EDITABLE](state, node) {
-      const { uuid } = node;
-      state.nodes[uuid].edited = false;
+      isNodeEdited({ state, node, isEdited: false });
     },
     [MutationTypes.START_EDITING_CONTENT](state, node) {
-      const { uuid } = node;
-      state.nodes[uuid].edited = true;
+      isNodeEdited({ state, node, isEdited: true });
     },
     [MutationTypes.TRACK_NODE](state, node) {
       state.nodes[node.uuid] = {

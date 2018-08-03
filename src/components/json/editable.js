@@ -70,25 +70,30 @@ const Editable = {
     isKeyNode: function () {
       return this.nodeType === NODE_TYPES.key;
     },
+    registerChildrenWithTag: function ({ children, tag }) {
+      children.forEach((child) => {
+        if (child.$vnode.componentOptions.tag === tag) {
+          child.register();
+        }
+      });
+    },
     registerChildren: function () {
       let componentName = this.$vnode.componentOptions.tag;
       if (typeof componentName === 'undefined') {
         componentName = this.$vnode.componentOptions.Ctor.options.name;
       }
       if (componentName === 'json-object') {
-        this.$children.forEach((child) => {
-          if (child.$vnode.componentOptions.tag === 'json-pair') {
-            child.register();
-          }
+        this.registerChildrenWithTag({
+          children: this.$children,
+          tag: 'json-pair',
         });
         return;
       }
 
       if (componentName === 'json-array') {
-        this.$children.forEach((child) => {
-          if (child.$vnode.componentOptions.tag === 'json-value') {
-            child.register();
-          }
+        this.registerChildrenWithTag({
+          children: this.$children,
+          tag: 'json-value',
         });
       }
     },
