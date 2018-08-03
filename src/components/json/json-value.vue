@@ -66,7 +66,8 @@ export default {
       if (!this.isRegistered 
       && !this.isArrayItem
       && typeof this.$slots.default !== 'undefined'
-      && typeof this.$slots.default[0] !== 'undefined') {
+      && typeof this.$slots.default[0] !== 'undefined'
+      && typeof this.$slots.default[0].text !== 'undefined') {
         this.text = this.$slots.default[0].text;
       }
 
@@ -183,13 +184,13 @@ export default {
       isLastChild: false,
       nodeType: this.getNodeTypes().value,
       sharedState: SharedState.state,
-      temporaryValue: null,
+      value: null,
     }
   },
   computed: {
     text: {
       get: function () {
-        return this.temporaryValue;
+        return this.value;
       },
       set: function (text) {
         if (this.isArrayItem) {
@@ -200,9 +201,9 @@ export default {
           this.$slots.default = [];
         }
 
-        this.temporaryValue = text;
-        this.$slots.default[0] = this.temporaryValue;
-        this.sharedState.values[this.uuid] = this.temporaryValue;
+        this.value = text;
+        this.$slots.default[0] = this.value;
+        this.sharedState.values[this.uuid] = this.value;
       }
     },
     hasText: function () {
