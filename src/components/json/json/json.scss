@@ -283,7 +283,7 @@ $color-punctuation: $color-beige;
         color: $color-punctuation;
 
         &:after {
-          content: '{';
+          content: ' {';
           color: $color-punctuation;
         }
       }
@@ -292,7 +292,7 @@ $color-punctuation: $color-beige;
     &--array {
       > .json__key-value > .json__colon {
         &:after {
-          content: '[';
+          content: ' [';
         }
       }
 

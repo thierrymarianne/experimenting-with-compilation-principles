@@ -223,15 +223,9 @@ const JSONDrawer = class extends JSONListener {
 
     jsonPairTemplate = `
       <json-pair ${isFirstChildArray} ${isFirstChildObject} ${isArrayOrObject}>
-        <template slot='key'>
-          ${key.symbol.text}
-        </template>
-        <template slot='colon'>
-          ${colon.symbol.text}
-        </template>
-        <template slot='value'>
-          ${content}
-        </template>
+        <template slot='key'>${key.symbol.text}</template>
+        <template slot='colon'>${colon.symbol.text}</template>
+        <template slot='value'>${content}</template>
       </json-pair>
     `;
 

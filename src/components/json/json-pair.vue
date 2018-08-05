@@ -34,7 +34,7 @@
       :data-editable='isEditable'
     >
       <span class="json__key-value">
-        <span class="json__key"><slot name='key'></slot></span>
+        <pair-key><slot name='key'></slot></pair-key>
         <span class="json__colon"><slot name='colon'></slot></span>
       </span>
       <slot name='value'></slot>
