@@ -348,7 +348,7 @@ describe('JsonEditor', () => {
         store,
         localVue,
       },
-      destroyAfter: false,
+      destroyAfter: true,
       wrapperCreator: mount,
     });
 
