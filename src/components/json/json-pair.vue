@@ -42,19 +42,19 @@
     </span>
     <button
       v-if='!isArrayOrObject && isShown'
-      class='json__pair---button'
+      class='json__pair--button'
       v-on:click='toggleVisibility'>
       <font-awesome-icon
-        class='json__pair---button-icon'
+        class='json__pair--button-icon'
         :icon='getIconName' />
     </button>
     <button
-      class='json__pair---button'
+      class='json__pair--button'
       v-if='!isArrayOrObject && isVisible'
       v-on:click='addAfterPair'
     >
       <font-awesome-icon
-        class='json__pair---button-icon'
+        class='json__pair--button-icon'
         icon='plus' />
     </button>
   </fragment-transition>

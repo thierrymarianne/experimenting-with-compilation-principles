@@ -8,7 +8,7 @@
   .dynamic-json {
     min-width: 500px;
 
-    .json__pair---button {
+    .json__pair--button {
       cursor: pointer;
       border: none;
       display: none;
@@ -19,7 +19,7 @@
   }
 
   .editable-json.editable-json--ready {
-    .json__pair---button {
+    .json__pair--button {
       display: inline;
     }
   }

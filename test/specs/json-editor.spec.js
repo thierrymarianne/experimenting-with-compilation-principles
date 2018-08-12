@@ -230,7 +230,7 @@ describe('JsonEditor', () => {
     const text = subjectUnderTestWrapper.text().replace(/\s/g, '');
     expect(text).to.equal('{"Key":"Value",}{"Key":"Value",}');
 
-    togglePairVisibilityButton = document.querySelector('.editable-json .json__pair---button');
+    togglePairVisibilityButton = document.querySelector('.editable-json .json__pair--button');
     expect(isVisible(
       subjectUnderTestWrapper.vm
       .$refs['json-editor']
@@ -252,7 +252,7 @@ describe('JsonEditor', () => {
           JsonEvents.node.afterRegistration,
           afterRegistration,
         );
-        const buttons = document.querySelectorAll('.editable-json .json__pair---button');
+        const buttons = document.querySelectorAll('.editable-json .json__pair--button');
         const addPairAfterButton = buttons[1];
         addPairAfterButton.click();
       }
@@ -441,7 +441,7 @@ describe('JsonEditor', () => {
       // but the array, and the object don't register themselves (twice).
 
       if (registeredComponents.length === 24) {
-        const buttons = document.querySelectorAll('.editable-json .json__pair---button');
+        const buttons = document.querySelectorAll('.editable-json .json__pair--button');
         const addPairAfterButton = buttons[1];
         addPairAfterButton.click();
         done();

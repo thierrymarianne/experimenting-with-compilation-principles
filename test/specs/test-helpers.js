@@ -54,7 +54,7 @@ const ensureComponentWrapperIsDestroyedAfter = (context) => {
 };
 
 const selectPairButtonAtIndex = (index) => {
-  const selector = '.editable-json .json__pair---button';
+  const selector = '.editable-json .json__pair--button';
   const matchingElements = document.querySelectorAll(selector);
   if (typeof matchingElements[index] === 'undefined') {
     throw Error(`No matching element for selector ${selector}`);
