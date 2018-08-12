@@ -1,8 +1,29 @@
 <template>
   <fragment-transition v-if='isArrayItem'>
-    <span class='json__value--array-item'>
-      <span :class='classes'><slot></slot></span>
-    </span>
+    <transition 
+      name="custom-classes-transition" 
+      mode='in-out'
+      enter-active-class="animated fadeInLeftBig" 
+      leave-active-class="animated hinge"
+    >
+      <span 
+        class='json__value--array-item'
+        v-show='isShown'
+        :ref='uuid'
+        :data-uuid='uuid'
+        :data-editable='isEditable'
+      >
+        <span :class='classes'><slot></slot></span>
+      </span>
+    </transition>
+    <button
+      class='json__value--button'
+      v-if='hasText'
+      v-on:click='toggleVisibility'>
+      <font-awesome-icon
+        class='json__value--button-icon'
+        :icon='getIconName' />
+    </button>
   </fragment-transition>
   <span
     v-else
@@ -43,7 +64,7 @@ export default {
     ClickOutside
   },
   mixins: [
-    Object.assign({}, Editable.Editable),
+    Editable.Editable,
     WithEditableContent,
   ],
   props: {
@@ -63,7 +84,7 @@ export default {
   created: function () {
     this.$nextTick(function () {
       if (!this.isRegistered 
-      && !this.isArrayItem
+      && (!this.isArrayItem || this.hasText)
       && typeof this.$slots.default !== 'undefined'
       && typeof this.$slots.default[0] !== 'undefined'
       && typeof this.$slots.default[0].text !== 'undefined') {
@@ -121,9 +142,12 @@ export default {
   updated: function () {
     this.$nextTick(function () {
       if (!this.hasText
+      || !this.isVisible
       || this.isEditable) { 
         return;
       }
+
+      return;
       
       if (typeof this.$slots.default === 'undefined') {
         this.$slots.default = [];
@@ -218,25 +242,35 @@ export default {
       return !this.hasText;
     },
     classes: function () {
-      const defaultClasses = 'json__value json__value--editable';
+      const classes = {
+        'json__value': true,
+        'json__value--editable': true,
+        'json__value--key': false,
+        'json__value--boolean': false,
+        'json__value--null': false,
+        'json__value--has-text': this.hasText,
+      };
 
       if (this.isKey) {
-        return `${defaultClasses} json__value--key`;
+        classes['json__value--key'] = true;
+        return classes;
       }
 
-      let booleanClass = '';
       if (this.text === 'false'
       || this.text === 'true') {
-        booleanClass = ' json__value--boolean';
+        classes['json__value--boolean'] = true;
       }
 
-      let nullClass = '';
       if (this.text === 'null') {
-        nullClass = ' json__value--null';
+        classes['json__value--null'] = true;
       }
 
-      return `${defaultClasses}${booleanClass}${nullClass}`;
+      return classes;
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import './json-value.scss';
+</style>

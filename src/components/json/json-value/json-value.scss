@@ -1,0 +1,23 @@
+.json__value {
+  &--button {
+    border: none;
+    color: $color-text-clickable;
+    cursor: pointer;
+    display: inline;
+    outline-color: transparent;
+    background-color: transparent;
+    font-size: 1rem;
+  }
+
+  &--has-text {
+    white-space: pre;
+  }
+}
+
+.dynamic-json {
+  .json__value {
+    &--button {
+      display: none;
+    }
+  }
+}

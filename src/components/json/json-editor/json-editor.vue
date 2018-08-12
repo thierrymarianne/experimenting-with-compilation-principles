@@ -264,7 +264,7 @@ export default {
           component.$vnode.componentOptions.tag === 'json-value'
           && (
             !component.hasText
-            || component.$parent.$vnode.componentOptions.tag === 'json-array'
+            && component.$parent.$vnode.componentOptions.tag === 'json-array'
           )
         )) {
           return;
@@ -352,7 +352,7 @@ export default {
         twinVNode,
       };
     },
-    locateTwinOf({ element, uuid, nodeType }) {
+    locateTwinOf({ element, uuid }) {
       let twins;
       let editableElement = element;
 
@@ -614,9 +614,8 @@ export default {
       const { twinVNode, elementVNode } = this.locateTwinOf({
         element,
         uuid,
-        nodeType: Editable.NODE_TYPES.pair,
       });
-      twinVNode.$parent.$forceUpdate();
+
       this.$nextTick(function () {
         const editableComponent = elementVNode;
         const dynamicComponent = twinVNode;
@@ -629,6 +628,7 @@ export default {
 
         elementVNode.isEditable = true;
         elementVNode.isVisible = !elementVNode.isVisible;
+        twinVNode.isEditable = false;
         twinVNode.isVisible = !twinVNode.isVisible;
         this.toggleVisibilityOfSurroundingCommas({ dynamicComponent, isVisible: twinVNode.isVisible })
 
@@ -645,6 +645,7 @@ export default {
           },
         );
       });
+      twinVNode.$parent.$forceUpdate();
     },
     toggleNodeEdition: function ({ nodeUuid }) {
       const nodeComponent = this.componentWithUuid(nodeUuid);

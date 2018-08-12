@@ -200,6 +200,7 @@ $color-punctuation: $color-beige;
     }
   }
 
+  > .json__array-container,
   > .json__object-container {
     margin-left: 0;
 
@@ -219,6 +220,15 @@ $color-punctuation: $color-beige;
 
     > .json__object {
       margin-left: 2rem;
+    }
+  }
+
+  > .json__array-container {
+    margin-left: 2rem;
+
+    > .json__square-bracket--left,
+    > .json__square-bracket--right {
+      margin-left: -2rem;
     }
   }
 

@@ -98,6 +98,7 @@ import BrokenCase from '../../../../json/broken-case.json';
 import CodeInjection from '../../../../json/code-injection.json';
 import LearningCompilers from '../../../../../package.json';
 import Leftpad from '../../../../json/leftpad.json';
+import ObjectInArray from '../../../../json/object-in-array.json';
 import Pair from '../../../../json/pair.json';
 import Symfony from '../../../../json/symfony.json';
 
@@ -106,12 +107,13 @@ const jsonExamples = {
   brokenCase: BrokenCase,
   codeInjection: CodeInjection,
   learningCompilers: LearningCompilers,
+  objectInArray: ObjectInArray,
   leftpad: Leftpad,
   pair: Pair,
   symfony: Symfony,
 };
 
-const PackageJson = jsonExamples.brokenCase;
+const PackageJson = jsonExamples.array;
 
 export default {
   name: 'lexical-analyzer',

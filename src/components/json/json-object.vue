@@ -67,8 +67,8 @@ export default {
         };
       }).filter(child => (child.isShown));
 
-      filteredChildren.map((child) => (child.component.isLastChild = false));
-      filteredChildren[filteredChildren.length - 1].component.isLastChild = true;
+      // filteredChildren.map((child) => (child.component.isLastChild = false));
+      // filteredChildren[filteredChildren.length - 1].component.isLastChild = true;
 
       EventHub.$emit(JsonEvents.node.afterAlteration);
     },

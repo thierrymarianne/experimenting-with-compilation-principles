@@ -37,7 +37,10 @@ export default {
     },
     props: {
         "literal-object": {
-            type: Object
+            validator: function (value) {
+                return Array.isArray(value)
+                || (value === Object(value));
+            }
         },
         activeParser: {
             type: Boolean,

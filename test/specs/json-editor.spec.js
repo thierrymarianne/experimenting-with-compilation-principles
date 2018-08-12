@@ -463,7 +463,7 @@ describe('JsonEditor', () => {
       },
       nextAction: 'hide_second_pair',
     });
-  
+
     setUpAction({
       action: 'hide_second_pair',
       actionTrigger: function () {
