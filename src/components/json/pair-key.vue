@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import JsonValue from './json-value.vue';
+import JsonValue from './json-value/json-value.vue';
 import Editable from './editable';
 import WithEditableContent from './with-editable-content';
 

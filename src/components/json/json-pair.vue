@@ -63,7 +63,7 @@
 <script>
 import FragmentTransition from './fragment-transition.vue';
 import Comma from './comma.vue';
-import JsonValue from './json-value.vue';
+import JsonValue from './json-value/json-value.vue';
 import PairKey from './pair-key.vue';
 import JsonEvents from './events/json-events';
 import Editable from './editable';

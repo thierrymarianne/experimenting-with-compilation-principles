@@ -21,14 +21,14 @@
 <script>
 import ClickOutside from 'vue-click-outside';
 
-import Comma from './comma.vue';
-import FragmentTransition from './fragment-transition.vue';
-import EventHub from '../../modules/event-hub';
-import SharedState from '../../modules/shared-state';
-import MutationTypes from './json-editor/json-editor-mutation-types';
-import Editable from './editable';
-import WithEditableContent from './with-editable-content';
-import JsonEvents from './events/json-events';
+import Comma from '../comma.vue';
+import FragmentTransition from '../fragment-transition.vue';
+import EventHub from '../../../modules/event-hub';
+import SharedState from '../../../modules/shared-state';
+import MutationTypes from '../json-editor/json-editor-mutation-types';
+import Editable from '../editable';
+import WithEditableContent from '../with-editable-content';
+import JsonEvents from '../events/json-events';
 
 import { createNamespacedHelpers } from 'vuex';
 const { mapActions, mapMutations } = createNamespacedHelpers('json-editor');

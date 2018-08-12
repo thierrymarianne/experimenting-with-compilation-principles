@@ -6,7 +6,7 @@ import store from '../../src/store';
 import JsonEditor from '../../src/components/json/json-editor/json-editor.vue';
 import JsonObject from '../../src/components/json/json-object.vue';
 import JsonPair from '../../src/components/json/json-pair.vue';
-import JsonValue from '../../src/components/json/json-value.vue';
+import JsonValue from '../../src/components/json/json-value/json-value.vue';
 import Styles from '../../src/styles';
 import JsonEvents from '../../src/components/json/events/json-events';
 import EventHub from '../../src/modules/event-hub';

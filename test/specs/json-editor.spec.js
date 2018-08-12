@@ -62,6 +62,59 @@ describe('JsonEditor', () => {
     return window.getComputedStyle(element).display !== 'none';
   };
 
+  let actions;
+
+  // Allow to set up a sequence of arbitrary actions
+  // (which details are given by the "actionTrigger" functions),
+  // without worrying about unregistering event handlers.
+  // It also prevent having to face a pyramid
+  // of nested callback registration
+  const setUpAction = ({
+    event,
+    action,
+    actionTrigger,
+    nextAction,
+    nextEvent,
+  }) => {
+    let jsonEvent = event;
+    if (typeof jsonEvent === 'undefined') {
+      jsonEvent = JsonEvents.node.altered;
+    }
+
+    let nextJsonEvent = nextEvent;
+    if (typeof nextJsonEvent === 'undefined') {
+      nextJsonEvent = JsonEvents.node.altered;
+    }
+
+    actions[action] = () => {
+      EventHub.$off(
+        jsonEvent,
+        actions[action],
+      );
+
+      localVue.nextTick()
+      .then(() => {
+        if (nextAction) {
+          if (typeof actions[nextAction] !== 'function') {
+            throw Error(
+              `The definition of the next action (with name "${nextAction}") `
+              + 'is not valid (a function is required as trigger)',
+            );
+          }
+
+          EventHub.$on(
+            nextJsonEvent,
+            actions[nextAction],
+          );
+        }
+
+        actionTrigger();
+      });
+    };
+
+    return actions[action];
+  };
+
   afterEach(() => {
     TestHelpers.destroyComponent(jsonEditorWrapper);
   });
@@ -394,63 +447,13 @@ describe('JsonEditor', () => {
         done();
       }
     };
+
     EventHub.$on(
       JsonEvents.node.afterRegistration,
       afterRegistration,
     );
 
-    const actions = {};
-
-    // Allow to set up a sequence of arbitrary actions
-    // (which details are given by the "actionTrigger" functions),
-    // without worrying about unregistering event handlers.
-    // It also prevent having to face a pyramid
-    // of nested callback registration
-    const setUpAction = ({
-      event,
-      action,
-      actionTrigger,
-      nextAction,
-      nextEvent,
-    }) => {
-      let jsonEvent = event;
-      if (typeof jsonEvent === 'undefined') {
-        jsonEvent = JsonEvents.node.altered;
-      }
-
-      let nextJsonEvent = nextEvent;
-      if (typeof nextJsonEvent === 'undefined') {
-        nextJsonEvent = JsonEvents.node.altered;
-      }
-
-      actions[action] = () => {
-        EventHub.$off(
-          jsonEvent,
-          actions[action],
-        );
-
-        localVue.nextTick()
-        .then(() => {
-          if (nextAction) {
-            if (typeof actions[nextAction] !== 'function') {
-              throw Error(
-                `The definition of the next action (with name "${nextAction}") `
-                + 'is not valid (a function is required as trigger)',
-              );
-            }
-
-            EventHub.$on(
-              nextJsonEvent,
-              actions[nextAction],
-            );
-          }
-
-          actionTrigger();
-        });
-      };
-
-      return actions[action];
-    };
+    actions = {};
 
     const startByHidingFirstPair = setUpAction({
       event: JsonEvents.node.afterPairAddition,
@@ -460,7 +463,7 @@ describe('JsonEditor', () => {
       },
       nextAction: 'hide_second_pair',
     });
-
+  
     setUpAction({
       action: 'hide_second_pair',
       actionTrigger: function () {
@@ -537,27 +540,27 @@ describe('JsonEditor', () => {
     });
 
     const template = '<json-array has-children>'
-      + '<json-value>'
-      + ' <json-object has-children>'
-      + ' <json-pair>'
-      + '   <template slot="key">"Key"</template>'
-      + '   <template slot="colon">:</template>'
-      + '   <template slot="value"><json-value>"Value"</json-value></template>'
-      + ' </json-pair>'
-      + ' <comma />'
-      + ' <json-pair>'
-      + '   <template slot="key">"Key2"</template>'
-      + '   <template slot="colon">:</template>'
-      + '   <template slot="value"><json-value>"Value2"</json-value></template>'
-      + ' </json-pair>'
-      + ' <comma />'
-      + ' <json-pair>'
-      + '   <template slot="key">"Key3"</template>'
-      + '   <template slot="colon">:</template>'
-      + '   <template slot="value"><json-value>"Value3"</json-value></template>'
-      + ' </json-pair>'
-      + '</json-object>'
-      + '</json-value>'
+      + '  <json-value>'
+      + '    <json-object has-children>'
+      + '      <json-pair>'
+      + '        <template slot="key">"Key"</template>'
+      + '        <template slot="colon">:</template>'
+      + '        <template slot="value"><json-value>"Value"</json-value></template>'
+      + '      </json-pair>'
+      + '      <comma />'
+      + '      <json-pair>'
+      + '        <template slot="key">"Key2"</template>'
+      + '        <template slot="colon">:</template>'
+      + '        <template slot="value"><json-value>"Value2"</json-value></template>'
+      + '      </json-pair>'
+      + '      <comma />'
+      + '      <json-pair>'
+      + '        <template slot="key">"Key3"</template>'
+      + '        <template slot="colon">:</template>'
+      + '        <template slot="value"><json-value>"Value3"</json-value></template>'
+      + '      </json-pair>'
+      + '    </json-object>'
+      + '  </json-value>'
       + '</json-array>';
     subjectUnderTestWrapper.vm.setJsonTemplate(template);
   });

@@ -1,7 +1,7 @@
 <script>
 import Vue from 'vue';
 import Comma from '../comma.vue';
-import JsonValue from '../json-value.vue';
+import JsonValue from '../json-value/json-value.vue';
 import JsonPair from '../json-pair.vue';
 import JsonArray from '../json-array.vue';
 import JsonObject from '../json-object.vue';
