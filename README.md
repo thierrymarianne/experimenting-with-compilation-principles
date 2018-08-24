@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/thierrymarianne/project-learning-compilers/branch/master/graph/badge.svg)](https://codecov.io/gh/thierrymarianne/project-learning-compilers)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/test_coverage)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/test_coverage)
 [![CircleCI](https://circleci.com/gh/thierrymarianne/learning-compilation-principles.svg?style=svg)](https://circleci.com/gh/thierrymarianne/learning-compilation-principles)
-[![Build Status](https://travis-ci.org/thierrymarianne/learning-compilation-principles?branch=master)](https://travis-ci.org/thierrymarianne/learning-compilation-principles)
+[![Build Status](https://travis-ci.org/thierrymarianne/learning-compilation-principles.svg?branch=master)](https://travis-ci.org/thierrymarianne/learning-compilation-principles)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/maintainability)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/maintainability)
 
 ## Demo
