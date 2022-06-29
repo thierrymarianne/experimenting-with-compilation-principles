@@ -1,15 +1,5 @@
 # Learning how compilers work
 
-[![codecov](https://codecov.io/gh/thierrymarianne/project-learning-compilers/branch/master/graph/badge.svg)](https://codecov.io/gh/thierrymarianne/project-learning-compilers)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/test_coverage)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/test_coverage)
-[![CircleCI](https://circleci.com/gh/thierrymarianne/learning-compilation-principles.svg?style=svg)](https://circleci.com/gh/thierrymarianne/learning-compilation-principles)
-[![Build Status](https://travis-ci.org/thierrymarianne/learning-compilation-principles.svg?branch=master)](https://travis-ci.org/thierrymarianne/learning-compilation-principles)
-[![Maintainability](https://api.codeclimate.com/v1/badges/6d36175eb27c5a4e66cd/maintainability)](https://codeclimate.com/github/thierrymarianne/project-learning-compilers/maintainability)
-
-## Demo
-
-![JSON Editor made with Vue components and ANTLR4](https://thierry.marianne.io/compilers/compilers-principles-techniques-and-tools.gif)
-
 ## About
 
 A simple JSON editor implemented as an exercice
