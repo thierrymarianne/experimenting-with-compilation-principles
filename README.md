@@ -14,7 +14,7 @@ to learn more about:
 Install [git](https://git-scm.org) and clone the project repository
 
 ```
-git clone https://github.com/thierrymarianne/project-learning-compilers.git
+git clone https://github.com/thierrymarianne/experimenting-with-compilation-principles
 ```
 
 Install [node.js](https://nodejs.org), 
